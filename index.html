@@ -3,58 +3,58 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Forja</title>
+<title>GymBlack</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Barlow:wght@500;600;700;800&display=swap" rel="stylesheet">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#0E0C0A">
+<meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Forja">
+<meta name="apple-mobile-web-app-title" content="GymBlack">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="icon" type="image/png" href="icon-192.png">
 
 <style>
 :root{
-  --bg:#0E0C0A;--s1:#1A1714;--s2:#241F1A;--line:#3A322A;--ink:#F6EFE7;--muted:#A89A8B;
-  --fuego:#FF7A1A;--fuego2:#FFB547;--ok:#3DDC84;--frio:#6FB7FF;--rojo:#FF5C5C;
+  --bg:#0A0A0B;--s1:#151618;--s2:#1F2023;--line:#2F3135;--ink:#F2F3F5;--muted:#9A9EA6;
+  --fuego:#C9CED6;--fuego2:#EDEFF3;--ok:#3DDC84;--frio:#6FB7FF;--rojo:#FF5C5C;
   --f:"Barlow",system-ui,sans-serif;--fd:"Barlow Condensed","Barlow",system-ui,sans-serif;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--ink);font:600 16px/1.4 var(--f)}
 body{padding:calc(env(safe-area-inset-top,0px) + 8px) 16px calc(96px + env(safe-area-inset-bottom,0px));max-width:620px;margin:0 auto;
-  background:radial-gradient(120% 60% at 50% -10%,#3A1D08 0%,transparent 60%),var(--bg);min-height:100vh}
+  background:radial-gradient(120% 60% at 50% -10%,#24272C 0%,transparent 60%),var(--bg);min-height:100vh}
 h1,h2,h3{font-family:var(--fd);letter-spacing:.3px;margin:0}
 h1{font-size:34px;font-weight:800}h2{font-size:24px;font-weight:800}h3{font-size:19px;font-weight:800}
 button{font:inherit;color:inherit;cursor:pointer}
 input{font:inherit;color:var(--ink)}
 .top{display:flex;align-items:center;gap:10px;padding:6px 0 12px}
-.logo{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:22px;background:linear-gradient(135deg,var(--fuego),#C2410C);box-shadow:0 4px 18px #FF7A1A55}
+.logo{width:42px;height:42px;border-radius:12px;background:#000 url(logo-app.png) center/cover;box-shadow:0 0 0 1px #3A3E46,0 4px 18px #0008}
 .top .t{flex:1}.top small{display:block;color:var(--muted);font-weight:700;font-size:13px}
 .chip{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:999px;background:var(--s2);border:1px solid var(--line);font-weight:800;font-size:13px}
-.chip.f{background:#FF7A1A22;border-color:#FF7A1A66;color:var(--fuego2)}
+.chip.f{background:#C9CED622;border-color:#C9CED666;color:var(--fuego2)}
 .card{background:var(--s1);border:1px solid var(--line);border-radius:20px;padding:16px;margin:0 0 14px}
-.card.hero{background:linear-gradient(160deg,#2A1A0E,#1A1714 70%);border-color:#5A3A1E}
+.card.hero{background:linear-gradient(160deg,#1E2025,#151618 70%);border-color:#3A3E46}
 .muted{color:var(--muted)}.small{font-size:13px}
 .row{display:flex;gap:10px;align-items:center}.row.w{flex-wrap:wrap}.sp{flex:1}
-.btn{border:0;border-radius:16px;padding:14px 18px;font:800 17px var(--f);background:var(--fuego);color:#1A0E04;box-shadow:0 4px 0 #A8480C;width:100%}
-.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #A8480C}
+.btn{border:0;border-radius:16px;padding:14px 18px;font:800 17px var(--f);background:var(--fuego);color:#0B0C0E;box-shadow:0 4px 0 #70757E;width:100%}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #70757E}
 .btn.sec{background:var(--s2);color:var(--ink);box-shadow:0 4px 0 #0006;border:1px solid var(--line)}
 .btn.ok{background:var(--ok);box-shadow:0 4px 0 #1E8A4F;color:#04210F}
 .btn.chico{width:auto;padding:9px 14px;font-size:15px}
-.nav{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;justify-content:center;background:#0E0C0AF0;backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px))}
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;justify-content:center;background:#0A0A0BF0;backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px))}
 .nav div{display:flex;width:100%;max-width:620px}
 .nav button{flex:1;border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;color:var(--muted);font-weight:800;font-size:12px;border-radius:14px}
 .nav button span{font-size:23px;filter:grayscale(1);opacity:.7}
-.nav button.on{color:var(--fuego2);background:#FF7A1A14}.nav button.on span{filter:none;opacity:1}
+.nav button.on{color:var(--fuego2);background:#C9CED614}.nav button.on span{filter:none;opacity:1}
 .ej{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--line)}
 .ej:first-child{border-top:0}
 .num{flex:none;width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:var(--s2);font:800 15px var(--fd);color:var(--fuego2)}
 .ej b{display:block}.ej .d{color:var(--muted);font-size:14px}
 .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 .tag{font-size:12px;font-weight:800;padding:3px 8px;border-radius:8px;background:var(--s2);color:var(--ink)}
-.tag.tec{background:#FF7A1A26;color:var(--fuego2)}
+.tag.tec{background:#C9CED626;color:var(--fuego2)}
 .comida{border-radius:18px;background:var(--s2);border:1px solid var(--line);padding:14px;margin-bottom:10px}
 .comida.ya{border-color:#3DDC8466;background:#132218}
 .comida.ahora{border-color:var(--fuego);box-shadow:0 0 0 1px var(--fuego) inset}
@@ -89,21 +89,21 @@ input{font:inherit;color:var(--ink)}
 .rirs{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
 .rirs button{border:2px solid var(--line);background:var(--s2);border-radius:12px;padding:8px 0;font-weight:800}
 .rirs button small{display:block;font-size:10px;color:var(--muted);font-weight:700}
-.rirs button.on{border-color:var(--fuego);background:#FF7A1A22}
+.rirs button.on{border-color:var(--fuego);background:#C9CED622}
 .reloj{width:230px;height:230px;margin:20px auto;position:relative}
 .reloj svg{transform:rotate(-90deg)}
 .reloj .t{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
 .reloj .t b{font:800 64px/1 var(--fd)}
-.consejo{background:#FF7A1A14;border:1px solid #FF7A1A44;border-radius:14px;padding:10px 12px;font-size:15px;margin-top:10px}
+.consejo{background:#C9CED614;border:1px solid #C9CED644;border-radius:14px;padding:10px 12px;font-size:15px;margin-top:10px}
 .tempo{display:flex;gap:6px;margin-top:10px}
 .tempo div{flex:1;text-align:center;padding:10px 4px;border-radius:12px;background:var(--s2);font-weight:800;font-size:13px;transition:.2s}
 .tempo div b{display:block;font:800 22px var(--fd)}
-.tempo div.on{background:var(--fuego);color:#1A0E04;transform:scale(1.06)}
+.tempo div.on{background:var(--fuego);color:#0B0C0E;transform:scale(1.06)}
 .series{display:flex;flex-direction:column;gap:6px;margin-top:10px}
 .serie{display:flex;justify-content:space-between;padding:8px 12px;border-radius:12px;background:#132218;color:var(--ok);font-weight:700}
 .campo{width:100%;padding:14px;border-radius:14px;border:2px solid var(--line);background:var(--s2);font-size:18px;outline:none}
 .campo:focus{border-color:var(--fuego)}
-.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;background:#F6EFE7;color:#1A0E04;padding:11px 16px;border-radius:14px;font-weight:800;box-shadow:0 8px 24px #0008;max-width:90vw;text-align:center;animation:sube .25s}
+.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;background:#F2F3F5;color:#0B0C0E;padding:11px 16px;border-radius:14px;font-weight:800;box-shadow:0 8px 24px #0008;max-width:90vw;text-align:center;animation:sube .25s}
 @keyframes sube{from{opacity:0;transform:translate(-50%,10px)}}
 @keyframes late{50%{transform:scale(1.08)}}
 .late{animation:late 1s infinite}
@@ -119,7 +119,7 @@ details summary{cursor:pointer;font-weight:800;padding:4px 0}
 <body>
 <div id="app"></div>
 <nav class="nav" id="nav"><div>
-  <button data-t="hoy"><span>🔥</span>Hoy</button>
+  <button data-t="hoy"><span>⚡</span>Hoy</button>
   <button data-t="entreno"><span>🏋️</span>Entrenar</button>
   <button data-t="comidas"><span>🍽️</span>Comidas</button>
   <button data-t="progreso"><span>📈</span>Progreso</button>
@@ -296,14 +296,14 @@ function render(){
 }
 function cabecera(){
   const s = semanaActual(), S = SEMANAS[s.n - 1];
-  return `<div class="top"><div class="logo">🔥</div><div class="t"><h1 style="font-size:28px;line-height:1">Forja</h1>
+  return `<div class="top"><div class="logo"></div><div class="t"><h1 style="font-size:28px;line-height:1;letter-spacing:1px">GYM<span style="color:var(--muted)">BLACK</span></h1>
     <small>${E.nombre ? "Hola, " + esc(E.nombre) + " · " : ""}Semana ${s.n} de 12 · ${S.b}</small></div>
     <span class="chip f">⚖️ ${fmtKg(pesoActual())} kg</span></div>`;
 }
 
 function bienvenida(){
-  $("#app").innerHTML = `<div style="padding-top:30px;text-align:center"><div class="logo" style="width:84px;height:84px;font-size:46px;margin:0 auto 14px;border-radius:24px">🔥</div>
-    <h1>Forja</h1><p class="muted">Tu rutina y tus comidas, día por día. Te dice qué máquina te toca, cuántas series, con qué peso y cuánto descansar.</p></div>
+  $("#app").innerHTML = `<div style="padding-top:30px;text-align:center"><div class="logo" style="width:120px;height:120px;margin:0 auto 16px;border-radius:30px"></div>
+    <h1 style="letter-spacing:2px">GYM<span style="color:var(--muted)">BLACK</span></h1><p class="muted">Tu rutina y tus comidas, día por día. Te dice qué máquina te toca, cuántas series, con qué peso y cuánto descansar.</p></div>
     <div class="card"><div class="lbl">¿Cómo te llamo?</div><input id="bNom" class="campo" placeholder="Tu nombre" maxlength="24" autocomplete="off">
     <div class="lbl">¿Cuánto pesás hoy? (kg)</div><input id="bKg" class="campo" type="number" inputmode="decimal" step="0.1" value="58">
     <div class="lbl">¿En qué semana del programa estás?</div>
@@ -365,7 +365,7 @@ function instalarCard(){
   const ua = navigator.userAgent, ios = /iPhone|iPad|iPod/.test(ua);
   let pasos;
   if (ios) pasos = /CriOS/.test(ua) ? "Tocá <b>Compartir ⬆️</b> (arriba a la derecha) → <b>«Agregar a pantalla de inicio»</b>." : "Tocá <b>Compartir ⬆️</b> → <b>«Agregar a pantalla de inicio»</b>.";
-  else if (promptInstalar) pasos = `<button class="btn chico" data-a="instalar" style="margin:8px 0 4px">📲 Instalar Forja</button><br>`;
+  else if (promptInstalar) pasos = `<button class="btn chico" data-a="instalar" style="margin:8px 0 4px">📲 Instalar GymBlack</button><br>`;
   else pasos = "Abrí el menú ⋮ del navegador → <b>«Instalar app»</b> o <b>«Agregar a pantalla de inicio»</b>.";
   return `<div class="card" style="border-color:#6FB7FF66"><div class="row"><b>📲 Tenela como app</b><span class="sp"></span><button class="chip" data-a="noinstalar">✕</button></div>
     <p class="small" style="margin:6px 0 0">${pasos} Así funciona sin internet en el gimnasio.</p></div>`;
@@ -476,9 +476,9 @@ function grafico(){
   const P = E.pesos.slice(-30); if (P.length < 2) return `<p class="small muted" style="margin:10px 0 0">Anotá tu peso unos días y acá aparece el gráfico.</p>`;
   const kgs = P.map(p => p.kg), mn = Math.min(...kgs) - 0.5, mx = Math.max(...kgs) + 0.5, W = 300, H = 120;
   const pts = P.map((p, i) => [(i / (P.length - 1) * (W - 20) + 10).toFixed(1), (H - 10 - (p.kg - mn) / (mx - mn) * (H - 20)).toFixed(1)]);
-  return `<svg class="graf" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="margin-top:12px"><defs><linearGradient id="gg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF7A1A" stop-opacity=".35"/><stop offset="1" stop-color="#FF7A1A" stop-opacity="0"/></linearGradient></defs>
+  return `<svg class="graf" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="margin-top:12px"><defs><linearGradient id="gg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C9CED6" stop-opacity=".35"/><stop offset="1" stop-color="#C9CED6" stop-opacity="0"/></linearGradient></defs>
     <path d="M${pts.map(p => p.join(",")).join(" L")} L${pts[pts.length - 1][0]},${H} L${pts[0][0]},${H} Z" fill="url(#gg)"/>
-    <polyline points="${pts.map(p => p.join(",")).join(" ")}" fill="none" stroke="#FFB547" stroke-width="3" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg>
+    <polyline points="${pts.map(p => p.join(",")).join(" ")}" fill="none" stroke="#EDEFF3" stroke-width="3" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg>
     <div class="row small muted"><span>${fmtKg(kgs[0])} kg</span><span class="sp"></span><span>${fmtKg(kgs[kgs.length - 1])} kg</span></div>`;
 }
 // Tabla de ajuste calórico del plan: ganancia promedio por semana
@@ -555,7 +555,7 @@ function pintarGuia(){
       <div class="row w"><span class="chip">🛠️ ${ej.eq}</span><span class="chip">🎯 ${ej.m}</span></div>
       <div class="objetivo"><div><b>${ss.serie + 1}/${o.series}</b><small>SERIE</small></div><div><b>${o.reps}</b><small>REPS</small></div><div><b>${o.rir}</b><small>RIR</small></div></div>
       <div class="consejo">${{sube:"📈 ", baja:"📉 ", igual:"💡 "}[sg.tipo] || "💡 "}${sg.txt}</div>
-      ${ss.serie === o.series - 1 && o.tec ? `<div class="consejo" style="background:#FF7A1A30"><b>★ Último set: ${o.tec.n}</b><br>${o.tec.t}${ej.tec === "drop" && kgPrevio ? ` (≈ ${fmtKg(redondear(kgPrevio * 0.8, 1.25))} kg)` : ""}</div>` : ""}
+      ${ss.serie === o.series - 1 && o.tec ? `<div class="consejo" style="background:#C9CED630"><b>★ Último set: ${o.tec.n}</b><br>${o.tec.t}${ej.tec === "drop" && kgPrevio ? ` (≈ ${fmtKg(redondear(kgPrevio * 0.8, 1.25))} kg)` : ""}</div>` : ""}
       <div class="lbl">Ritmo de cada repetición · ${ej.t}</div>
       <div class="tempo" id="tempo"><div><b>${tp[0]}s</b>bajá</div><div><b>${tp[1]}s</b>pausa</div><div><b>${tp[2]}s</b>subí</div><div><b>${tp[3]}s</b>arriba</div></div>
       <button class="btn sec chico" data-g="ritmo" style="margin-top:8px;width:100%">▶ Marcame el ritmo</button>
@@ -581,8 +581,8 @@ function pintarDescanso(arriba){
   else prox = `Próximo: <b>serie ${ss.serie + 1} de ${objetivo(R.ej[ss.i], sem).series}</b>`;
   $("#guia").innerHTML = `<div class="guia"><div class="in">${arriba}
     <div style="text-align:center"><div class="lbl" style="margin-top:6px">DESCANSO</div>
-    <div class="reloj"><svg width="230" height="230"><circle cx="115" cy="115" r="104" stroke="#241F1A" stroke-width="14" fill="none"/>
-    <circle id="arco" cx="115" cy="115" r="104" stroke="#FF7A1A" stroke-width="14" fill="none" stroke-linecap="round" stroke-dasharray="653.5" stroke-dashoffset="0"/></svg>
+    <div class="reloj"><svg width="230" height="230"><circle cx="115" cy="115" r="104" stroke="#1F2023" stroke-width="14" fill="none"/>
+    <circle id="arco" cx="115" cy="115" r="104" stroke="#C9CED6" stroke-width="14" fill="none" stroke-linecap="round" stroke-dasharray="653.5" stroke-dashoffset="0"/></svg>
     <div class="t"><div><b id="seg">--</b><div class="muted small" id="segU">segundos</div></div></div></div>
     <p style="font-size:17px">${prox}</p>
     <div class="row"><button class="btn sec" data-g="menos">−15 s</button><button class="btn sec" data-g="mas">+15 s</button></div>
@@ -670,7 +670,7 @@ function b64(s){ return btoa(unescape(encodeURIComponent(s))).replace(/\+/g, "-"
 function deb64(s){ return decodeURIComponent(escape(atob(s.replace(/-/g, "+").replace(/_/g, "/")))); }
 async function exportar(){
   const url = location.href.split("#")[0] + "#p=" + b64(JSON.stringify({...E, sesion:null, comidas:{}, agua:{}}));
-  try { if (navigator.share) { await navigator.share({title:"Mis datos de Forja", url}); return; } } catch { return; }
+  try { if (navigator.share) { await navigator.share({title:"Mis datos de GymBlack", url}); return; } } catch { return; }
   try { await navigator.clipboard.writeText(url); toast("🔗 Link copiado: abrilo en el otro dispositivo"); } catch { toast("No se pudo copiar el link"); }
 }
 function importarDeLink(){
@@ -690,7 +690,7 @@ if (E && E.sesion && E.sesion.f === hoyStr() && E.sesion.descansoHasta) abrirGui
 setInterval(() => { if (E && E.inicio && !$("#guia").innerHTML && !(document.activeElement && document.activeElement.tagName === "INPUT")) render(); }, 60000);
 </script>
 <script>
-const VERSION_APP = "20260927222301";
+const VERSION_APP = "20260927223716";
 if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").then(reg => {
   document.addEventListener("visibilitychange", () => { if (!document.hidden) reg.update().catch(() => {}); });
 }).catch(() => {}));
@@ -705,10 +705,10 @@ function avisarVersionNueva(){
   if (document.getElementById("versionNueva") || document.getElementById("guia").innerHTML) return;
   const d = document.createElement("div"); d.id = "versionNueva";
   d.style.cssText = "position:fixed;left:12px;right:12px;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:50;display:flex;gap:10px;align-items:center;" +
-    "background:#FF7A1A;color:#1A0E04;padding:12px 14px;border-radius:16px;font:800 15px system-ui,sans-serif;box-shadow:0 6px 20px rgba(0,0,0,.4)";
-  d.innerHTML = '<span style="flex:1">✨ Hay una versión nueva de Forja</span>';
+    "background:#E4E7EC;color:#0B0C0E;padding:12px 14px;border-radius:16px;font:800 15px system-ui,sans-serif;box-shadow:0 6px 20px rgba(0,0,0,.4)";
+  d.innerHTML = '<span style="flex:1">✨ Hay una versión nueva de GymBlack</span>';
   const b = document.createElement("button"); b.textContent = "Actualizar";
-  b.style.cssText = "border:0;border-radius:12px;padding:9px 14px;font:800 15px system-ui,sans-serif;background:#1A0E04;color:#FFB547";
+  b.style.cssText = "border:0;border-radius:12px;padding:9px 14px;font:800 15px system-ui,sans-serif;background:#0B0C0E;color:#E4E7EC";
   b.onclick = () => location.reload();
   d.append(b); document.body.append(d);
 }

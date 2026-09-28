@@ -1,14 +1,14 @@
 {
-  "name": "Forja: rutina y comidas",
-  "short_name": "Forja",
+  "name": "GymBlack: rutina y comidas",
+  "short_name": "GymBlack",
   "description": "Tu rutina del gimnasio y tus comidas, día por día.",
   "lang": "es-AR",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#0E0C0A",
-  "theme_color": "#0E0C0A",
+  "background_color": "#000000",
+  "theme_color": "#000000",
   "icons": [
     {
       "src": "icon-192.png",
