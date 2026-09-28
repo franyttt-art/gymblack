@@ -152,7 +152,7 @@ const RUTINA = {
     {id:"ua2",n:"Remo polea baja agarre neutro",eq:"Polea baja + triángulo",m:"Dorsal / romboides / bíceps",s:4,r:"8–12",d:90,t:"3-1-1-0",c:1,tip:"Pecho alto, tirá con los codos hacia la cadera. No balancees el torso."},
     {id:"ua3",n:"Apertura inclinada con poleas altas",eq:"Dos poleas altas cruzadas",m:"Pecho (estiramiento)",s:3,r:"12–15",d:90,t:"3-0-1-0",tip:"Codos apenas flexionados. Abrí hasta sentir que estira el pecho."},
     {id:"ua4",n:"Jalón al pecho agarre prono medio",eq:"Polea alta + barra recta",m:"Dorsal / redondo mayor",s:4,r:"8–12",d:90,t:"3-1-1-0",c:1,tip:"Llevá la barra a la clavícula con el pecho arriba. Controlá la subida."},
-    {id:"ua5",n:"Elevación lateral en máquina",eq:"Máquina de deltoides laterales",m:"Deltoides lateral ★",s:5,r:"12–15",d:60,t:"2-0-1-0",tec:"myo",tip:"Empujá con los codos hasta la altura del hombro. Sin encoger."},
+    {id:"ua5",n:"Elevación lateral en máquina",eq:"Máquina de deltoides laterales",m:"Deltoides lateral ★",s:5,r:"12–15",d:60,t:"2-0-1-0",tec:"myo",mas:3,tip:"Empujá con los codos hasta la altura del hombro. Sin encoger."},
     {id:"ua6",n:"Elevación lateral polea baja (a un brazo)",eq:"Polea baja + agarre simple",m:"Deltoides lateral ★",s:3,r:"15–20",d:45,t:"2-0-1-0",tip:"El cable pasa por delante del cuerpo. Subí hasta el hombro. Hacé las reps con un brazo y después con el otro."},
     {id:"ua7",n:"Extensión de tríceps polea alta (cuerda)",eq:"Polea alta + cuerda",m:"Tríceps ★",s:5,r:"12–15",d:75,t:"2-0-1-0",tip:"Codos pegados al cuerpo y quietos. Abrí la cuerda al final."},
     {id:"ua8",n:"Curl martillo en polea baja (cuerda)",eq:"Polea baja + cuerda",m:"Bíceps / braquial ★",s:4,r:"12–15",d:90,t:"3-0-1-0",tip:"Palmas enfrentadas, codos quietos al costado."}]},
@@ -167,10 +167,10 @@ const RUTINA = {
     {id:"ub1",n:"Press militar con barra",eq:"Rack + barra olímpica",m:"Hombros / tríceps",s:4,r:"6–10",d:120,t:"3-1-1-0",c:1,tip:"Glúteos y abdomen firmes. La barra sube recta, pasando cerca de la cara."},
     {id:"ub2",n:"Remo con mancuerna pecho apoyado",eq:"Banco inclinado 30° + mancuernas",m:"Dorsal / romboides / bíceps",s:4,r:"8–12",d:90,t:"3-1-1-0",c:1,tip:"Pecho apoyado todo el tiempo. Tirá los codos hacia atrás."},
     {id:"ub3",n:"Press con mancuernas banco plano",eq:"Banco plano + mancuernas",m:"Pecho",s:3,r:"10–12",d:90,t:"3-1-1-0",c:1,tip:"Bajá hasta sentir estiramiento, con los codos a unos 45° del cuerpo."},
-    {id:"ub4",n:"Elevación lateral polea baja (a un brazo)",eq:"Polea baja + agarre simple",m:"Deltoides lateral ★",s:5,r:"15–20",d:60,t:"2-0-1-0",tec:"rest",tip:"El cable pasa por delante del cuerpo. Subí hasta el hombro. Hacé las reps con un brazo y después con el otro."},
+    {id:"ub4",n:"Elevación lateral polea baja (a un brazo)",eq:"Polea baja + agarre simple",m:"Deltoides lateral ★",s:5,r:"15–20",d:60,t:"2-0-1-0",tec:"rest",mas:3,tip:"El cable pasa por delante del cuerpo. Subí hasta el hombro. Hacé las reps con un brazo y después con el otro."},
     {id:"ub5",n:"Curl inclinado con mancuernas",eq:"Banco inclinado 45° + mancuernas",m:"Bíceps (cabeza larga) ★",s:4,r:"10–15",d:90,t:"3-0-1-0",tip:"Brazos colgando por detrás del cuerpo. No adelantes los codos."},
     {id:"ub6",n:"Extensión de tríceps sobre la cabeza con cable",eq:"Polea baja + cuerda",m:"Tríceps (cabeza larga) ★",s:4,r:"12–15",d:90,t:"3-0-1-0",tip:"De espaldas a la polea, codos arriba y quietos. Estirá bien atrás."},
-    {id:"ub7",n:"Pájaro en máquina (deltoides posterior)",eq:"Pec deck en posición invertida",m:"Deltoides posterior",s:3,r:"12–15",d:75,t:"2-1-1-0",tip:"Brazos casi rectos, abrí hacia atrás. Pausa de 1 s."},
+    {id:"ub7",n:"Pájaro en máquina (deltoides posterior)",eq:"Pec deck en posición invertida",m:"Deltoides posterior",s:3,mas:4,r:"12–15",d:75,t:"2-1-1-0",tip:"Brazos casi rectos, abrí hacia atrás. Pausa de 1 s."},
     {id:"ub8",n:"Curl con barra EZ",eq:"Barra EZ + discos",m:"Bíceps ★",s:4,r:"8–12",d:90,t:"3-0-1-0",tip:"Codos quietos, sin balancear el cuerpo."},
     {id:"ub9",n:"Rompecráneos con barra EZ",eq:"Banco plano + barra EZ",m:"Tríceps ★",s:3,r:"10–12",d:75,t:"3-0-1-0",tip:"Bajá la barra detrás de la frente con los codos apuntando al techo."}]},
   LB:{nombre:"Día 4 · Lower B", corto:"Lower B", foco:"Piernas · cadena posterior", ej:[
@@ -206,24 +206,59 @@ const TECNICAS = {
 };
 
 /* ============ COMIDAS: PLAN NUTRICIONAL — HIPERTROFIA NATURAL (Fase 1) ============ */
+// Porciones que se ajustan al peso: [nombre, cantidad, {k: comida, g: gramos base, kcal: kcal por gramo}]
+const AV = (k, g) => ["Avena arrollada (seca)", g + " g", {k, g, kcal: 3.8}];
+const ARZ = (k, g) => ["Arroz blanco (seco, pesalo antes de cocinar)", g + " g", {k, g, kcal: 3.57, cocido: 2.8}];
+const PAPA = (k, g, n) => [n || "Papa (hervida o al microondas)", g + " g", {k, g, kcal: .86}];
+const BATATA = (k, g) => ["Batata (al horno o microondas)", g + " g", {k, g, kcal: .86}];
+const FID = (k, g) => ["Fideos (secos, cualquier tipo)", g + " g", {k, g, kcal: 3.6}];
+const ENS = g => ["Lechuga + tomate" + (g >= 200 ? " + cebolla" : ""), g ? g + " g" : "a gusto"];
 const COMIDAS = [
-  {id:"des",h:"07:30",n:"Desayuno",ic:"🥣",o:{A:{kcal:699,p:37,items:[["Avena arrollada (seca)","60 g",{k:"des",g:60,kcal:3.8}],["Leche entera","250 ml"],["Banana mediana","1 (~120 g)"],["Huevos enteros","3"],["Café negro (opcional)","sin azúcar o poca"]]}},
-    prep:"Avena en leche caliente (microondas 2–3 min). Huevos revueltos en sartén sin aceite o con spray vegetal.",sup:"💊 Multivitamínico (opcional) con el desayuno."},
-  {id:"pre",h:"11:00",n:"Pre-entreno",nD:"Colación de media mañana",ic:"🥤",o:{A:{kcal:311,p:27,items:[["Whey protein","1 scoop (~30 g)"],["Agua fría","300–400 ml"],["Banana mediana","1"],["Manzana o pera","1 (~180 g)"]]}},
-    prep:"45 min antes de entrenar. Whey en agua (no leche): se digiere más rápido y no cae pesado.",sup:"☕ Café: 200–250 mg de cafeína (~2 cafés) entre 45 y 60 min antes de entrenar."},
-  {id:"alm",h:"13:30",n:"Almuerzo post-entreno ★",nD:"Almuerzo",ic:"🍗",o:{
-    A:{t:"Pollo",kcal:790,p:47,items:[["Pechuga de pollo (cruda, sin piel)","160 g"],["Arroz blanco (seco, pesalo antes de cocinar)","110 g",{k:"alm",g:110,kcal:3.57,cocido:2.8}],["Lechuga + tomate + cebolla","200 g"],["Aceite de girasol o canola","10 ml (2 cditas)"],["Naranja, manzana o pera","1"]]},
-    B:{t:"Carne",kcal:860,p:49,items:[["Cuadrada, peceto o nalga a la plancha","180 g"],["Arroz blanco (seco)","110 g",{k:"alm",g:110,kcal:3.57,cocido:2.8}],["Lechuga + tomate + cebolla","200 g"],["Aceite de girasol o canola","7 ml"],["Naranja, manzana o pera","1"]]}},
-    prep:"La comida principal del día. Rotá pollo y carne para variar.",sup:"💪 Creatina 5 g con esta comida (todos los días, también los de descanso). 🐟 Omega 3 (opcional) acá."},
-  {id:"mer",h:"15:30",n:"Merienda",ic:"🥪",o:{A:{kcal:490,p:21,items:[["Yogur natural entero (sin sabor)","200 g"],["Banana mediana","1"],["Pan lactal","2 rebanadas"],["Queso port salut o cuartirolo","30 g"]]}},
-    prep:"3 minutos, sin cocinar nada. 30 min antes de salir a la facultad."},
-  {id:"fac",h:"18:00",n:"Shake en la facu (opcional)",ic:"🎒",opc:1,o:{A:{kcal:110,p:25,items:[["Whey (medido en casa, en una bolsita)","1 scoop"],["Agua del dispenser","300 ml"]]}},
-    prep:"Entre la merienda y la cena pasan 6 h: este shake mantiene la construcción de músculo."},
-  {id:"cen",h:"21:30",n:"Cena",ic:"🍳",o:{
-    A:{t:"Huevos",kcal:536,p:30,items:[["Huevos enteros","4"],["Papa hervida o al microondas (pesada cocida)","200 g",{k:"cen",g:200,kcal:.86}],["Lechuga + tomate","150 g"],["Aceite de girasol","8 ml"]]},
-    B:{t:"Carne",kcal:460,p:33,items:[["Cuadrada a la plancha","150 g"],["Batata al microondas (pesada cocida)","200 g",{k:"cen",g:200,kcal:.86}],["Lechuga + tomate","150 g"]]}},
-    prep:"Papa o batata al microondas: 8–12 min con cáscara, sin preparar nada antes.",sup:"😴 Magnesio bisglicinato (opcional) 30–45 min antes de dormir."}
+  {id:"des",h:"07:30",n:"Desayuno",ic:"🥣",sup:"💊 Multivitamínico (opcional) con el desayuno.",o:{
+    D1:{t:"Avena con leche + huevos + banana",kcal:700,p:37,min:5,items:[AV("des",60),["Leche entera (para la avena)","250 ml"],["Huevos revueltos","3"],["Banana mediana","1"]],prep:"Avena en leche caliente (microondas 2–3 min). Huevos en sartén seca o con spray."},
+    D2:{t:"Omelette de queso + tostadas + leche + banana",kcal:685,p:38,min:8,items:[["Huevos (omelette)","3"],["Queso port salut (dentro del omelette)","30 g"],["Pan lactal tostado","2 rebanadas"],["Leche entera","200 ml"],["Banana","1"]],prep:"Omelette en sartén seca con el queso adentro."},
+    D3:{t:"Panqueques de avena y huevo + leche + banana",kcal:670,p:35,min:10,items:[["Huevos","3"],AV("des",60),["Leche (un chorrito para la mezcla)","un chorrito"],["Leche entera para tomar","200 ml"],["Banana (encima)","1"]],prep:"Mezclá huevos + avena + un chorrito de leche y hacé panqueques en sartén seca."},
+    D4:{t:"Licuado de avena + huevos revueltos",kcal:700,p:37,min:5,items:[["Leche entera","250 ml"],AV("des",60),["Banana","1"],["Huevos revueltos (aparte)","3"]],prep:"Licuá leche + avena + banana. Aparte, huevos revueltos en sartén seca."},
+    D5:{t:"French toast + leche + banana",kcal:650,p:35,min:8,items:[["Huevos batidos","3"],["Pan lactal","3 rebanadas"],["Leche entera","200 ml"],["Banana (aparte)","1"]],prep:"Remojá cada rebanada 30 s en el huevo batido y dorala en sartén seca."},
+    D6:{t:"Huevos con queso + avena + manzana",kcal:710,p:38,min:8,items:[["Huevos revueltos","4"],["Queso rallado (encima)","20 g"],AV("des",50),["Leche entera caliente (para la avena)","200 ml"],["Manzana mediana","1"]],prep:"Avena con la leche caliente; huevos revueltos con el queso rallado arriba."},
+    D7:{t:"Overnight oats + huevos duros",kcal:670,p:34,min:2,items:[AV("des",50),["Yogur natural entero","200 g"],["Leche entera","150 ml"],["Banana cortada","1"],["Huevos duros","2"]],prep:"La noche anterior: mezclá avena + yogur + leche y dejalo tapado en la heladera. A la mañana: banana cortada y los huevos duros (7 min hirviendo)."}}},
+  {id:"pre",h:"11:00",n:"Pre-entreno",nD:"Colación de media mañana",ic:"🥤",sup:"☕ Café: 200–250 mg de cafeína (~2 cafés) entre 45 y 60 min antes de entrenar.",o:{
+    PE1:{t:"Whey + agua + 2 frutas",kcal:310,p:27,min:1,items:[["Whey protein","1 scoop (~30 g)"],["Agua fría","300 ml"],["Banana","1"],["Manzana o pera","1"]],prep:"45 min antes de entrenar. Whey en agua: se digiere rápido y no cae pesado."},
+    PE2:{t:"Whey + agua + pan lactal + banana",kcal:360,p:32,min:2,items:[["Whey protein","1 scoop"],["Agua","300 ml"],["Pan lactal","2 rebanadas"],["Banana","1"]],prep:"45 min antes de entrenar."},
+    PE3:{t:"Whey con leche + banana",kcal:365,p:34,min:1,items:[["Whey protein","1 scoop"],["Leche entera","250 ml"],["Banana","1"]],prep:"Agitá bien en el shaker. Más proteína y calorías: usala cuando tengas más hambre."},
+    PE4:{t:"Yogur + pan lactal + 2 bananas (sin whey)",kcal:470,p:15,min:1,items:[["Yogur natural entero","200 g"],["Pan lactal","2 rebanadas"],["Bananas","2"]],prep:"Para cuando se terminó el whey o preferís comida sólida. Menos proteína, pero el día igual cierra bien."}}},
+  {id:"alm",h:"13:30",n:"Almuerzo post-entreno ★",nD:"Almuerzo",ic:"🍗",sup:"💪 Creatina 5 g con esta comida (todos los días, también los de descanso). 🐟 Omega 3 (opcional) acá.",o:{
+    A1:{t:"Pollo + arroz + ensalada",kcal:790,p:47,min:15,items:[["Pechuga de pollo (cruda, sin piel) a la plancha","160 g"],ARZ("alm",110),ENS(200),["Aceite de girasol o canola","10 ml"],["Fruta de postre","1"]],prep:"La comida principal del día."},
+    A2:{t:"Cuadrada o peceto + arroz + ensalada",kcal:830,p:47,min:15,items:[["Cuadrada o peceto (crudo, magro) a la plancha","170 g"],ARZ("alm",110),ENS(200),["Aceite","8 ml"],["Fruta","1"]],prep:"Carne a la plancha, 5 min por lado."},
+    A3:{t:"Carne picada + arroz + tomate + queso",kcal:845,p:50,min:20,items:[["Carne picada magra","170 g"],ARZ("alm",110),["Tomate natural picado (para la salsa)","200 g"],["Aceite","8 ml"],["Queso rallado (encima)","30 g"]],prep:"Salteá la carne en sartén sin aceite y sumale el tomate como salsa."},
+    A4:{t:"Merluza + arroz + ensalada",kcal:840,p:52,min:15,items:[["Filete de merluza (crudo) a la plancha","250 g"],ARZ("alm",110),ENS(200),["Aceite","12 ml"],["Fruta","1"]],prep:"Limón, sal y pimentón. 🐟 Es el omega 3 más barato: comela 1–2 veces por semana."},
+    A5:{t:"Milanesa de pollo al horno + puré",kcal:830,p:57,min:30,items:[["Pechuga de pollo","180 g"],["Huevo (para pasar la milanesa)","1"],["Pan rallado","20 g"],PAPA("alm",250,"Papa (para el puré)"),["Leche (para el puré, sin manteca)","50 ml"],["Aceite","10 ml"],ENS(0)],prep:"Horno a 200 °C, 20 min. Es la más larga: podés dejar la milanesa hecha la noche anterior."},
+    A6:{t:"Lomo de cerdo + batata + pan + ensalada",kcal:870,p:50,min:20,items:[["Lomo de cerdo (crudo) a la plancha","170 g"],BATATA("alm",300),["Pan lactal","2 rebanadas"],["Aceite","8 ml"],["Fruta","1"],ENS(0)],prep:"Batata al horno 30 min o al microondas 10 min."},
+    A7:{t:"Fideos con carne picada + tomate + queso",kcal:850,p:50,min:25,items:[FID("alm",100),["Carne picada magra","150 g"],["Tomate natural picado","150 g"],["Aceite","8 ml"],["Queso rallado","30 g"]],prep:"Salsa de carne y tomate; queso rallado arriba."}}},
+  {id:"mer",h:"15:30",n:"Merienda",ic:"🥪",o:{
+    M1:{t:"Yogur + banana + pan + queso",kcal:490,p:21,min:2,items:[["Yogur natural entero (sin sabor)","200 g"],["Banana","1"],["Pan lactal","2 rebanadas"],["Queso port salut o cuartirolo","30 g"]],prep:"Sin cocinar nada. 30 min antes de salir a la facultad."},
+    M2:{t:"Licuado de leche, avena y banana + queso",kcal:515,p:22,min:3,items:[["Leche entera","250 ml"],["Avena","40 g"],["Banana","1"],["Queso (aparte)","30 g"]],prep:"Licuá leche + avena + banana; el queso, aparte."},
+    M3:{t:"Pan con queso + leche + banana",kcal:520,p:22,min:2,items:[["Pan lactal","3 rebanadas"],["Queso port salut (encima del pan)","30 g"],["Leche entera","200 ml"],["Banana","1"]],prep:"Sin cocinar nada."},
+    M4:{t:"Yogur + banana + manzana + tostadas",kcal:480,p:18,min:1,items:[["Yogur natural entero","200 g"],["Banana","1"],["Manzana","1"],["Tostadas de pan lactal","2"]],prep:"Sin cocinar nada."},
+    M5:{t:"Licuado proteico express",kcal:475,p:36,min:1,items:[["Whey protein","1 scoop"],["Leche entera","250 ml"],["Bananas","2"]],prep:"Shaker o licuadora. La más rápida y con más proteína para días con apuro."}}},
+  {id:"fac",h:"18:00",n:"Shake en la facu (opcional)",ic:"🎒",opc:1,o:{
+    F1:{t:"Whey con agua",kcal:110,p:25,min:1,items:[["Whey (medido en casa, en una bolsita)","1 scoop"],["Agua del dispenser","300 ml"]],prep:"Entre la merienda y la cena pasan 6 h: este shake mantiene la construcción de músculo."}}},
+  {id:"cen",h:"21:30",n:"Cena",ic:"🍳",sup:"😴 Magnesio bisglicinato (opcional) 30–45 min antes de dormir.",o:{
+    C1:{t:"4 huevos revueltos + papa + ensalada",kcal:536,p:30,min:12,items:[["Huevos revueltos","4"],PAPA("cen",200),ENS(150),["Aceite","8 ml"]],prep:"Papa al microondas 10 min con cáscara."},
+    C2:{t:"Fideos + atún + tomate",kcal:560,p:40,min:15,items:[FID("cen",90),["Atún al natural (escurrido, 1 lata)","120 g"],["Tomate natural picado","150 g"],["Aceite","10 ml"]],prep:"Cena de emergencia: no hay que cocinar la proteína. Sal y orégano a gusto."},
+    C3:{t:"Arroz + 4 huevos + queso",kcal:620,p:38,min:15,items:[ARZ("cen",80),["Huevos revueltos (encima del arroz)","4"],["Queso rallado","30 g"],["Aceite","5 ml"]],prep:"Huevos revueltos arriba del arroz caliente."},
+    C4:{t:"Pollo + batata + pan + ensalada",kcal:590,p:45,min:15,items:[["Pechuga de pollo (cruda) a la plancha","160 g"],BATATA("cen",250),["Pan lactal","2 rebanadas"],["Aceite","8 ml"],ENS(0)],prep:"Batata al microondas 10 min."},
+    C5:{t:"Omelette de queso + papa",kcal:575,p:36,min:12,items:[["Huevos (omelette)","4"],["Queso port salut (dentro)","30 g"],PAPA("cen",200),["Aceite","8 ml"],ENS(0)],prep:"Papa al microondas mientras hacés el omelette."},
+    C6:{t:"Milanesa de pollo + batata + ensalada",kcal:570,p:46,min:25,items:[["Pechuga de pollo","160 g"],["Huevo (para pasar)","1"],["Pan rallado","20 g"],BATATA("cen",250),["Aceite","8 ml"],ENS(0)],prep:"Horno a 200 °C, 20 min; la batata al microondas mientras."},
+    C7:{t:"Fideos + 3 huevos + queso",kcal:620,p:36,min:15,items:[FID("cen",80),["Huevos (salteados con los fideos)","3"],["Queso rallado","30 g"],["Aceite","8 ml"]],prep:"Salteá los fideos cocidos con el huevo en la misma sartén."},
+    C8:{t:"Carne + batata (del plan principal)",kcal:460,p:33,min:15,items:[["Cuadrada a la plancha","150 g"],BATATA("cen",200),ENS(150)],prep:"Batata al microondas 8–12 min con cáscara."}}}
 ];
+// Rotación semanal del PDF (índice = getDay(): 0 domingo … 6 sábado)
+const ROTACION = [
+  {des:"D7",pre:"PE4",alm:"A7",mer:"M2",cen:"C7"}, {des:"D1",pre:"PE1",alm:"A1",mer:"M1",cen:"C1"}, {des:"D2",pre:"PE2",alm:"A2",mer:"M2",cen:"C2"},
+  {des:"D3",pre:"PE1",alm:"A4",mer:"M3",cen:"C4"}, {des:"D4",pre:"PE3",alm:"A3",mer:"M4",cen:"C3"}, {des:"D5",pre:"PE2",alm:"A5",mer:"M5",cen:"C5"},
+  {des:"D6",pre:"PE1",alm:"A6",mer:"M1",cen:"C6"}];
+const MENU_FIJO = {des:"D1",pre:"PE1",alm:"A1",mer:"M1",cen:"C1"};
 const FASES = [
   {n:1,desde:0,hasta:65,kcal:2750,p:130,extra:null,vel:"0,4–0,5 kg por semana"},
   {n:2,desde:65,hasta:70,kcal:2850,p:130,extra:["Extra de fase 2","1 banana más o +30 g de arroz seco"],vel:"0,3–0,4 kg por semana"},
@@ -235,7 +270,7 @@ const K = "forja-v1";
 let E = cargar();
 function cargar(){ try { return JSON.parse(localStorage.getItem(K)) || null; } catch { return null; } }
 function guardar(){ try { localStorage.setItem(K, JSON.stringify(E)); } catch {} }
-function nuevoEstado(){ return {nombre:"", inicio:null, pesos:[], hist:{}, var:{}, comidas:{}, opcion:{alm:"A",cen:"A"}, agua:{}, entrenos:{}, sesion:null, sonido:true, ultimoKg:{}}; }
+function nuevoEstado(){ return {nombre:"", inicio:null, pesos:[], hist:{}, var:{}, comidas:{}, eleccion:{}, menuFijo:false, agua:{}, entrenos:{}, sesion:null, sonido:true, ultimoKg:{}}; }
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -268,7 +303,11 @@ function porcion(i){
   const g = Math.max(a.g * 0.6, Math.round((a.g + extraKcal() * REPARTO[a.k] / a.kcal) / 5) * 5), dk = Math.round((g - a.g) * a.kcal);
   return {txt: g + " g" + (a.cocido ? " → ~" + Math.round(g * a.cocido / 10) * 10 + " g cocido" : ""), kcal: dk, cambio: g !== a.g};
 }
-function kcalComida(o){ return o.kcal + o.items.reduce((t, i) => t + porcion(i).kcal, 0); }
+function extraPan(o, slot){
+  if (!REPARTO[slot] || o.items.some(i => i[2])) return 0;
+  return Math.round(extraKcal() * REPARTO[slot] / 65);  // 1 rebanada de pan lactal ≈ 65 kcal
+}
+function kcalComida(o, slot){ return o.kcal + o.items.reduce((t, i) => t + porcion(i).kcal, 0) + extraPan(o, slot) * 65; }
 function faseActual(){ const kg = pesoActual(); return FASES.find(f => kg >= f.desde && kg < f.hasta) || FASES[2]; }
 const rango = s => s.split("–").map(Number);
 const redondear = (kg, paso) => Math.max(0, Math.round(kg / paso) * paso);
@@ -292,6 +331,12 @@ function foto(ej){
   return `<div class="foto"><img src="${rutaFoto(img, 0)}" alt=""><img class="b" src="${rutaFoto(img, 1)}" alt="">
     <span class="et a2">① Posición inicial</span><span class="et b">② Posición final</span></div>
     ${nota ? `<p class="small muted" style="margin:6px 0 0">📷 ${nota}</p>` : ""}`;
+}
+function hojaMenu(id){
+  const x = COMIDAS.find(c => c.id === id), op = opcion(x), rot = opcionDeHoy(x);
+  abrirHoja(`<div class="row"><h2 style="flex:1">${x.ic} ${nombreComida(x)}</h2><button class="chip" data-h="cerrar">✕</button></div>
+    <p class="small muted" style="margin:6px 0 4px">Todas tienen calorías parecidas: elegí la que quieras para hoy. Mañana vuelve la del menú.</p>
+    ${Object.entries(x.o).map(([k, o]) => `<button class="alt ${k === op ? "on" : ""}" data-h="comer" data-id="${id}" data-k="${k}"><div class="num">${k}</div><div style="flex:1"><b>${o.t}</b><div class="small muted">${kcalComida(o, id)} kcal · ${o.p} g proteína · ⏱️ ${o.min} min${k === rot ? " · 📅 la de hoy" : ""}</div></div><span>${k === op ? "✓" : "›"}</span></button>`).join("")}`);
 }
 function cerrarHoja(){ $("#hoja").innerHTML = ""; }
 function abrirHoja(html){
@@ -319,6 +364,11 @@ function hojaVariantes(id){
 function hojaAccion(a, b){
   if (a === "cerrar") return cerrarHoja();
   if (a === "variantes") return hojaVariantes(b.dataset.id);
+  if (a === "comer") {
+    const d = E.eleccion[hoyStr()] || (E.eleccion[hoyStr()] = {}), x = COMIDAS.find(c => c.id === b.dataset.id);
+    if (b.dataset.k === opcionDeHoy(x)) delete d[b.dataset.id]; else d[b.dataset.id] = b.dataset.k;
+    guardar(); sonar("listo"); cerrarHoja(); toast("🍽️ " + x.o[b.dataset.k].t); return render();
+  }
   if (a === "elegir" || a === "original") {
     const id = b.dataset.id;
     E.var = E.var || {};
@@ -337,7 +387,7 @@ function hojaAccion(a, b){
 // Lo que toca en cada ejercicio según la semana del programa (tabla de progresión)
 function objetivo(ej, sem){
   const S = SEMANAS[sem - 1];
-  const series = sem === 12 ? 2 : Math.max(2, ej.s + ((ej.c ? S.sc : S.sa) - 4));
+  const series = sem === 12 ? 2 : Math.max(2, ej.s + ((ej.c ? S.sc : S.sa) - 4)) + (ej.mas && sem >= ej.mas ? 1 : 0);
   const rirMin = parseInt(S.rir, 10);
   const tec = ej.tec && sem >= 7 && sem <= 11 ? TECNICAS[ej.tec] : null;
   return {series, reps: ej.c ? S.rc : S.ra, rir: S.rir, rirMin, tec, desc: sem === 12 ? Math.max(90, Math.min(120, ej.d)) : ej.d};
@@ -457,7 +507,7 @@ function pHoy(){
   h += `<div class="card"><h3>📅 Semana ${s.n} · ${S.b}</h3><p class="small muted" style="margin:6px 0 0">${S.nota}</p>${diasSemana()}</div>`;
   const prox = comidaAhora();
   h += `<div class="card"><div class="row"><h3>🍽️ Comidas de hoy</h3><span class="sp"></span><span class="chip">${comidasHechas()}/${COMIDAS.filter(c => !c.opc).length}</span></div>
-    ${prox ? `<p style="margin:8px 0 10px">Ahora toca: <b style="color:var(--fuego2)">${prox.h} · ${nombreComida(prox)}</b></p>` : `<p style="color:var(--ok);font-weight:800">¡Todas las comidas del día listas! 🎉</p>`}
+    ${prox ? `<p style="margin:8px 0 10px">Ahora toca: <b style="color:var(--fuego2)">${prox.h} · ${nombreComida(prox)}</b><br><span class="small">${prox.o[opcion(prox)].t}</span></p>` : `<p style="color:var(--ok);font-weight:800">¡Todas las comidas del día listas! 🎉</p>`}
     ${barraKcal()}<button class="btn sec" data-a="tab" data-t="comidas" style="margin-top:12px">Ver qué comer</button></div>`;
   h += aguaCard();
   return h;
@@ -504,7 +554,7 @@ function pEntreno(){
     const ej = ejActivo(ej0), o = objetivo(ej, s.n), sg = sugerencia(ej, o), img = imgDe(ej);
     h += `<div class="ej" data-a="ficha" data-id="${ej0.id}" style="cursor:pointer"><div class="num">${i + 1}</div><div style="flex:1"><b>${ej.n}</b>${ej.base ? ' <span class="tag tec">🔁 variante</span>' : ""}<div class="d">🛠️ ${ej.eq} · ${ej.m}</div>
       <div class="tags"><span class="tag">${o.series} × ${o.reps}</span><span class="tag">RIR ${o.rir}</span><span class="tag">⏸ ${fmtDesc(o.desc)}</span><span class="tag">Tempo ${ej.t}</span>
-      ${sg.kg != null ? `<span class="tag" style="background:#3DDC8422;color:var(--ok)">${fmtKg(sg.kg)} kg</span>` : ""}${o.tec ? `<span class="tag tec">★ ${o.tec.n}</span>` : ""}</div></div>${img ? `<img class="mini" src="${rutaFoto(img, 1)}" alt="" loading="lazy">` : ""}</div>`;
+      ${sg.kg != null ? `<span class="tag" style="background:#3DDC8422;color:var(--ok)">${fmtKg(sg.kg)} kg</span>` : ""}${o.tec ? `<span class="tag tec">★ ${o.tec.n}</span>` : ""}${ej.mas && s.n >= ej.mas && s.n < 12 ? `<span class="tag tec">+1 serie desde sem. ${ej.mas}</span>` : ""}</div></div>${img ? `<img class="mini" src="${rutaFoto(img, 1)}" alt="" loading="lazy">` : ""}</div>`;
   });
   h += `</div><details class="card"><summary>❓ ¿Qué significa RIR, tempo y ★?</summary><p class="small">
     <b>RIR</b> = repeticiones que te quedan «en el tanque». RIR 2 = terminás la serie sabiendo que podías hacer 2 más. RIR 0 = no sale ni una más.<br><br>
@@ -518,7 +568,8 @@ function pEntreno(){
 function nombreComida(c){ return !hoyEntrena() && c.nD ? c.nD : c.n; }
 function comidasHoy(){ return E.comidas[hoyStr()] || (E.comidas[hoyStr()] = {}); }
 function comidasHechas(){ const c = comidasHoy(); return COMIDAS.filter(x => !x.opc && c[x.id]).length; }
-function opcion(c){ return c.o[E.opcion[c.id]] ? E.opcion[c.id] : "A"; }
+function opcionDeHoy(c){ return (E.menuFijo ? MENU_FIJO : ROTACION[new Date().getDay()])[c.id] || Object.keys(c.o)[0]; }
+function opcion(c){ const el = (E.eleccion[hoyStr()] || {})[c.id]; return c.o[el] ? el : opcionDeHoy(c); }
 function comidaAhora(){
   const c = comidasHoy(), n = new Date(), min = n.getHours() * 60 + n.getMinutes();
   const pend = COMIDAS.filter(x => !c[x.id] && !x.opc);
@@ -528,7 +579,7 @@ function comidaAhora(){
   return llegadas.length ? llegadas[llegadas.length - 1] : pend[0];
 }
 function kcalHoy(){ const c = comidasHoy(); let k = 0, p = 0;
-  COMIDAS.forEach(x => { if (c[x.id]) { const o = x.o[opcion(x)]; k += kcalComida(o); p += o.p; } }); return {k, p}; }
+  COMIDAS.forEach(x => { if (c[x.id]) { const o = x.o[opcion(x)]; k += kcalComida(o, x.id); p += o.p; } }); return {k, p}; }
 function barraKcal(){
   const t = kcalHoy(), mk = metaKcal(), mp = metaProt();
   return `<div class="row small" style="margin-bottom:6px"><span>${t.k} / ${mk} kcal</span><span class="sp"></span><span class="muted">${t.p} / ${mp} g proteína</span></div>
@@ -538,15 +589,18 @@ function pComidas(){
   const dia = hoyEntrena(), f = faseActual(), c = comidasHoy(), prox = comidaAhora();
   let h = `<div class="card hero"><div class="row"><h2>🍽️ Hoy comés</h2><span class="sp"></span><span class="chip f">Fase ${f.n}</span></div>
     <p class="muted small" style="margin:4px 0 12px">Objetivo para tus ${fmtKg(pesoActual())} kg: ~${metaKcal()} kcal · ${metaProt()} g de proteína o más · ${dia ? "día de entreno 🏋️" : "día de descanso 😌"}. Tocá ✓ cuando comas.</p>${barraKcal()}
+    ${(() => { const tot = COMIDAS.filter(c => !c.opc).reduce((t, c) => t + kcalComida(c.o[opcion(c)], c.id), 0), dif = tot - metaKcal();
+      return `<p class="small" style="margin:10px 0 0">📋 El menú de hoy suma <b>~${tot} kcal</b>${Math.abs(dif) >= 100 ? ` (${dif > 0 ? "+" : ""}${dif} respecto de tu meta; está bien, se compensa en la semana)` : ""}.</p>`; })()}
     ${extraKcal() ? `<p class="small" style="margin:10px 0 0">⚖️ Las porciones marcadas con ⚖️ ya están ajustadas a tu peso (${extraKcal() > 0 ? "+" : ""}${extraKcal()} kcal respecto del plan de 58 kg). Se actualizan solas cuando anotás tu peso en Progreso.</p>` : ""}</div>`;
   COMIDAS.forEach(x => {
-    const op = opcion(x), o = x.o[op], ya = c[x.id];
+    const op = opcion(x), o = x.o[op], ya = c[x.id], pan = extraPan(o, x.id), varias = Object.keys(x.o).length > 1;
     h += `<div class="comida ${ya ? "ya" : ""} ${prox === x ? "ahora" : ""}"><div class="row"><div class="h">${x.h}</div>
-      <div style="flex:1"><b>${x.ic} ${nombreComida(x)}</b><div class="small muted">${kcalComida(o)} kcal · ${o.p} g proteína${prox === x ? ' · <span style="color:var(--fuego2)">ahora</span>' : ""}</div></div>
+      <div style="flex:1"><b>${x.ic} ${nombreComida(x)}</b><div style="font-weight:800;color:var(--fuego2);margin-top:2px">${o.t}</div><div class="small muted">${kcalComida(o, x.id)} kcal · ${o.p} g proteína · ⏱️ ${o.min} min${prox === x ? ' · <span style="color:var(--fuego2)">ahora</span>' : ""}</div></div>
       <button class="check" data-a="comi" data-id="${x.id}" aria-label="Marcar como comida">${ya ? "✓" : ""}</button></div>
-      ${Object.keys(x.o).length > 1 ? `<div class="seg">${Object.keys(x.o).map(k => `<button class="${k === op ? "on" : ""}" data-a="op" data-id="${x.id}" data-o="${k}">Opción ${k}: ${x.o[k].t}</button>`).join("")}</div>` : ""}
-      <ul class="items">${o.items.map(i => { const q = porcion(i); return `<li><span>${i[0]}</span><span>${q.cambio ? "⚖️ " : ""}${q.txt}</span></li>`; }).join("")}</ul>
-      <p class="small muted" style="margin:8px 0 0">${x.prep}</p>${x.sup ? `<p class="small" style="margin:6px 0 0">${x.sup}</p>` : ""}</div>`;
+      <ul class="items">${o.items.map(i => { const q = porcion(i); return `<li><span>${i[0]}</span><span>${q.cambio ? "⚖️ " : ""}${q.txt}</span></li>`; }).join("")}
+      ${pan > 0 ? `<li><span>Pan lactal extra (por tu peso)</span><span>⚖️ ${pan} rebanada${pan > 1 ? "s" : ""}</span></li>` : ""}</ul>
+      <p class="small muted" style="margin:8px 0 0">${o.prep}</p>
+      ${varias ? `<button class="btn sec chico" data-a="menu" data-id="${x.id}" style="width:100%;margin-top:10px">🔁 Cambiar por otra opción${op !== opcionDeHoy(x) ? " · elegida por vos" : ""}</button>` : ""}${x.sup ? `<p class="small" style="margin:6px 0 0">${x.sup}</p>` : ""}</div>`;
     if (x.id === "pre" && dia) h += `<div class="card" style="padding:12px 16px"><div class="row"><span style="font-size:22px">🏋️</span><div><b>12:00 – 13:30 · Entrenamiento</b><div class="small muted">${RUTINA[dia].nombre}</div></div></div></div>`;
     if (x.id === "mer") h += `<div class="card" style="padding:12px 16px"><div class="row"><span style="font-size:22px">🎓</span><b>16:00 – 21:00 · Facultad</b></div></div>`;
   });
@@ -586,6 +640,7 @@ function pProgreso(){
     <details style="margin-top:10px"><summary>Ver las 12 semanas</summary><table class="tabla">${SEMANAS.map((S, i) => `<tr style="${i + 1 === s.n ? "color:var(--fuego2)" : ""}"><td>${i + 1}</td><td>${S.b}</td><td>${S.rc} / ${S.ra} reps</td><td>RIR ${S.rir}</td></tr>`).join("")}</table>
     <p class="small muted">Reps: ejercicios compuestos / de aislamiento.</p></details></div>`;
   h += `<div class="card"><h3>⚙️ Ajustes</h3>
+    <div class="row" style="margin-top:8px"><span>🍽️ Menú: ${E.menuFijo ? "siempre el mismo" : "variado (7 días)"}</span><span class="sp"></span><button class="btn chico sec" data-a="menuFijo">${E.menuFijo ? "Variar" : "Fijar"}</button></div>
     <div class="row" style="margin-top:8px"><span>🔊 Sonido al terminar el descanso</span><span class="sp"></span><button class="btn chico sec" data-a="sonido">${E.sonido ? "Sí" : "No"}</button></div>
     <div class="row" style="margin-top:10px"><span>📤 Pasar mis datos a otro dispositivo</span><span class="sp"></span><button class="btn chico sec" data-a="exportar">Link</button></div>
     <p class="small muted" style="margin:10px 0 0">Tus datos se guardan solo en este dispositivo.</p></div>`;
@@ -625,7 +680,8 @@ function accion(a, b){
   if (a === "ficha") return fichaEj(b.dataset.id);
   if (a === "dia") { diaElegido = b.dataset.d; sonar("toque"); return render(); }
   if (a === "comi") { const c = comidasHoy(); c[b.dataset.id] = !c[b.dataset.id]; guardar(); sonar(c[b.dataset.id] ? "listo" : "toque"); if (c[b.dataset.id]) vibrar(20); return render(); }
-  if (a === "op") { E.opcion[b.dataset.id] = b.dataset.o; guardar(); sonar("toque"); return render(); }
+  if (a === "menu") return hojaMenu(b.dataset.id);
+  if (a === "menuFijo") { E.menuFijo = !E.menuFijo; guardar(); sonar("listo"); return render(); }
   if (a === "agua") { const i = +b.dataset.i, v = E.agua[hoyStr()] || 0; E.agua[hoyStr()] = i < v ? i : i + 1; guardar(); sonar("toque"); return render(); }
   if (a === "peso") {
     const kg = parseFloat(String($("#kgIn").value).replace(",", "."));
@@ -849,7 +905,7 @@ if (E && E.sesion && E.sesion.f === hoyStr() && E.sesion.descansoHasta) abrirGui
 setInterval(() => { if (E && E.inicio && !$("#guia").innerHTML && !(document.activeElement && document.activeElement.tagName === "INPUT")) render(); }, 60000);
 </script>
 <script>
-const VERSION_APP = "20260927234940";
+const VERSION_APP = "20260928003048";
 if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").then(reg => {
   document.addEventListener("visibilitychange", () => { if (!document.hidden) reg.update().catch(() => {}); });
 }).catch(() => {}));
