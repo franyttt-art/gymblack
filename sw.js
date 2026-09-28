@@ -1,4 +1,4 @@
-const CACHE = "forja-20260927222022", FUENTES = "forja-fuentes";
+const CACHE = "forja-20260927222301", FUENTES = "forja-fuentes";
 const BASE = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png", "sonidos/fin.wav", "sonidos/listo.wav", "sonidos/tick.wav", "sonidos/toque.wav"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(BASE))); self.skipWaiting(); });
 self.addEventListener("activate", e => {
