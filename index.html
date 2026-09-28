@@ -207,21 +207,21 @@ const TECNICAS = {
 
 /* ============ COMIDAS: PLAN NUTRICIONAL — HIPERTROFIA NATURAL (Fase 1) ============ */
 const COMIDAS = [
-  {id:"des",h:"07:30",n:"Desayuno",ic:"🥣",o:{A:{kcal:699,p:37,items:[["Avena arrollada (seca)","60 g"],["Leche entera","250 ml"],["Banana mediana","1 (~120 g)"],["Huevos enteros","3"],["Café negro (opcional)","sin azúcar o poca"]]}},
+  {id:"des",h:"07:30",n:"Desayuno",ic:"🥣",o:{A:{kcal:699,p:37,items:[["Avena arrollada (seca)","60 g",{k:"des",g:60,kcal:3.8}],["Leche entera","250 ml"],["Banana mediana","1 (~120 g)"],["Huevos enteros","3"],["Café negro (opcional)","sin azúcar o poca"]]}},
     prep:"Avena en leche caliente (microondas 2–3 min). Huevos revueltos en sartén sin aceite o con spray vegetal.",sup:"💊 Multivitamínico (opcional) con el desayuno."},
   {id:"pre",h:"11:00",n:"Pre-entreno",nD:"Colación de media mañana",ic:"🥤",o:{A:{kcal:311,p:27,items:[["Whey protein","1 scoop (~30 g)"],["Agua fría","300–400 ml"],["Banana mediana","1"],["Manzana o pera","1 (~180 g)"]]}},
     prep:"45 min antes de entrenar. Whey en agua (no leche): se digiere más rápido y no cae pesado.",sup:"☕ Café: 200–250 mg de cafeína (~2 cafés) entre 45 y 60 min antes de entrenar."},
   {id:"alm",h:"13:30",n:"Almuerzo post-entreno ★",nD:"Almuerzo",ic:"🍗",o:{
-    A:{t:"Pollo",kcal:790,p:47,items:[["Pechuga de pollo (cruda, sin piel)","160 g"],["Arroz blanco (seco, pesalo antes de cocinar)","110 g → ~310 g cocido"],["Lechuga + tomate + cebolla","200 g"],["Aceite de girasol o canola","10 ml (2 cditas)"],["Naranja, manzana o pera","1"]]},
-    B:{t:"Carne",kcal:860,p:49,items:[["Cuadrada, peceto o nalga a la plancha","180 g"],["Arroz blanco (seco)","110 g → ~310 g cocido"],["Lechuga + tomate + cebolla","200 g"],["Aceite de girasol o canola","7 ml"],["Naranja, manzana o pera","1"]]}},
+    A:{t:"Pollo",kcal:790,p:47,items:[["Pechuga de pollo (cruda, sin piel)","160 g"],["Arroz blanco (seco, pesalo antes de cocinar)","110 g",{k:"alm",g:110,kcal:3.57,cocido:2.8}],["Lechuga + tomate + cebolla","200 g"],["Aceite de girasol o canola","10 ml (2 cditas)"],["Naranja, manzana o pera","1"]]},
+    B:{t:"Carne",kcal:860,p:49,items:[["Cuadrada, peceto o nalga a la plancha","180 g"],["Arroz blanco (seco)","110 g",{k:"alm",g:110,kcal:3.57,cocido:2.8}],["Lechuga + tomate + cebolla","200 g"],["Aceite de girasol o canola","7 ml"],["Naranja, manzana o pera","1"]]}},
     prep:"La comida principal del día. Rotá pollo y carne para variar.",sup:"💪 Creatina 5 g con esta comida (todos los días, también los de descanso). 🐟 Omega 3 (opcional) acá."},
   {id:"mer",h:"15:30",n:"Merienda",ic:"🥪",o:{A:{kcal:490,p:21,items:[["Yogur natural entero (sin sabor)","200 g"],["Banana mediana","1"],["Pan lactal","2 rebanadas"],["Queso port salut o cuartirolo","30 g"]]}},
     prep:"3 minutos, sin cocinar nada. 30 min antes de salir a la facultad."},
   {id:"fac",h:"18:00",n:"Shake en la facu (opcional)",ic:"🎒",opc:1,o:{A:{kcal:110,p:25,items:[["Whey (medido en casa, en una bolsita)","1 scoop"],["Agua del dispenser","300 ml"]]}},
     prep:"Entre la merienda y la cena pasan 6 h: este shake mantiene la construcción de músculo."},
   {id:"cen",h:"21:30",n:"Cena",ic:"🍳",o:{
-    A:{t:"Huevos",kcal:536,p:30,items:[["Huevos enteros","4"],["Papa hervida o al microondas","200 g (cocida)"],["Lechuga + tomate","150 g"],["Aceite de girasol","8 ml"]]},
-    B:{t:"Carne",kcal:460,p:33,items:[["Cuadrada a la plancha","150 g"],["Batata al microondas","200 g"],["Lechuga + tomate","150 g"]]}},
+    A:{t:"Huevos",kcal:536,p:30,items:[["Huevos enteros","4"],["Papa hervida o al microondas (pesada cocida)","200 g",{k:"cen",g:200,kcal:.86}],["Lechuga + tomate","150 g"],["Aceite de girasol","8 ml"]]},
+    B:{t:"Carne",kcal:460,p:33,items:[["Cuadrada a la plancha","150 g"],["Batata al microondas (pesada cocida)","200 g",{k:"cen",g:200,kcal:.86}],["Lechuga + tomate","150 g"]]}},
     prep:"Papa o batata al microondas: 8–12 min con cáscara, sin preparar nada antes.",sup:"😴 Magnesio bisglicinato (opcional) 30–45 min antes de dormir."}
 ];
 const FASES = [
@@ -249,6 +249,26 @@ function semanaActual(){
   return {n: total % 12 + 1, ciclo: Math.floor(total / 12) + 1};
 }
 function pesoActual(){ return E.pesos.length ? E.pesos[E.pesos.length - 1].kg : 58; }
+// Metas del plan nutricional según el peso de hoy (mismos valores del PDF, pero sin saltos entre fases):
+// calorías 58 kg → 2750 · 65 kg → 2850 · 70 kg → 2950; proteína 2 g por kg con mínimo de 130 g; agua 35–40 ml por kg (+0,5–0,75 L si entrenás)
+function metaKcal(kg = pesoActual()){
+  const P = [[58, 2750], [65, 2850], [70, 2950]];
+  if (kg <= P[0][0]) return Math.round(P[0][1] + (kg - 58) * 14.3);
+  for (let i = 1; i < P.length; i++) if (kg <= P[i][0]) { const [a, ka] = P[i - 1], [b, kb] = P[i]; return Math.round(ka + (kg - a) / (b - a) * (kb - ka)); }
+  return 2950;
+}
+function metaProt(kg = pesoActual()){ return Math.max(130, Math.round(kg * 2)); }
+function metaAgua(entrena, kg = pesoActual()){ return Math.round((kg * 0.0375 + (entrena ? 0.625 : 0)) * 4) / 4; }
+// Las calorías de más (o de menos) respecto del plan base de 58 kg se reparten en carbohidratos, como indica el PDF:
+// mitad en el arroz del almuerzo, un cuarto en la avena del desayuno y un cuarto en la papa/batata de la cena.
+const REPARTO = {des: .25, alm: .5, cen: .25};
+function extraKcal(){ return metaKcal() - 2750; }
+function porcion(i){
+  const a = i[2]; if (!a) return {txt: i[1], kcal: 0};
+  const g = Math.max(a.g * 0.6, Math.round((a.g + extraKcal() * REPARTO[a.k] / a.kcal) / 5) * 5), dk = Math.round((g - a.g) * a.kcal);
+  return {txt: g + " g" + (a.cocido ? " → ~" + Math.round(g * a.cocido / 10) * 10 + " g cocido" : ""), kcal: dk, cambio: g !== a.g};
+}
+function kcalComida(o){ return o.kcal + o.items.reduce((t, i) => t + porcion(i).kcal, 0); }
 function faseActual(){ const kg = pesoActual(); return FASES.find(f => kg >= f.desde && kg < f.hasta) || FASES[2]; }
 const rango = s => s.split("–").map(Number);
 const redondear = (kg, paso) => Math.max(0, Math.round(kg / paso) * paso);
@@ -323,10 +343,32 @@ function objetivo(ej, sem){
   return {series, reps: ej.c ? S.rc : S.ra, rir: S.rir, rirMin, tec, desc: sem === 12 ? Math.max(90, Math.min(120, ej.d)) : ej.d};
 }
 // Peso sugerido: criterios de progresión de cargas (página 8 del PDF)
+// Factor = kg por cada kg de peso corporal para ~10 reps dejando 2–3 en reserva (nivel intermedio).
+// Posición 0 = ejercicio original; 1, 2, 3 = sus variantes (mismo orden que media.js). null = sin peso (banda o peso corporal).
+const FACTOR = {
+  ua1:[.6,.22,.55,.6], ua2:[.75,.7,.3,.6], ua3:[.12,.14,.5,.1], ua4:[.75,.75,.3,null], ua5:[.3,.1,.09,.06], ua6:[.07,.1,.07,null], ua7:[.35,.4,.4,.1], ua8:[.3,.2,.2,.15],
+  la1:[.9,.8,.3,.25], la2:[1.6,.9,.8,.2], la3:[.6,.3,.3,.15], la4:[.45,.5,.2,null], la5:[.9,.35,.8,.4], la6:[1,1.4,.8,.2],
+  ub1:[.5,.2,.5,.45], ub2:[.25,.5,.7,.75], ub3:[.3,.8,.7,.7], ub4:[.07,.1,.06,.1], ub5:[.15,.2,.4,.4], ub6:[.3,.25,.35,.5], ub7:[.35,.08,.05,.35], ub8:[.4,.4,.18,.4], ub9:[.35,.12,.35,.65],
+  lb1:[1,.35,.9,.45], lb2:[1,1.6,.8,.3], lb3:[.5,.45,.2,null], lb4:[.2,.4,.2,.15], lb5:[1,.9,null,.15], lb6:[.6,.6,.25,1.4]
+};
+// Peso de arranque: peso corporal × factor del ejercicio × la carga que marca la semana del programa (72,5% = referencia)
+function pesoArranque(ej){
+  const base = ej.base ? ej.base.id : ej.id, pos = ej.base ? ej.varK + 1 : 0, f = FACTOR[base] && FACTOR[base][pos];
+  if (!f) return null;
+  const carga = SEMANAS[semanaActual().n - 1].carga.match(/\d+/g).map(Number), medio = (carga[0] + carga[1]) / 2;
+  const paso = /mancuerna/i.test(ej.eq) ? 1 : /agarre simple|Dos poleas/i.test(ej.eq) ? 1.25 : 2.5;
+  const kg = Math.max(paso, redondear(pesoActual() * f * medio / 72.5, paso));
+  const unidad = /mancuernas/i.test(ej.eq) ? " en cada mancuerna" : /Dos poleas/i.test(ej.eq) ? " de cada lado" : "";
+  return {kg, unidad};
+}
 function sugerencia(ej, obj){
   const h = E.hist[ej.id];
   const [rmin] = rango(obj.reps);
-  if (!h || !h.length) return {kg:null, txt:`Primera vez: elegí un peso con el que llegues a ${obj.reps} reps y te sobren ${obj.rir} (RIR).`};
+  if (!h || !h.length) {
+    const a = pesoArranque(ej);
+    if (a) return {kg:a.kg, tipo:"inicio", txt:`Primera vez: arrancá con ~${fmtKg(a.kg)} kg${a.unidad} (calculado para tu peso de ${fmtKg(pesoActual())} kg). Si la primera serie te sale muy fácil o muy difícil, ajustalo: tenés que llegar a ${obj.reps} reps dejando ${obj.rir} en reserva.`};
+    return {kg:null, txt:`Primera vez: elegí un peso con el que llegues a ${obj.reps} reps y te sobren ${obj.rir} (RIR).`};
+  }
   const sets = h[h.length - 1].sets.filter(s => s.kg > 0);
   if (!sets.length) return {kg:null, txt:`La vez pasada no anotaste peso: elegí uno que te deje ${obj.rir} reps en reserva.`};
   const base = Math.max(...sets.map(s => s.kg));
@@ -485,25 +527,25 @@ function comidaAhora(){
   const llegadas = pend.filter(x => { const [hh, mm] = x.h.split(":").map(Number); return hh * 60 + mm - 30 <= min; });
   return llegadas.length ? llegadas[llegadas.length - 1] : pend[0];
 }
-function kcalHoy(){ const c = comidasHoy(), f = faseActual(); let k = 0, p = 0;
-  COMIDAS.forEach(x => { if (c[x.id]) { const o = x.o[opcion(x)]; k += o.kcal; p += o.p; if (x.id === "alm" && f.extra) k += f.n === 2 ? 100 : 200; } }); return {k, p}; }
+function kcalHoy(){ const c = comidasHoy(); let k = 0, p = 0;
+  COMIDAS.forEach(x => { if (c[x.id]) { const o = x.o[opcion(x)]; k += kcalComida(o); p += o.p; } }); return {k, p}; }
 function barraKcal(){
-  const f = faseActual(), t = kcalHoy();
-  return `<div class="row small" style="margin-bottom:6px"><span>${t.k} / ${f.kcal} kcal</span><span class="sp"></span><span class="muted">${t.p} / ${f.p} g proteína</span></div>
-    <div class="barra"><i style="width:${Math.min(100, t.k / f.kcal * 100)}%"></i></div>`;
+  const t = kcalHoy(), mk = metaKcal(), mp = metaProt();
+  return `<div class="row small" style="margin-bottom:6px"><span>${t.k} / ${mk} kcal</span><span class="sp"></span><span class="muted">${t.p} / ${mp} g proteína</span></div>
+    <div class="barra"><i style="width:${Math.min(100, t.k / mk * 100)}%"></i></div>`;
 }
 function pComidas(){
   const dia = hoyEntrena(), f = faseActual(), c = comidasHoy(), prox = comidaAhora();
   let h = `<div class="card hero"><div class="row"><h2>🍽️ Hoy comés</h2><span class="sp"></span><span class="chip f">Fase ${f.n}</span></div>
-    <p class="muted small" style="margin:4px 0 12px">Objetivo: ~${f.kcal} kcal · ${f.p} g de proteína o más · ${dia ? "día de entreno 🏋️" : "día de descanso 😌"}. Tocá ✓ cuando comas.</p>${barraKcal()}</div>`;
+    <p class="muted small" style="margin:4px 0 12px">Objetivo para tus ${fmtKg(pesoActual())} kg: ~${metaKcal()} kcal · ${metaProt()} g de proteína o más · ${dia ? "día de entreno 🏋️" : "día de descanso 😌"}. Tocá ✓ cuando comas.</p>${barraKcal()}
+    ${extraKcal() ? `<p class="small" style="margin:10px 0 0">⚖️ Las porciones marcadas con ⚖️ ya están ajustadas a tu peso (${extraKcal() > 0 ? "+" : ""}${extraKcal()} kcal respecto del plan de 58 kg). Se actualizan solas cuando anotás tu peso en Progreso.</p>` : ""}</div>`;
   COMIDAS.forEach(x => {
     const op = opcion(x), o = x.o[op], ya = c[x.id];
     h += `<div class="comida ${ya ? "ya" : ""} ${prox === x ? "ahora" : ""}"><div class="row"><div class="h">${x.h}</div>
-      <div style="flex:1"><b>${x.ic} ${nombreComida(x)}</b><div class="small muted">${o.kcal} kcal · ${o.p} g proteína${prox === x ? ' · <span style="color:var(--fuego2)">ahora</span>' : ""}</div></div>
+      <div style="flex:1"><b>${x.ic} ${nombreComida(x)}</b><div class="small muted">${kcalComida(o)} kcal · ${o.p} g proteína${prox === x ? ' · <span style="color:var(--fuego2)">ahora</span>' : ""}</div></div>
       <button class="check" data-a="comi" data-id="${x.id}" aria-label="Marcar como comida">${ya ? "✓" : ""}</button></div>
       ${Object.keys(x.o).length > 1 ? `<div class="seg">${Object.keys(x.o).map(k => `<button class="${k === op ? "on" : ""}" data-a="op" data-id="${x.id}" data-o="${k}">Opción ${k}: ${x.o[k].t}</button>`).join("")}</div>` : ""}
-      <ul class="items">${o.items.map(i => `<li><span>${i[0]}</span><span>${i[1]}</span></li>`).join("")}
-      ${x.id === "alm" && f.extra ? `<li style="color:var(--fuego2)"><span>➕ ${f.extra[0]}</span><span>${f.extra[1]}</span></li>` : ""}</ul>
+      <ul class="items">${o.items.map(i => { const q = porcion(i); return `<li><span>${i[0]}</span><span>${q.cambio ? "⚖️ " : ""}${q.txt}</span></li>`; }).join("")}</ul>
       <p class="small muted" style="margin:8px 0 0">${x.prep}</p>${x.sup ? `<p class="small" style="margin:6px 0 0">${x.sup}</p>` : ""}</div>`;
     if (x.id === "pre" && dia) h += `<div class="card" style="padding:12px 16px"><div class="row"><span style="font-size:22px">🏋️</span><div><b>12:00 – 13:30 · Entrenamiento</b><div class="small muted">${RUTINA[dia].nombre}</div></div></div></div>`;
     if (x.id === "mer") h += `<div class="card" style="padding:12px 16px"><div class="row"><span style="font-size:22px">🎓</span><b>16:00 – 21:00 · Facultad</b></div></div>`;
@@ -515,10 +557,10 @@ function pComidas(){
   return h;
 }
 function aguaCard(){
-  const entrena = !!hoyEntrena(), meta = entrena ? 12 : 9, v = E.agua[hoyStr()] || 0;
+  const entrena = !!hoyEntrena(), litros = metaAgua(entrena), meta = Math.round(litros * 4), v = E.agua[hoyStr()] || 0;
   let vasos = ""; for (let i = 0; i < meta; i++) vasos += `<button class="vaso ${i < v ? "lleno" : ""}" data-a="agua" data-i="${i}" aria-label="Vaso ${i + 1}"></button>`;
-  return `<div class="card"><div class="row"><h3>💧 Agua</h3><span class="sp"></span><span class="chip">${(v * 0.25).toFixed(2).replace(".", ",")} / ${entrena ? "3" : "2,25"} L</span></div>
-    <p class="small muted" style="margin:4px 0 0">Cada vaso = 250 ml. ${entrena ? "Día de entreno: 2,5–3 L (entrenando, 400–500 ml por hora)." : "Día de descanso: 2–2,3 L."} Orina amarillo pálido = bien.</p><div class="agua">${vasos}</div></div>`;
+  return `<div class="card"><div class="row"><h3>💧 Agua</h3><span class="sp"></span><span class="chip">${(v * 0.25).toFixed(2).replace(".", ",")} / ${String(litros).replace(".", ",")} L</span></div>
+    <p class="small muted" style="margin:4px 0 0">Cada vaso = 250 ml. Calculado para tus ${fmtKg(pesoActual())} kg${entrena ? ", día de entreno (entrenando, 400–500 ml por hora)" : ", día de descanso"}. Orina amarillo pálido = bien.</p><div class="agua">${vasos}</div></div>`;
 }
 
 // ---------- PROGRESO ----------
@@ -635,7 +677,7 @@ function pintarGuia(){
       <p class="small" style="margin:8px 0 0">💬 ${ej.tip}</p>
       <button class="btn no chico" data-g="variantes" style="width:100%;margin-top:10px">🚫 No se puede realizar · ver variantes</button>
       <div class="objetivo"><div><b>${ss.serie + 1}/${o.series}</b><small>SERIE</small></div><div><b>${o.reps}</b><small>REPS</small></div><div><b>${o.rir}</b><small>RIR</small></div></div>
-      <div class="consejo">${{sube:"📈 ", baja:"📉 ", igual:"💡 "}[sg.tipo] || "💡 "}${sg.txt}</div>
+      <div class="consejo">${{sube:"📈 ", baja:"📉 ", igual:"💡 ", inicio:"⚖️ "}[sg.tipo] || "💡 "}${sg.txt}</div>
       ${ss.serie === o.series - 1 && o.tec ? `<div class="consejo" style="background:#C9CED630"><b>★ Último set: ${o.tec.n}</b><br>${o.tec.t}${ej.tec === "drop" && kgPrevio ? ` (≈ ${fmtKg(redondear(kgPrevio * 0.8, 1.25))} kg)` : ""}</div>` : ""}
       <div class="lbl">Ritmo de cada repetición · ${ej.t}</div>
       <div class="tempo" id="tempo"><div><b>${tp[0]}s</b>bajá</div><div><b>${tp[1]}s</b>pausa</div><div><b>${tp[2]}s</b>subí</div><div><b>${tp[3]}s</b>arriba</div></div>
@@ -807,7 +849,7 @@ if (E && E.sesion && E.sesion.f === hoyStr() && E.sesion.descansoHasta) abrirGui
 setInterval(() => { if (E && E.inicio && !$("#guia").innerHTML && !(document.activeElement && document.activeElement.tagName === "INPUT")) render(); }, 60000);
 </script>
 <script>
-const VERSION_APP = "20260927233620";
+const VERSION_APP = "20260927234940";
 if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").then(reg => {
   document.addEventListener("visibilitychange", () => { if (!document.hidden) reg.update().catch(() => {}); });
 }).catch(() => {}));
