@@ -22,6 +22,12 @@
   --f:"Barlow",system-ui,sans-serif;--fd:"Barlow Condensed","Barlow",system-ui,sans-serif;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+/* Intro al abrir la app: logo de ZafiroWeb y después la app (ver final del script) */
+#intro{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:radial-gradient(60% 40% at 50% 46%,#2A1E0B 0%,transparent 70%),var(--bg);transition:opacity .5s ease}
+#intro img{width:min(72vw,340px);height:auto;opacity:0;transform:scale(.9);animation:introLogo 1s .15s cubic-bezier(.2,.8,.2,1) forwards}
+#intro.fuera{opacity:0;pointer-events:none}
+@keyframes introLogo{to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){#intro img{animation:none;opacity:1;transform:none}}
 html,body{margin:0;background:var(--bg);color:var(--ink);font:600 16px/1.4 var(--f)}
 body{padding:calc(env(safe-area-inset-top,0px) + 8px) 16px calc(96px + env(safe-area-inset-bottom,0px));max-width:620px;margin:0 auto;
   background:radial-gradient(120% 60% at 50% -10%,#24272C 0%,transparent 60%),var(--bg);min-height:100vh}
@@ -135,6 +141,7 @@ details summary{cursor:pointer;font-weight:800;padding:4px 0}
 </style>
 </head>
 <body>
+<div id="intro" aria-hidden="true"><img src="zafiroweb-intro.webp" alt=""></div>
 <div id="app"></div>
 <nav class="nav" id="nav"><div>
   <button data-t="hoy"><span>⚡</span>Hoy</button>
@@ -273,7 +280,7 @@ const K = "forja-v1";
 let E = cargar();
 function cargar(){ try { return JSON.parse(localStorage.getItem(K)) || null; } catch { return null; } }
 function guardar(){ try { localStorage.setItem(K, JSON.stringify(E)); } catch {} }
-function nuevoEstado(){ return {nombre:"", horario:JSON.parse(JSON.stringify(HORARIO_BASE)), horarioVisto:false, obj:null, meta:null, sexo:null, edad:null, altura:null, ajuste:0, inicio:null, pesos:[], hist:{}, var:{}, comidas:{}, eleccion:{}, menuFijo:false, agua:{}, entrenos:{}, sesion:null, sonido:true, ultimoKg:{}}; }
+function nuevoEstado(){ return {nombre:"", hv:1, horario:JSON.parse(JSON.stringify(HORARIO_BASE)), horarioVisto:false, obj:null, meta:null, sexo:null, edad:null, altura:null, ajuste:0, inicio:null, pesos:[], hist:{}, var:{}, comidas:{}, eleccion:{}, menuFijo:false, agua:{}, entrenos:{}, sesion:null, sonido:true, ultimoKg:{}}; }
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -1170,13 +1177,20 @@ function importarDeLink(){
   const m = /#p=([\w-]+)/.exec(location.hash); if (!m) return;
   try {
     const d = JSON.parse(deb64(m[1]));
-    if (d && d.inicio && (!E || !E.inicio || confirm("¿Reemplazar los datos de este dispositivo por los del link?"))) { E = Object.assign(nuevoEstado(), d); guardar(); toast("✅ Datos cargados"); }
+    if (d && d.inicio && (!E || !E.inicio || confirm("¿Reemplazar los datos de este dispositivo por los del link?"))) { E = completarEstado(d); guardar(); toast("✅ Datos cargados"); }
   } catch { toast("El link de datos no es válido"); }
   history.replaceState(null, "", location.pathname);
 }
 
 importarDeLink();
-if (E) E = Object.assign(nuevoEstado(), E);
+// Completa los datos guardados con los campos nuevos. Quien los guardó antes de «Mi horario» (sin el campo hv) y todavía
+// no confirmó su horario conserva el del plan original (facultad de 16 a 21), no el de base.
+function completarEstado(d){
+  const x = Object.assign(nuevoEstado(), d);
+  if (!d.hv && !d.horarioVisto) x.horario = JSON.parse(JSON.stringify(HORARIO_VIEJO));
+  x.hv = 1; return x;
+}
+if (E) E = completarEstado(E);
 /* ============ MODO SIN INTERNET: guardar todas las fotos en el celular ============ */
 let offline = {total: 0, hechas: 0, fallos: 0, listo: false, empezado: false};
 function textoOffline(){
@@ -1214,12 +1228,16 @@ addEventListener("online", () => { if (!offline.listo) prepararOffline(); });
 setTimeout(prepararOffline, 1500);
 
 render();
+// Intro: el logo de ZafiroWeb queda ~1,8 s (un toque la saltea) y se desvanece hacia la app, que ya cargó por detrás.
+(() => { const i = $("#intro"); if (!i) return; let ido = false;
+  const irse = () => { if (ido) return; ido = true; i.classList.add("fuera"); setTimeout(() => i.remove(), 550); };
+  i.onclick = irse; setTimeout(irse, 1800); })();
 if (E && E.sesion && E.sesion.f === hoyStr() && E.sesion.descansoHasta) abrirGuia();
 // cada minuto se actualiza «qué comida toca ahora» (si no estás escribiendo nada)
 setInterval(() => { if (E && E.inicio && !$("#guia").innerHTML && !(document.activeElement && document.activeElement.tagName === "INPUT")) render(); }, 60000);
 </script>
 <script>
-const VERSION_APP = "20260928130918";
+const VERSION_APP = "20260928132108";
 if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").then(reg => {
   document.addEventListener("visibilitychange", () => { if (!document.hidden) reg.update().catch(() => {}); });
 }).catch(() => {}));
