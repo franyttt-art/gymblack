@@ -31,7 +31,8 @@ button{font:inherit;color:inherit;cursor:pointer}
 input{font:inherit;color:var(--ink)}
 .top{display:flex;align-items:center;gap:10px;padding:6px 0 12px}
 .logo{width:42px;height:42px;border-radius:12px;background:#000 url(logo-app.png) center/cover;box-shadow:0 0 0 1px #3A3E46,0 4px 18px #0008}
-.top .t{flex:1}.top small{display:block;color:var(--muted);font-weight:700;font-size:13px}
+.top .t{flex:1;min-width:0}.marca{display:flex;align-items:center;gap:10px;min-width:0}.zw{flex:0 1 118px;width:118px;min-width:0;height:auto;box-sizing:border-box;padding-left:10px;border-left:1px solid var(--line)}  /* logo de ZafiroWeb: se achica si no entra */
+.top small{display:block;color:var(--muted);font-weight:700;font-size:13px}
 .chip{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:999px;background:var(--s2);border:1px solid var(--line);font-weight:800;font-size:13px}
 .chip.f{background:#C9CED622;border-color:#C9CED666;color:var(--fuego2)}
 .card{background:var(--s1);border:1px solid var(--line);border-radius:20px;padding:16px;margin:0 0 14px}
@@ -537,7 +538,7 @@ function render(){
 }
 function cabecera(){
   const s = semanaActual(), S = SEMANAS[s.n - 1];
-  return `<div class="top"><div class="logo"></div><div class="t"><h1 style="font-size:28px;line-height:1;letter-spacing:1px">GYM<span style="color:var(--muted)">BLACK</span></h1>
+  return `<div class="top"><div class="logo"></div><div class="t"><div class="marca"><h1 style="font-size:28px;line-height:1;letter-spacing:1px">GYM<span style="color:var(--muted)">BLACK</span></h1><img class="zw" src="zafiroweb.png" alt="ZafiroWeb"></div>
     <small>${E.nombre ? "Hola, " + esc(E.nombre) + " · " : ""}Semana ${s.n} de 12 · ${S.b}</small></div>
     <span class="chip f">⚖️ ${fmtKg(pesoActual())} kg</span></div>`;
 }
@@ -1076,7 +1077,7 @@ if (E && E.sesion && E.sesion.f === hoyStr() && E.sesion.descansoHasta) abrirGui
 setInterval(() => { if (E && E.inicio && !$("#guia").innerHTML && !(document.activeElement && document.activeElement.tagName === "INPUT")) render(); }, 60000);
 </script>
 <script>
-const VERSION_APP = "20260928124209";
+const VERSION_APP = "20260928125035";
 if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").then(reg => {
   document.addEventListener("visibilitychange", () => { if (!document.hidden) reg.update().catch(() => {}); });
 }).catch(() => {}));
