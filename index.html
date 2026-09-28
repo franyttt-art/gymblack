@@ -290,9 +290,15 @@ function pesoActual(){ return E.pesos.length ? E.pesos[E.pesos.length - 1].kg : 
 const bajando = () => E.obj === "bajar";
 const pesoMeta = () => E.meta || 75;
 const pesoInicial = () => E.pesoIni || (E.pesos.length ? E.pesos[0].kg : pesoActual());  // peso del día en que eligió el objetivo
-// Bajar de peso: ~20% menos que lo que gasta una persona que entrena 4 veces por semana, estimado por su peso
-// (nunca menos de 1500 kcal). E.ajuste lo corrige el propio usuario según cómo baja cada semana.
-function kcalBajar(kg){ return Math.max(1500, Math.round((1250 + 12 * kg) / 10) * 10 + (E.ajuste || 0)); }
+// Bajar de peso: 20% menos de lo que gasta. Gasto = metabolismo basal de Mifflin-St Jeor (peso, altura, sexo;
+// edad de referencia 25 años) × 1,55 por entrenar 4 veces por semana. Nunca menos de 1500 kcal (hombres) o 1200 (mujeres).
+// Sin altura/sexo (datos viejos) se estima solo por el peso. E.ajuste lo corrige el propio usuario según cómo baja cada semana.
+const EDAD_REF = 25;
+function kcalBajar(kg){
+  const mujer = E.sexo === "f";
+  const base = E.sexo && E.altura ? (10 * kg + 6.25 * E.altura - 5 * EDAD_REF + (mujer ? -161 : 5)) * 1.55 * 0.8 : 1250 + 12 * kg;
+  return Math.max(mujer ? 1200 : 1500, Math.round(base / 10) * 10 + (E.ajuste || 0));
+}
 function metaKcal(kg = pesoActual()){
   if (bajando()) return kcalBajar(kg);
   const P = [[58, 2750], [65, 2850], [70, 2950]];
@@ -300,7 +306,7 @@ function metaKcal(kg = pesoActual()){
   for (let i = 1; i < P.length; i++) if (kg <= P[i][0]) { const [a, ka] = P[i - 1], [b, kb] = P[i]; return Math.round(ka + (kg - a) / (b - a) * (kb - ka)); }
   return 2950;
 }
-function metaProt(kg = pesoActual()){ return bajando() ? Math.max(110, Math.min(170, Math.round(1.8 * pesoMeta()))) : Math.max(130, Math.round(kg * 2)); }
+function metaProt(kg = pesoActual()){ return bajando() ? Math.max(E.sexo === "f" ? 90 : 110, Math.min(170, Math.round(1.8 * pesoMeta()))) : Math.max(130, Math.round(kg * 2)); }
 function metaAgua(entrena, kg = pesoActual()){ return Math.round((kg * 0.0375 + (entrena ? 0.625 : 0)) * 4) / 4; }
 // Las calorías de más (o de menos) respecto del plan base de 58 kg se reparten en carbohidratos, como indica el PDF:
 // mitad en el arroz del almuerzo, un cuarto en la avena del desayuno y un cuarto en la papa/batata de la cena.
@@ -317,30 +323,48 @@ function extraPan(o, slot){
 }
 // Para bajar de peso: cada comida apunta a su parte de las calorías del día (misma proporción que el menú base),
 // primero con cambios que no tocan la proteína (lácteos descremados, mitad de aceite y queso) y después
-// achicando solo los carbohidratos (avena, arroz, papa, batata, fideos, pan, banana). Nunca se agranda nada.
+// achicando los carbohidratos (avena, arroz, papa, batata, fideos, pan, banana). Si con eso no alcanza (personas
+// chicas: metas de 1300–1800 kcal), se achica también la carne/pollo/pescado/huevo, pero solo lo que sobra de
+// proteína: cada comida mantiene su parte de la meta de proteína del día. Nunca se agranda nada.
 const PARTE = {des:.25, pre:.11, alm:.28, mer:.17, cen:.19};
+// Fuentes de proteína que se pueden achicar: kcal y g de proteína por unidad (gramo o huevo), paso de redondeo y mínimo.
+const PROTE = [[/^Pechuga de pollo/, 1.2, .23, 10, 80], [/^(Cuadrada|Lomo de cerdo)/, 1.35, .21, 10, 80], [/^Carne picada/, 1.6, .2, 10, 80],
+  [/^Filete de merluza/, .9, .18, 10, 120], [/^Huevos/, 75, 6.5, 1, 2]];
 function cambioBajar(i){
   const [n, q] = i, m = /^(\d+)\s*(.*)$/.exec(q), v = m ? +m[1] : 0, u = m ? m[2] : "";
   if (i[2]) return {n, v:i[2].g, u:"g", kcal:i[2].kcal, flex:1, min:Math.round(i[2].g * .35), paso:5, a:i[2]};
-  if (/^Leche entera/.test(n) && u === "ml") return {n:n.replace("entera", "descremada"), v, u, dk:-.27 * v, cambio:1};
-  if (/^Yogur natural entero/.test(n) && u === "g") return {n:n.replace("entero", "descremado"), v, u, dk:-.21 * v, cambio:1};
+  if (/^Leche entera/.test(n) && u === "ml") return {n:n.replace("entera", "descremada"), v, u, dk:-.27 * v, kcal:.35, pf:.034, flex:1, min:Math.min(v, 150), paso:50, cambio:1};
+  if (/^Yogur natural entero/.test(n) && u === "g") return {n:n.replace("entero", "descremado"), v, u, dk:-.21 * v, kcal:.4, pf:.04, flex:1, min:Math.min(v, 150), paso:50, cambio:1};
   if (/^Aceite/.test(n) && u === "ml") { const nv = Math.max(3, Math.round(v / 2)); return {n, v:nv, u, dk:-(v - nv) * 9, cambio:1}; }
-  if (/^Queso/.test(n) && u === "g") { const nv = Math.round(v / 2 / 5) * 5 || 10; return {n, v:nv, u, dk:-(v - nv) * (/rallado/.test(n) ? 4 : 3), cambio:1}; }
+  if (/^Queso/.test(n) && u === "g") { const nv = Math.round(v / 2 / 5) * 5 || 10; return {n, v:nv, u, dk:-(v - nv) * (/rallado/.test(n) ? 4 : 3), dp:-(v - nv) * .25, cambio:1}; }
   if (/^(Pan lactal|Tostadas de pan lactal)/.test(n) && m) return {n, v, u, kcal:65, flex:1, min:1, paso:1};
-  if (/^Bananas?\b/.test(n) && m && !u) return {n, v, u, kcal:90, flex:1, min:1, paso:1};
+  if (/^Bananas?\b/.test(n) && m && !u) return {n, v, u, kcal:90, flex:1, min:0, paso:1};
+  if (/^(Fruta|Manzana)/.test(n) && m && !u) return {n, v, u, kcal:65, flex:1, min:0, paso:1};  // la fruta de postre se puede sacar
+  const p = m && PROTE.find(([re]) => re.test(n));
+  if (p && (u === "g" || !u)) return {n, v, u, kcal:p[1], prot:p[2], paso:p[3], min:Math.min(v, p[4])};
   return null;
 }
+const cantidad = (c, nv) => nv + (c.u ? " " + c.u : "") + (c.a && c.a.cocido ? " → ~" + Math.round(nv * c.a.cocido / 10) * 10 + " g cocido" : "");
 function itemsBajar(o, slot){
-  const cs = o.items.map(cambioBajar), dk = cs.reduce((t, c) => t + (c && c.dk || 0), 0);
-  const flex = cs.reduce((t, c) => t + (c && c.flex ? c.v * c.kcal : 0), 0);
-  const r = PARTE[slot] && flex ? Math.min(1, Math.max(.35, 1 + (metaKcal() * PARTE[slot] - o.kcal - dk) / flex)) : 1;
+  const cs = o.items.map(cambioBajar), meta = metaKcal() * (PARTE[slot] || 0), suma = (f) => cs.reduce((t, c) => t + (c ? f(c) : 0), 0);
+  const dk = suma(c => c.dk || 0), dp = suma(c => c.dp || 0);
+  // 1) carbohidratos
+  const flex = suma(c => c.flex ? c.v * c.kcal : 0);
+  const r = PARTE[slot] && flex ? Math.min(1, Math.max(.35, 1 + (meta - o.kcal - dk) / flex)) : 1;
+  cs.forEach(c => { if (c && c.flex) c.nv = Math.max(c.min, Math.round(c.v * r / c.paso) * c.paso); });
+  // 2) proteína que sobra, solo si la comida sigue pasada de su parte de calorías
+  const exceso = o.kcal + dk + suma(c => c.flex ? (c.nv - c.v) * c.kcal : 0) - meta;
+  const pk = suma(c => c.prot ? c.v * c.kcal : 0), pp = suma(c => c.prot ? c.v * c.prot : 0), sobra = o.p + dp - metaProt() * (PARTE[slot] || 0);
+  const rp = PARTE[slot] && exceso > 0 && pk && sobra > 0 ? Math.max(.5, 1 - exceso / pk, 1 - sobra / pp) : 1;
+  cs.forEach(c => { if (c && c.prot) c.nv = Math.max(c.min, Math.round(c.v * Math.min(1, rp) / c.paso) * c.paso); });
   return o.items.map((i, k) => {
-    const c = cs[k]; if (!c) return {n:i[0], txt:i[1], dk:0};
-    if (!c.flex) return {n:c.n, txt:Math.round(c.v) + " " + c.u, dk:Math.round(c.dk), marca:1};
-    const nv = Math.max(c.min, Math.round(c.v * r / c.paso) * c.paso), txt = nv + (c.u ? " " + c.u : "") + (c.a && c.a.cocido ? " → ~" + Math.round(nv * c.a.cocido / 10) * 10 + " g cocido" : "");
-    return {n:i[0], txt, dk:Math.round((nv - c.v) * c.kcal), marca:nv !== c.v};
+    const c = cs[k]; if (!c) return {n:i[0], txt:i[1], dk:0, dp:0};
+    if (c.nv === undefined) return {n:c.n, txt:Math.round(c.v) + " " + c.u, dk:Math.round(c.dk), dp:c.dp || 0, marca:1};
+    return {n:c.n, txt:c.nv ? cantidad(c, c.nv) : "hoy no", dk:Math.round((c.dk || 0) + (c.nv - c.v) * c.kcal), dp:(c.nv - c.v) * (c.prot || c.pf || 0), marca:c.cambio || c.nv !== c.v};
   });
 }
+// Gramos de proteína de la comida después de los ajustes (en hipertrofia no cambia).
+function protComida(o, slot){ return bajando() ? Math.round(o.p + itemsBajar(o, slot).reduce((t, i) => t + i.dp, 0)) : o.p; }
 // Lista de ingredientes de una comida ya ajustada al objetivo y al peso: [{n: nombre, txt: cantidad, dk: kcal de diferencia, marca}]
 function itemsComida(o, slot){
   if (bajando()) return itemsBajar(o, slot);
@@ -377,7 +401,7 @@ function hojaMenu(id){
   const x = COMIDAS.find(c => c.id === id), op = opcion(x), rot = opcionDeHoy(x);
   abrirHoja(`<div class="row"><h2 style="flex:1">${x.ic} ${nombreComida(x)}</h2><button class="chip" data-h="cerrar">✕</button></div>
     <p class="small muted" style="margin:6px 0 4px">Todas tienen calorías parecidas: elegí la que quieras para hoy. Mañana vuelve la del menú.</p>
-    ${Object.entries(x.o).map(([k, o]) => `<button class="alt ${k === op ? "on" : ""}" data-h="comer" data-id="${id}" data-k="${k}"><div class="num">${k}</div><div style="flex:1"><b>${o.t}</b><div class="small muted">${kcalComida(o, id)} kcal · ${o.p} g proteína · ⏱️ ${o.min} min${k === rot ? " · 📅 la de hoy" : ""}</div></div><span>${k === op ? "✓" : "›"}</span></button>`).join("")}`);
+    ${Object.entries(x.o).map(([k, o]) => `<button class="alt ${k === op ? "on" : ""}" data-h="comer" data-id="${id}" data-k="${k}"><div class="num">${k}</div><div style="flex:1"><b>${o.t}</b><div class="small muted">${kcalComida(o, id)} kcal · ${protComida(o, id)} g proteína · ⏱️ ${o.min} min${k === rot ? " · 📅 la de hoy" : ""}</div></div><span>${k === op ? "✓" : "›"}</span></button>`).join("")}`);
 }
 function cerrarHoja(){ $("#hoja").innerHTML = ""; }
 function abrirHoja(html){
@@ -498,7 +522,7 @@ document.querySelectorAll("#nav button").forEach(b => b.onclick = () => { sonar(
 
 function render(){
   if (!E || !E.inicio) { $("#nav").style.display = "none"; return bienvenida(); }
-  if (!E.obj || elegirObjetivo) { $("#nav").style.display = "none"; return pantallaObjetivo(); }
+  if (!E.obj || elegirObjetivo || (bajando() && !(E.sexo && E.altura))) { $("#nav").style.display = "none"; return pantallaObjetivo(); }
   $("#nav").style.display = "";
   document.querySelectorAll("#nav button").forEach(b => b.classList.toggle("on", b.dataset.t === pestana));
   $("#app").innerHTML = cabecera() + {hoy:pHoy, entreno:pEntreno, comidas:pComidas, progreso:pProgreso}[pestana]();
@@ -523,6 +547,11 @@ function conectarObjetivo(){
     document.querySelectorAll("[data-obj]").forEach(x => { x.classList.toggle("on", x === b); x.lastElementChild.textContent = x === b ? "✓" : ""; });
     $("#bObj").value = b.dataset.obj; sonar("toque");
     $("#bMetaAyuda").textContent = b.dataset.obj === "bajar" ? "El peso al que querés llegar (menor que el de hoy)." : "El peso al que querés llegar ganando músculo.";
+    $("#bCuerpo").style.display = b.dataset.obj === "bajar" ? "" : "none";
+  });
+  document.querySelectorAll("[data-sexo]").forEach(b => b.onclick = () => {
+    document.querySelectorAll("[data-sexo]").forEach(x => x.classList.toggle("sec", x !== b));
+    $("#bSexo").value = b.dataset.sexo; sonar("toque");
   });
 }
 // Lee y valida objetivo + peso + meta del formulario. Devuelve null (y avisa) si falta algo.
@@ -532,13 +561,30 @@ function leerObjetivo(){
   if (!(kg > 30 && kg < 250)) { toast("Poné tu peso en kg, por ejemplo 72,5"); return null; }
   if (!(meta > 30 && meta < 250)) { toast("Poné tu peso objetivo en kg"); return null; }
   if (obj === "bajar" && meta >= kg) { toast("Para bajar de peso, el objetivo tiene que ser menor que tu peso de hoy"); return null; }
-  return {obj, kg, meta};
+  const sexo = $("#bSexo").value, cm = parseFloat(String($("#bAlt").value).replace(",", "."));
+  const altura = cm > 0 && cm < 3 ? Math.round(cm * 100) : cm;  // si escribe 1,75 lo tomo como 175 cm
+  if (obj === "bajar" && !sexo) { toast("Elegí hombre o mujer: cambia cuántas calorías gastás"); return null; }
+  if (obj === "bajar" && !(altura >= 120 && altura <= 230)) { toast("Poné tu altura en cm, por ejemplo 175"); return null; }
+  return {obj, kg, meta, sexo:sexo || null, altura:altura >= 120 && altura <= 230 ? altura : null};
+}
+// Guarda en E lo leído del formulario de objetivo (sexo y altura solo si los completó).
+function aplicarObjetivo(o){
+  E.obj = o.obj; E.meta = o.meta;
+  if (o.sexo) E.sexo = o.sexo;
+  if (o.altura) E.altura = o.altura;
+}
+function camposCuerpo(sel){
+  const sx = E && E.sexo, bot = (k, t) => `<button class="btn chico ${sx === k ? "" : "sec"}" data-sexo="${k}" style="flex:1">${t}</button>`;
+  return `<div id="bCuerpo" style="${sel === "bajar" ? "" : "display:none"}">
+    <div class="lbl">Sexo</div><div class="row">${bot("m", "👨 Hombre")}${bot("f", "👩 Mujer")}</div><input id="bSexo" type="hidden" value="${sx || ""}">
+    <div class="lbl">¿Cuánto medís? (cm)</div><input id="bAlt" class="campo" type="number" inputmode="decimal" step="1" value="${(E && E.altura) || ""}" placeholder="Ej: 175">
+    <p class="small muted">Con tu sexo, altura y peso calculo cuántas calorías gastás por día, y el plan te deja un 20% abajo para bajar de forma sostenida.</p></div>`;
 }
 function camposObjetivo(sel, kg, meta){
   return `${botonesObjetivo(sel)}<input id="bObj" type="hidden" value="${sel || ""}">
     <div class="lbl">¿Cuánto pesás hoy? (kg)</div><input id="bKg" class="campo" type="number" inputmode="decimal" step="0.1" value="${kg || ""}" placeholder="Ej: 72,5">
     <div class="lbl">¿Cuál es tu peso objetivo? (kg)</div><input id="bMeta" class="campo" type="number" inputmode="decimal" step="0.1" value="${meta || ""}" placeholder="Ej: 75">
-    <p class="small muted" id="bMetaAyuda">${sel === "bajar" ? "El peso al que querés llegar (menor que el de hoy)." : "El peso al que querés llegar."} Con tu peso y tu objetivo te armo las calorías, la proteína y las porciones.</p>`;
+    <p class="small muted" id="bMetaAyuda">${sel === "bajar" ? "El peso al que querés llegar (menor que el de hoy)." : "El peso al que querés llegar."} Con tu peso y tu objetivo te armo las calorías, la proteína y las porciones.</p>${camposCuerpo(sel)}`;
 }
 function pantallaObjetivo(){
   const cambio = elegirObjetivo;
@@ -550,8 +596,9 @@ function pantallaObjetivo(){
   if ($("#bNo")) $("#bNo").onclick = () => { elegirObjetivo = false; render(); };
   $("#bOk").onclick = () => {
     const o = leerObjetivo(); if (!o) return;
-    if (o.obj !== E.obj) { E.ajuste = 0; E.pesoIni = o.kg; }
-    E.obj = o.obj; E.meta = o.meta;
+    if (o.obj !== E.obj || o.sexo !== (E.sexo || null) || o.altura !== (E.altura || null)) E.ajuste = 0;
+    if (o.obj !== E.obj) E.pesoIni = o.kg;
+    aplicarObjetivo(o);
     if (Math.abs(o.kg - pesoActual()) >= 0.05) { E.pesos = E.pesos.filter(p => p.f !== hoyStr()); E.pesos.push({f:hoyStr(), kg:o.kg}); }
     elegirObjetivo = false; guardar(); sonar("listo"); toast(o.obj === "bajar" ? "🔥 Plan para bajar de peso listo" : "💪 Plan de hipertrofia listo"); render(); scrollTo(0, 0);
   };
@@ -572,7 +619,7 @@ function bienvenida(){
     const o = leerObjetivo(); if (!o) return;
     E = nuevoEstado();
     E.nombre = $("#bNom").value.trim().slice(0, 24);
-    E.obj = o.obj; E.meta = o.meta; E.pesoIni = o.kg; E.pesos.push({f:hoyStr(), kg:o.kg});
+    aplicarObjetivo(o); E.pesoIni = o.kg; E.pesos.push({f:hoyStr(), kg:o.kg});
     const ini = lunesDe(new Date()); ini.setDate(ini.getDate() - (+$("#bSem").value - 1) * 7);
     E.inicio = fechaStr(ini); guardar(); sonar("listo"); render();
   };
@@ -667,7 +714,7 @@ function comidaAhora(){
   return llegadas.length ? llegadas[llegadas.length - 1] : pend[0];
 }
 function kcalHoy(){ const c = comidasHoy(); let k = 0, p = 0;
-  COMIDAS.forEach(x => { if (c[x.id]) { const o = x.o[opcion(x)]; k += kcalComida(o, x.id); p += o.p; } }); return {k, p}; }
+  COMIDAS.forEach(x => { if (c[x.id]) { const o = x.o[opcion(x)]; k += kcalComida(o, x.id); p += protComida(o, x.id); } }); return {k, p}; }
 function barraKcal(){
   const t = kcalHoy(), mk = metaKcal(), mp = metaProt();
   return `<div class="row small" style="margin-bottom:6px"><span>${t.k} / ${mk} kcal</span><span class="sp"></span><span class="muted">${t.p} / ${mp} g proteína</span></div>
@@ -684,7 +731,7 @@ function pComidas(){
   COMIDAS.forEach(x => {
     const op = opcion(x), o = x.o[op], ya = c[x.id], varias = Object.keys(x.o).length > 1;
     h += `<div class="comida ${ya ? "ya" : ""} ${prox === x ? "ahora" : ""}"><div class="row"><div class="h">${x.h}</div>
-      <div style="flex:1"><b>${x.ic} ${nombreComida(x)}</b><div style="font-weight:800;color:var(--fuego2);margin-top:2px">${o.t}</div><div class="small muted">${kcalComida(o, x.id)} kcal · ${o.p} g proteína · ⏱️ ${o.min} min${prox === x ? ' · <span style="color:var(--fuego2)">ahora</span>' : ""}</div></div>
+      <div style="flex:1"><b>${x.ic} ${nombreComida(x)}</b><div style="font-weight:800;color:var(--fuego2);margin-top:2px">${o.t}</div><div class="small muted">${kcalComida(o, x.id)} kcal · ${protComida(o, x.id)} g proteína · ⏱️ ${o.min} min${prox === x ? ' · <span style="color:var(--fuego2)">ahora</span>' : ""}</div></div>
       <button class="check" data-a="comi" data-id="${x.id}" aria-label="Marcar como comida">${ya ? "✓" : ""}</button></div>
       <ul class="items">${itemsComida(o, x.id).map(i => `<li><span>${i.n}</span><span>${i.marca ? "⚖️ " : ""}${i.txt}</span></li>`).join("")}</ul>
       <p class="small muted" style="margin:8px 0 0">${o.prep}</p>
@@ -1016,7 +1063,7 @@ if (E && E.sesion && E.sesion.f === hoyStr() && E.sesion.descansoHasta) abrirGui
 setInterval(() => { if (E && E.inicio && !$("#guia").innerHTML && !(document.activeElement && document.activeElement.tagName === "INPUT")) render(); }, 60000);
 </script>
 <script>
-const VERSION_APP = "20260928121616";
+const VERSION_APP = "20260928122947";
 if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").then(reg => {
   document.addEventListener("visibilitychange", () => { if (!document.hidden) reg.update().catch(() => {}); });
 }).catch(() => {}));
