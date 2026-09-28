@@ -401,7 +401,7 @@ function bienvenida(){
 // ---------- HOY ----------
 function pHoy(){
   const d = new Date(), dia = hoyEntrena(), s = semanaActual(), S = SEMANAS[s.n - 1], hecho = E.entrenos[hoyStr()];
-  let h = instalarCard();
+  let h = instalarCard() + `<div id="offlineEstado">${textoOffline()}</div>`;
   if (dia) {
     const R = RUTINA[dia], enCurso = E.sesion && E.sesion.f === hoyStr() && !hecho;
     h += `<div class="card hero"><div class="row w"><span class="chip f">${NOMBRE_DIA[d.getDay()]}</span><span class="chip">⏱️ ~${minutos(duracionDia(dia, s.n))} min</span><span class="chip">🕛 12:00</span></div>
@@ -765,13 +765,49 @@ function importarDeLink(){
 
 importarDeLink();
 if (E) E = Object.assign(nuevoEstado(), E);
+/* ============ MODO SIN INTERNET: guardar todas las fotos en el celular ============ */
+let offline = {total: 0, hechas: 0, fallos: 0, listo: false, empezado: false};
+function textoOffline(){
+  if (!offline.empezado) return "";
+  if (offline.listo) return `<div class="card" style="padding:10px 14px;border-color:#3DDC8466"><b style="color:var(--ok)">✅ Lista para usar sin internet</b><div class="small muted">Rutina, comidas y las ${offline.total} fotos quedaron guardadas en este dispositivo.</div></div>`;
+  const pc = offline.total ? Math.round(offline.hechas / offline.total * 100) : 0;
+  return `<div class="card" style="padding:10px 14px"><div class="row"><b>📶 Preparando modo sin internet…</b><span class="sp"></span><span class="chip">${pc}%</span></div>
+    <div class="barra" style="margin-top:8px"><i style="width:${pc}%"></i></div>
+    <div class="small muted" style="margin-top:6px">${offline.fallos ? "Falta conexión para terminar: abrí la app de nuevo con internet." : "Dejá la app abierta un ratito con internet."}</div></div>`;
+}
+function pintarOffline(){ const d = document.getElementById("offlineEstado"); if (d) d.innerHTML = textoOffline(); }
+async function prepararOffline(){
+  if (!("caches" in window) || offline.corriendo) return;
+  offline.corriendo = true;
+  try {
+    const fotos = [...new Set(Object.values(MEDIA).flatMap(m => [m.img, ...m.alt.map(a => a.img)]))].flatMap(i => [rutaFoto(i, 0), rutaFoto(i, 1)]);
+    const c = await caches.open("gymblack-fotos");
+    const ya = new Set((await c.keys()).map(r => decodeURIComponent(new URL(r.url).pathname).split("/ejercicios/")[1]));
+    const faltan = fotos.filter(f => !ya.has(f.split("ejercicios/")[1]));
+    offline = {...offline, total: fotos.length, hechas: fotos.length - faltan.length, fallos: 0, empezado: true, listo: !faltan.length};
+    pintarOffline();
+    let i = 0;
+    const trabajador = async () => {
+      while (i < faltan.length) {
+        const f = faltan[i++];
+        try { const r = await fetch(f, {cache: "no-cache"}); if (!r.ok) throw 0; await c.put(new URL(f, location.href).href, r); offline.hechas++; } catch { offline.fallos++; }
+        pintarOffline();
+      }
+    };
+    await Promise.all(Array.from({length: 6}, trabajador));
+    offline.listo = offline.hechas >= offline.total; pintarOffline();
+  } catch {} finally { offline.corriendo = false; }
+}
+addEventListener("online", () => { if (!offline.listo) prepararOffline(); });
+setTimeout(prepararOffline, 1500);
+
 render();
 if (E && E.sesion && E.sesion.f === hoyStr() && E.sesion.descansoHasta) abrirGuia();
 // cada minuto se actualiza «qué comida toca ahora» (si no estás escribiendo nada)
 setInterval(() => { if (E && E.inicio && !$("#guia").innerHTML && !(document.activeElement && document.activeElement.tagName === "INPUT")) render(); }, 60000);
 </script>
 <script>
-const VERSION_APP = "20260927225427";
+const VERSION_APP = "20260927233620";
 if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").then(reg => {
   document.addEventListener("visibilitychange", () => { if (!document.hidden) reg.update().catch(() => {}); });
 }).catch(() => {}));
