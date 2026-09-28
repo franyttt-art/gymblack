@@ -112,6 +112,21 @@ input{font:inherit;color:var(--ink)}
 .dias div.en{color:var(--ink)}.dias div.hoy{outline:2px solid var(--fuego)}.dias div.hecho{background:#132218;color:var(--ok)}
 .graf{width:100%;height:160px}
 details summary{cursor:pointer;font-weight:800;padding:4px 0}
+.foto{position:relative;border-radius:16px;overflow:hidden;background:#fff;aspect-ratio:4/3;margin-top:12px}
+.foto img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.foto .b{animation:ver 2.8s infinite}
+@keyframes ver{0%,38%{opacity:0}50%,88%{opacity:1}100%{opacity:0}}
+@keyframes ver2{0%,38%{opacity:1}50%,88%{opacity:0}100%{opacity:1}}
+.foto .et{position:absolute;left:8px;bottom:8px;padding:3px 9px;border-radius:8px;background:#000c;color:#fff;font-size:12px;font-weight:800}
+.foto .et.a2{animation:ver2 2.8s infinite}
+.mini{flex:none;width:66px;height:50px;border-radius:10px;object-fit:cover;background:#fff}
+.hojaF{position:fixed;inset:0;z-index:40;background:#000b;animation:sube2 .2s}
+.hojaF .in{position:absolute;left:0;right:0;bottom:0;max-height:90vh;overflow:auto;background:var(--s1);border-top:1px solid var(--line);border-radius:22px 22px 0 0;padding:16px 16px calc(22px + env(safe-area-inset-bottom,0px));max-width:620px;margin:0 auto}
+@keyframes sube2{from{opacity:0}}
+.alt{display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:10px;border-radius:14px;background:var(--s2);border:1px solid var(--line);margin-top:8px}
+.alt.on{border-color:var(--fuego)}
+.btn.no{background:#2A1416;color:#FF9C9C;box-shadow:0 4px 0 #0008;border:1px solid #5A2A2E}
+.chk{display:flex;gap:10px;align-items:center;margin-top:12px;font-size:14px}.chk input{flex:none;width:22px;height:22px;accent-color:#C9CED6}
 .tabla{width:100%;border-collapse:collapse;font-size:14px}
 .tabla td{padding:7px 4px;border-bottom:1px solid var(--line)}.tabla td:last-child{text-align:right;font-weight:800}
 </style>
@@ -125,6 +140,8 @@ details summary{cursor:pointer;font-weight:800;padding:4px 0}
   <button data-t="progreso"><span>📈</span>Progreso</button>
 </div></nav>
 <div id="guia"></div>
+<div id="hoja"></div>
+<script src="media.js"></script>
 <script>
 "use strict";
 /* ============ RUTINA: HYPERTROPHY ELITE PROGRAM v2 ============ */
@@ -218,7 +235,7 @@ const K = "forja-v1";
 let E = cargar();
 function cargar(){ try { return JSON.parse(localStorage.getItem(K)) || null; } catch { return null; } }
 function guardar(){ try { localStorage.setItem(K, JSON.stringify(E)); } catch {} }
-function nuevoEstado(){ return {nombre:"", inicio:null, pesos:[], hist:{}, comidas:{}, opcion:{alm:"A",cen:"A"}, agua:{}, entrenos:{}, sesion:null, sonido:true, ultimoKg:{}}; }
+function nuevoEstado(){ return {nombre:"", inicio:null, pesos:[], hist:{}, var:{}, comidas:{}, opcion:{alm:"A",cen:"A"}, agua:{}, entrenos:{}, sesion:null, sonido:true, ultimoKg:{}}; }
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -237,6 +254,65 @@ const rango = s => s.split("–").map(Number);
 const redondear = (kg, paso) => Math.max(0, Math.round(kg / paso) * paso);
 const fmtKg = kg => (Math.round(kg * 100) / 100).toString().replace(".", ",");
 const hoyEntrena = () => SEMANA_DIAS[new Date().getDay()];
+
+/* ============ FOTOS Y VARIANTES ============ */
+// E.var[id] = {k: número de variante, f: fecha (vale solo ese día) o null (siempre)}
+const todosEj = () => Object.values(RUTINA).flatMap(R => R.ej);
+function varDe(ej){ const v = E.var && E.var[ej.id]; return v && (v.f === null || v.f === hoyStr()) && MEDIA[ej.id] && MEDIA[ej.id].alt[v.k] ? v : null; }
+function ejActivo(ej){
+  const v = varDe(ej); if (!v) return ej;
+  const a = MEDIA[ej.id].alt[v.k];
+  return {...ej, id: ej.id + "~" + v.k, n: a.n, eq: a.eq, tip: a.tip, c: a.c ? 1 : 0, base: ej, varK: v.k};
+}
+function imgDe(ej){ return ej.base ? MEDIA[ej.base.id].alt[ej.varK].img : MEDIA[ej.id] && MEDIA[ej.id].img; }
+const rutaFoto = (img, n) => "ejercicios/" + img + "/" + n + ".jpg";
+function foto(ej){
+  const img = imgDe(ej); if (!img) return "";
+  const nota = !ej.base && MEDIA[ej.id].nota;
+  return `<div class="foto"><img src="${rutaFoto(img, 0)}" alt=""><img class="b" src="${rutaFoto(img, 1)}" alt="">
+    <span class="et a2">① Posición inicial</span><span class="et b">② Posición final</span></div>
+    ${nota ? `<p class="small muted" style="margin:6px 0 0">📷 ${nota}</p>` : ""}`;
+}
+function cerrarHoja(){ $("#hoja").innerHTML = ""; }
+function abrirHoja(html){
+  $("#hoja").innerHTML = `<div class="hojaF"><div class="in">${html}</div></div>`;
+  $("#hoja .hojaF").onclick = e => { if (e.target.classList.contains("hojaF")) cerrarHoja(); };
+  $("#hoja").querySelectorAll("[data-h]").forEach(b => b.onclick = () => hojaAccion(b.dataset.h, b));
+}
+// Ficha de un ejercicio: foto animada + cómo se hace + botón de variantes
+function fichaEj(id){
+  const ej = ejActivo(todosEj().find(e => e.id === id));
+  abrirHoja(`<div class="row"><h2 style="flex:1">${ej.n}</h2><button class="chip" data-h="cerrar">✕</button></div>
+    <div class="row w" style="margin-top:8px"><span class="chip">🛠️ ${ej.eq}</span><span class="chip">🎯 ${ej.m}</span></div>
+    ${foto(ej)}<p style="margin:12px 0 0">💬 ${ej.tip}</p>
+    <button class="btn no" data-h="variantes" data-id="${id}" style="margin-top:14px">🚫 No se puede realizar</button>
+    <p class="small muted" style="margin:8px 0 0">Si la máquina está ocupada, rota o tu gimnasio no la tiene, te doy una variante que trabaja el mismo músculo.</p>`);
+}
+function hojaVariantes(id){
+  const base = todosEj().find(e => e.id === id), m = MEDIA[id], v = varDe(base);
+  abrirHoja(`<div class="row"><h2 style="flex:1">Elegí una variante</h2><button class="chip" data-h="cerrar">✕</button></div>
+    <p class="small muted" style="margin:6px 0 4px">En lugar de <b style="color:var(--ink)">${base.n}</b>. Mismas series, reps y descansos. Tocá una:</p>
+    ${m.alt.map((a, k) => `<button class="alt ${v && v.k === k ? "on" : ""}" data-h="elegir" data-id="${id}" data-k="${k}"><img class="mini" src="${rutaFoto(a.img, 1)}" alt=""><div style="flex:1"><b>${a.n}</b><div class="small muted">🛠️ ${a.eq}</div></div><span>${v && v.k === k ? "✓" : "›"}</span></button>`).join("")}
+    ${v ? `<button class="alt" data-h="original" data-id="${id}"><img class="mini" src="${rutaFoto(m.img, 1)}" alt=""><div style="flex:1"><b>↩ Volver al original</b><div class="small muted">${base.n}</div></div></button>` : ""}
+    <label class="chk"><input type="checkbox" id="siempre" ${v && v.f === null ? "checked" : ""}> Usar siempre esta variante (por ej. si mi gimnasio no tiene la máquina). Sin tildar, vale solo por hoy.</label>`);
+}
+function hojaAccion(a, b){
+  if (a === "cerrar") return cerrarHoja();
+  if (a === "variantes") return hojaVariantes(b.dataset.id);
+  if (a === "elegir" || a === "original") {
+    const id = b.dataset.id;
+    E.var = E.var || {};
+    if (a === "original") delete E.var[id];
+    else E.var[id] = {k: +b.dataset.k, f: $("#siempre").checked ? null : hoyStr()};
+    guardar(); sonar("listo"); cerrarHoja();
+    toast(a === "original" ? "↩ Volviste al ejercicio original" : "🔁 Cambiado a: " + MEDIA[id].alt[+b.dataset.k].n);
+    if (E.sesion && $("#guia").innerHTML) {
+      const R = RUTINA[E.sesion.dia];
+      if (R.ej[E.sesion.i] && R.ej[E.sesion.i].id === id) { const ea = ejActivo(R.ej[E.sesion.i]); E.sesion.serie = Math.min(objetivo(ea, semanaActual().n).series - 1, (E.sesion.sets[ea.id] || []).length); }
+      guardar(); pintarGuia();
+    } else render();
+  }
+}
 
 // Lo que toca en cada ejercicio según la semana del programa (tabla de progresión)
 function objetivo(ej, sem){
@@ -379,13 +455,14 @@ function pEntreno(){
   let h = `<div class="seg" style="margin:0 0 14px">${Object.keys(RUTINA).map(x => `<button class="${x === k ? "on" : ""}" data-a="dia" data-d="${x}">${RUTINA[x].corto}</button>`).join("")}</div>`;
   h += `<div class="card hero"><h2>${R.nombre}</h2><p class="muted" style="margin:4px 0 10px">${R.foco}${k === hoyEntrena() ? " · <b style='color:var(--fuego2)'>te toca hoy</b>" : ""}</p>
     <div class="row w"><span class="chip f">Semana ${s.n}</span><span class="chip">Carga ${S.carga}</span><span class="chip">RIR ${S.rir}</span><span class="chip">⏱️ ~${minutos(duracionDia(k, s.n))} min</span></div>
-    <button class="btn" data-a="empezar" data-d="${k}" style="margin-top:14px">▶ Empezar guiado</button></div>`;
+    <button class="btn" data-a="empezar" data-d="${k}" style="margin-top:14px">▶ Empezar guiado</button>
+    <p class="small muted" style="margin:10px 0 0">📷 Tocá un ejercicio para ver cómo se hace o cambiarlo si no lo podés hacer.</p></div>`;
   h += `<div class="card"><h3>🔥 Entrada en calor · 10 min</h3><p class="small muted" style="margin:6px 0 0">5 min de cardio suave + 3 min de movilidad. Antes del primer ejercicio, 2 series livianas de aproximación (40–50% del peso).</p></div><div class="card">`;
-  R.ej.forEach((ej, i) => {
-    const o = objetivo(ej, s.n), sg = sugerencia(ej, o);
-    h += `<div class="ej"><div class="num">${i + 1}</div><div style="flex:1"><b>${ej.n}</b><div class="d">🛠️ ${ej.eq} · ${ej.m}</div>
+  R.ej.forEach((ej0, i) => {
+    const ej = ejActivo(ej0), o = objetivo(ej, s.n), sg = sugerencia(ej, o), img = imgDe(ej);
+    h += `<div class="ej" data-a="ficha" data-id="${ej0.id}" style="cursor:pointer"><div class="num">${i + 1}</div><div style="flex:1"><b>${ej.n}</b>${ej.base ? ' <span class="tag tec">🔁 variante</span>' : ""}<div class="d">🛠️ ${ej.eq} · ${ej.m}</div>
       <div class="tags"><span class="tag">${o.series} × ${o.reps}</span><span class="tag">RIR ${o.rir}</span><span class="tag">⏸ ${fmtDesc(o.desc)}</span><span class="tag">Tempo ${ej.t}</span>
-      ${sg.kg != null ? `<span class="tag" style="background:#3DDC8422;color:var(--ok)">${fmtKg(sg.kg)} kg</span>` : ""}${o.tec ? `<span class="tag tec">★ ${o.tec.n}</span>` : ""}</div></div></div>`;
+      ${sg.kg != null ? `<span class="tag" style="background:#3DDC8422;color:var(--ok)">${fmtKg(sg.kg)} kg</span>` : ""}${o.tec ? `<span class="tag tec">★ ${o.tec.n}</span>` : ""}</div></div>${img ? `<img class="mini" src="${rutaFoto(img, 1)}" alt="" loading="lazy">` : ""}</div>`;
   });
   h += `</div><details class="card"><summary>❓ ¿Qué significa RIR, tempo y ★?</summary><p class="small">
     <b>RIR</b> = repeticiones que te quedan «en el tanque». RIR 2 = terminás la serie sabiendo que podías hacer 2 más. RIR 0 = no sale ni una más.<br><br>
@@ -456,11 +533,11 @@ function pProgreso(){
     <p class="small muted">Pesate 3 veces por semana: a la mañana, en ayunas, después de ir al baño. En tu fase lo ideal es subir ${f.vel}.</p></div>`;
   h += `<div class="card"><h3>🏆 Tus pesos por ejercicio</h3>`;
   let alguno = false;
-  Object.values(RUTINA).forEach(R => R.ej.forEach(ej => {
+  todosEj().flatMap(e0 => [e0, ...(MEDIA[e0.id] ? MEDIA[e0.id].alt.map((a, k) => ({id: e0.id + "~" + k, n: a.n})) : [])]).forEach(ej => {
     const hh = E.hist[ej.id]; if (!hh || !hh.length) return; alguno = true;
     const ult = hh[hh.length - 1], mejor = Math.max(...hh.flatMap(x => x.sets.map(s => s.kg))), top = Math.max(...ult.sets.map(s => s.kg));
     h += `<div class="ej"><div style="flex:1"><b>${ej.n}</b><div class="d">Última vez (${ult.f.slice(8)}/${ult.f.slice(5, 7)}): ${fmtKg(top)} kg · reps ${ult.sets.map(s => s.reps).join(" / ")}</div></div><span class="chip f">🏆 ${fmtKg(mejor)}</span></div>`;
-  }));
+  });
   if (!alguno) h += `<p class="muted small">Cuando termines tu primer entrenamiento, acá vas a ver el peso de cada máquina.</p>`;
   h += `</div><div class="card"><h3>📅 Programa</h3><p class="small muted">Estás en la semana <b style="color:var(--ink)">${s.n}</b> de 12${s.ciclo > 1 ? " (vuelta " + s.ciclo + ")" : ""}. Si no coincide, corregila:</p>
     <div class="num-in"><button data-a="sem" data-d="-1">−</button><input value="Semana ${s.n}" readonly><button data-a="sem" data-d="1">+</button></div>
@@ -503,6 +580,7 @@ function accion(a, b){
   if (a === "tab") return ir(b.dataset.t);
   if (a === "empezar") return empezar(b.dataset.d);
   if (a === "seguir") return abrirGuia();
+  if (a === "ficha") return fichaEj(b.dataset.id);
   if (a === "dia") { diaElegido = b.dataset.d; sonar("toque"); return render(); }
   if (a === "comi") { const c = comidasHoy(); c[b.dataset.id] = !c[b.dataset.id]; guardar(); sonar(c[b.dataset.id] ? "listo" : "toque"); if (c[b.dataset.id]) vibrar(20); return render(); }
   if (a === "op") { E.opcion[b.dataset.id] = b.dataset.o; guardar(); sonar("toque"); return render(); }
@@ -528,7 +606,7 @@ function empezar(dia){
 async function pedirPantalla(){ try { if ("wakeLock" in navigator && !wake) { wake = await navigator.wakeLock.request("screen"); wake.addEventListener("release", () => wake = null); } } catch {} }
 document.addEventListener("visibilitychange", () => { if (!document.hidden && E && E.sesion && $("#guia").innerHTML) { pedirPantalla(); pintarGuia(); } });
 function abrirGuia(){ document.body.style.overflow = "hidden"; pedirPantalla(); pintarGuia(); }
-function cerrarGuia(){ detenerRitmo(); $("#guia").innerHTML = ""; clearInterval(reloj); reloj = null; try { wake && wake.release(); } catch {} wake = null; document.body.style.overflow = ""; render(); }
+function cerrarGuia(){ detenerRitmo(); cerrarHoja(); $("#guia").innerHTML = ""; clearInterval(reloj); reloj = null; try { wake && wake.release(); } catch {} wake = null; document.body.style.overflow = ""; render(); }
 
 function pintarGuia(){
   clearInterval(reloj); reloj = null; detenerRitmo();
@@ -543,23 +621,25 @@ function pintarGuia(){
     h = `${arriba}<div style="text-align:center;padding:18px 0"><div style="font-size:64px">🔥</div><h1>Entrada en calor</h1><p class="muted">10 minutos. No te la saltees: cuida las articulaciones y rendís más.</p></div>
       <div class="card"><div class="ej"><div class="num">1</div><div><b>5 min de cardio suave</b><div class="d">Bici o cinta, a ritmo de poder charlar.</div></div></div>
       <div class="ej"><div class="num">2</div><div><b>3 min de movilidad</b><div class="d">Círculos de hombros, cadera, rodillas y muñecas.</div></div></div>
-      <div class="ej"><div class="num">3</div><div><b>2 series livianas de aproximación</b><div class="d">Del primer ejercicio (${R.ej[0].n}) con 40–50% del peso.</div></div></div></div>
+      <div class="ej"><div class="num">3</div><div><b>2 series livianas de aproximación</b><div class="d">Del primer ejercicio (${ejActivo(R.ej[0]).n}) con 40–50% del peso.</div></div></div></div>
       <button class="btn" data-g="arrancar">Listo, arranquemos 💪</button>`;
   } else {
-    const ej = R.ej[ss.i], o = objetivo(ej, sem), sg = sugerencia(ej, o), hechos = ss.sets[ej.id] || [];
+    const ej = ejActivo(R.ej[ss.i]), o = objetivo(ej, sem), sg = sugerencia(ej, o), hechos = ss.sets[ej.id] || [];
     const kgPrevio = hechos.length ? hechos[hechos.length - 1].kg : sg.kg != null ? sg.kg : (E.ultimoKg[ej.id] || "");
     const [, rmax] = rango(o.reps), repsPrevio = hechos.length ? hechos[hechos.length - 1].reps : rmax;
     const tp = ej.t.split("-"), paso = ej.c ? 2.5 : 1.25;
     h = `${arriba}<div class="small muted" style="font-weight:800">EJERCICIO ${ss.i + 1} DE ${R.ej.length}</div>
       <h1 style="font-size:30px;line-height:1.05;margin:4px 0 8px">${ej.n}</h1>
-      <div class="row w"><span class="chip">🛠️ ${ej.eq}</span><span class="chip">🎯 ${ej.m}</span></div>
+      <div class="row w"><span class="chip">🛠️ ${ej.eq}</span><span class="chip">🎯 ${ej.m}</span>${ej.base ? '<span class="chip f">🔁 variante</span>' : ""}</div>
+      ${foto(ej)}
+      <p class="small" style="margin:8px 0 0">💬 ${ej.tip}</p>
+      <button class="btn no chico" data-g="variantes" style="width:100%;margin-top:10px">🚫 No se puede realizar · ver variantes</button>
       <div class="objetivo"><div><b>${ss.serie + 1}/${o.series}</b><small>SERIE</small></div><div><b>${o.reps}</b><small>REPS</small></div><div><b>${o.rir}</b><small>RIR</small></div></div>
       <div class="consejo">${{sube:"📈 ", baja:"📉 ", igual:"💡 "}[sg.tipo] || "💡 "}${sg.txt}</div>
       ${ss.serie === o.series - 1 && o.tec ? `<div class="consejo" style="background:#C9CED630"><b>★ Último set: ${o.tec.n}</b><br>${o.tec.t}${ej.tec === "drop" && kgPrevio ? ` (≈ ${fmtKg(redondear(kgPrevio * 0.8, 1.25))} kg)` : ""}</div>` : ""}
       <div class="lbl">Ritmo de cada repetición · ${ej.t}</div>
       <div class="tempo" id="tempo"><div><b>${tp[0]}s</b>bajá</div><div><b>${tp[1]}s</b>pausa</div><div><b>${tp[2]}s</b>subí</div><div><b>${tp[3]}s</b>arriba</div></div>
       <button class="btn sec chico" data-g="ritmo" style="margin-top:8px;width:100%">▶ Marcame el ritmo</button>
-      <p class="small muted" style="margin:10px 0 0">💬 ${ej.tip}</p>
       <div class="lbl">Peso que usaste (kg)</div>
       <div class="num-in"><button data-g="kg" data-d="-${paso}">−</button><input id="gKg" type="number" inputmode="decimal" step="0.25" value="${kgPrevio}" placeholder="kg"><button data-g="kg" data-d="${paso}">+</button></div>
       <div class="lbl">Repeticiones que hiciste</div>
@@ -577,8 +657,8 @@ function pintarDescanso(arriba){
   const ss = E.sesion, R = RUTINA[ss.dia], sem = semanaActual().n, total = ss.descansoTotal || 60;
   let prox;
   if (ss.i >= R.ej.length) prox = "¡Era la última serie! 🏁";
-  else if (ss.serie === 0) prox = `Próximo ejercicio:<br><b style="font-size:20px">${R.ej[ss.i].n}</b><br><span class="small muted">🛠️ ${R.ej[ss.i].eq} — andá preparando la máquina</span>`;
-  else prox = `Próximo: <b>serie ${ss.serie + 1} de ${objetivo(R.ej[ss.i], sem).series}</b>`;
+  else if (ss.serie === 0) { const pe = ejActivo(R.ej[ss.i]), pi = imgDe(pe); prox = `Próximo ejercicio:<br><b style="font-size:20px">${pe.n}</b><br><span class="small muted">🛠️ ${pe.eq} — andá preparando la máquina</span>${pi ? `<br><img class="mini" style="width:140px;height:105px;margin-top:10px" src="${rutaFoto(pi, 1)}" alt="">` : ""}`; }
+  else prox = `Próximo: <b>serie ${ss.serie + 1} de ${objetivo(ejActivo(R.ej[ss.i]), sem).series}</b>`;
   $("#guia").innerHTML = `<div class="guia"><div class="in">${arriba}
     <div style="text-align:center"><div class="lbl" style="margin-top:6px">DESCANSO</div>
     <div class="reloj"><svg width="230" height="230"><circle cx="115" cy="115" r="104" stroke="#1F2023" stroke-width="14" fill="none"/>
@@ -606,10 +686,11 @@ function guia(a, b){
   if (a === "arrancar") { ss.i = 0; ss.serie = 0; guardar(); sonar("listo"); return pintarGuia(); }
   if (a === "kg" || a === "rep") { const i = a === "kg" ? $("#gKg") : $("#gRep"); i.value = Math.max(0, Math.round(((parseFloat(String(i.value).replace(",", ".")) || 0) + parseFloat(b.dataset.d)) * 100) / 100); sonar("toque"); return; }
   if (a === "rir") { document.querySelectorAll("[data-g=rir]").forEach(x => x.classList.toggle("on", x === b)); sonar("toque"); return; }
-  if (a === "ritmo") return ritmoOn ? detenerRitmo() : marcarRitmo(R.ej[ss.i]);
+  if (a === "ritmo") return ritmoOn ? detenerRitmo() : marcarRitmo(ejActivo(R.ej[ss.i]));
+  if (a === "variantes") { detenerRitmo(); return hojaVariantes(R.ej[ss.i].id); }
   if (a === "serie") {
     detenerRitmo();
-    const ej = R.ej[ss.i], o = objetivo(ej, sem);
+    const ej = ejActivo(R.ej[ss.i]), o = objetivo(ej, sem);
     const kg = parseFloat(String($("#gKg").value).replace(",", ".")) || 0, reps = parseInt($("#gRep").value, 10) || 0;
     if (!kg) { toast("Anotá el peso que usaste (kg)"); $("#gKg").focus(); return; }
     if (!reps) { toast("Anotá cuántas repeticiones hiciste"); return; }
@@ -630,7 +711,7 @@ function guia(a, b){
   if (a === "yasta") { clearInterval(reloj); reloj = null; return finDescanso(); }
   if (a === "saltar") { ss.i++; ss.serie = 0; guardar(); return pintarGuia(); }
   if (a === "atras") {
-    if (ss.i > 0) { ss.i--; const o = objetivo(R.ej[ss.i], sem); ss.serie = Math.min(o.series - 1, (ss.sets[R.ej[ss.i].id] || []).length); } else ss.i = -1;
+    if (ss.i > 0) { ss.i--; const ea = ejActivo(R.ej[ss.i]), o = objetivo(ea, sem); ss.serie = Math.min(o.series - 1, (ss.sets[ea.id] || []).length); } else ss.i = -1;
     guardar(); return pintarGuia();
   }
   if (a === "terminar") return terminar();
@@ -690,7 +771,7 @@ if (E && E.sesion && E.sesion.f === hoyStr() && E.sesion.descansoHasta) abrirGui
 setInterval(() => { if (E && E.inicio && !$("#guia").innerHTML && !(document.activeElement && document.activeElement.tagName === "INPUT")) render(); }, 60000);
 </script>
 <script>
-const VERSION_APP = "20260927223716";
+const VERSION_APP = "20260927225427";
 if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").then(reg => {
   document.addEventListener("visibilitychange", () => { if (!document.hidden) reg.update().catch(() => {}); });
 }).catch(() => {}));
