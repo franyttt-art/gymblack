@@ -185,7 +185,12 @@ const RUTINA = {
     {id:"lb6",n:"Pantorrilla sentado",eq:"Máquina de gemelos sentado",m:"Sóleo",s:4,r:"15–20",d:60,t:"2-2-1-0",tip:"2 s abajo estirando, subí bien arriba."}]}
 };
 // getDay(): 0 = domingo … 6 = sábado
-const SEMANA_DIAS = {1:"UA",2:"LA",4:"UB",5:"LB"};
+// Días de entreno: cada uno elige 4 en «Mi horario» (E.horario.diasEntreno, 0 = domingo … 6 = sábado).
+// Las 4 sesiones del programa se reparten en orden (Upper A, Lower A, Upper B, Lower B) empezando por el lunes.
+const DIAS_ENTRENO_BASE = [1, 2, 4, 5], SESIONES = ["UA", "LA", "UB", "LB"], ORDEN_SEMANA = [1, 2, 3, 4, 5, 6, 0];
+function sesionDe(dow, dias = (E && E.horario && E.horario.diasEntreno) || DIAS_ENTRENO_BASE){
+  const i = ORDEN_SEMANA.filter(d => dias.includes(d)).indexOf(dow); return i >= 0 ? SESIONES[i] : undefined;
+}
 const NOMBRE_DIA = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
 // Tabla de progresión — 12 semanas (página 8 del PDF)
 const SEMANAS = [
@@ -387,7 +392,7 @@ function kcalComida(o, slot){ return o.kcal + itemsComida(o, slot).reduce((t, i)
 const rango = s => s.split("–").map(Number);
 const redondear = (kg, paso) => Math.max(0, Math.round(kg / paso) * paso);
 const fmtKg = kg => (Math.round(kg * 100) / 100).toString().replace(".", ",");
-const hoyEntrena = () => SEMANA_DIAS[new Date().getDay()];
+const hoyEntrena = () => sesionDe(new Date().getDay());
 
 /* ============ FOTOS Y VARIANTES ============ */
 // E.var[id] = {k: número de variante, f: fecha (vale solo ese día) o null (siempre)}
@@ -417,7 +422,7 @@ function hojaMenu(id){
 function tarjetaHorario(){
   if (E.horarioVisto) return "";
   const H = horario(), acts = H.acts.map(a => `${esc(a.n)} de ${a.desde} a ${a.hasta}`).join(", ");
-  return `<div class="card"><h3>🕒 ¿Es este tu horario?</h3><p class="small muted" style="margin:6px 0 10px">Las comidas se acomodan a tu día. Ahora están armadas para levantarte a las ${H.levanta}, entrenar a las ${H.entrena} y acostarte a las ${H.acuesta}${acts ? ", con " + acts : ""}.</p>
+  return `<div class="card"><h3>🕒 ¿Es este tu horario?</h3><p class="small muted" style="margin:6px 0 10px">Las comidas se acomodan a tu día. Ahora están armadas para levantarte a las ${H.levanta}, entrenar a las ${H.entrena} (${ORDEN_SEMANA.filter(d => sesionDe(d)).map(d => NOMBRE_DIA[d].toLowerCase()).join(", ")}) y acostarte a las ${H.acuesta}${acts ? ", con " + acts : ""}.</p>
     <div class="row"><button class="btn chico" data-a="horario" style="flex:1">✏️ Armar mi horario</button><button class="btn chico sec" data-a="horarioOk" style="flex:1">Sí, es este</button></div></div>`;
 }
 let borrador = null;  // horario que se está editando en la hoja (se guarda recién al tocar «Guardar»)
@@ -428,7 +433,11 @@ function hojaHorario(){
     <p class="small muted" style="margin:6px 0 4px">Con esto acomodo las comidas: el pre-entreno antes de entrenar, la comida grande justo después, y nada en el medio de tus actividades.</p>
     <div class="lbl">Me levanto</div><input id="hLev" class="campo" type="time" value="${B.levanta}">
     <div class="lbl">Entreno a las</div><input id="hEnt" class="campo" type="time" value="${B.entrena}">
-    <p class="small muted" style="margin:4px 0 0">Los días de entreno: lunes, martes, jueves y viernes · ~1 h 30 min.</p>
+    <p class="small muted" style="margin:4px 0 0">~1 h 30 min por entrenamiento.</p>
+    <div class="lbl">Días de entreno (elegí 4 · ${(B.diasEntreno || DIAS_ENTRENO_BASE).length} de 4)</div>
+    <div class="dias" style="margin-top:0">${semana.map(d => { const k = sesionDe(d, B.diasEntreno || DIAS_ENTRENO_BASE);
+      return `<button class="${k ? "on" : ""}" data-h="hent" data-d="${d}">${NOMBRE_DIA[d].slice(0, 2)}<br>${k ? (k[0] === "U" ? "💪" : "🦵") : "·"}</button>`; }).join("")}</div>
+    <p class="small muted" style="margin:6px 0 0">Se reparten en orden: Upper A, Lower A, Upper B, Lower B. Lo ideal es dejar un día de descanso en el medio (por ejemplo lunes, martes, jueves y viernes).</p>
     <div class="lbl">Me acuesto</div><input id="hDor" class="campo" type="time" value="${B.acuesta}">
     <div class="lbl">Actividades fijas (facultad, trabajo…)</div>
     ${B.acts.length ? "" : `<p class="small muted" style="margin:0">No tenés ninguna. Si tenés facultad, trabajo o algo con horario fijo, agregalo y las comidas no caen en el medio.</p>`}
@@ -449,6 +458,7 @@ function leerBorrador(){
 function validarHorario(B){
   const lev = aMin(B.levanta); let dor = aMin(B.acuesta), T = aMin(B.entrena);
   if (dor <= lev) dor += 1440; if (T < lev) T += 1440;
+  if ((B.diasEntreno || DIAS_ENTRENO_BASE).length !== 4) return "Elegí 4 días de entreno: el programa tiene 4 entrenamientos por semana";
   if (dor - lev < 12 * 60) return "Entre que te levantás y te acostás tiene que haber al menos 12 horas";
   if (T - lev < 60) return "Poné el entrenamiento al menos 1 hora después de levantarte, así llegás a desayunar";
   if (dor - (T + DUR_ENTRENO) < 60) return "Terminá de entrenar al menos 1 hora antes de acostarte";
@@ -457,7 +467,7 @@ function validarHorario(B){
     if (!x.dias.length) return `Elegí qué días tenés ${x.n}`;
     const d = aMin(x.desde), h = aMin(x.hasta);
     if (h <= d) return `${x.n}: la hora de fin tiene que ser después de la de inicio`;
-    if (x.dias.some(dd => SEMANA_DIAS[dd]) && d < aMin(B.entrena) + DUR_ENTRENO && h > aMin(B.entrena)) return `${x.n} se superpone con el entrenamiento (${B.entrena} a ${aHora(aMin(B.entrena) + DUR_ENTRENO)}) en un día de entreno`;
+    if (x.dias.some(dd => sesionDe(dd, B.diasEntreno || DIAS_ENTRENO_BASE)) && d < aMin(B.entrena) + DUR_ENTRENO && h > aMin(B.entrena)) return `${x.n} se superpone con el entrenamiento (${B.entrena} a ${aHora(aMin(B.entrena) + DUR_ENTRENO)}) en un día de entreno`;
   }
   return null;
 }
@@ -466,6 +476,9 @@ function accionHorario(a, b){
   leerBorrador(); const B = borrador, i = +b.dataset.i;
   if (a === "hquitar") B.acts.splice(i, 1);
   if (a === "hagregar") B.acts.push({n:"", desde:"09:00", hasta:"13:00", dias:[1, 2, 3, 4, 5]});
+  if (a === "hent") { const d = +b.dataset.d, l = B.diasEntreno || [...DIAS_ENTRENO_BASE];
+    if (!l.includes(d) && l.length >= 4) { toast("Ya elegiste 4 días: sacá uno antes de agregar otro"); return; }
+    B.diasEntreno = l.includes(d) ? l.filter(x => x !== d) : [...l, d]; }
   if (a === "hdia") { const d = +b.dataset.d, l = B.acts[i].dias; B.acts[i].dias = l.includes(d) ? l.filter(x => x !== d) : [...l, d]; }
   if (a === "hguardar") {
     const err = validarHorario(B); if (err) return toast(err);
@@ -720,14 +733,14 @@ function pHoy(){
   return h;
 }
 function siguienteEntreno(){
-  for (let i = 1; i <= 7; i++) { const d = new Date(); d.setDate(d.getDate() + i); const k = SEMANA_DIAS[d.getDay()];
+  for (let i = 1; i <= 7; i++) { const d = new Date(); d.setDate(d.getDate() + i); const k = sesionDe(d.getDay());
     if (k) return `<br><br>Próximo: <b style="color:var(--ink)">${NOMBRE_DIA[d.getDay()]} · ${RUTINA[k].nombre}</b>`; }
   return "";
 }
 function diasSemana(){
   const l = lunesDe(new Date()); let h = '<div class="dias">';
   for (let i = 0; i < 7; i++) {
-    const d = new Date(l); d.setDate(l.getDate() + i); const k = SEMANA_DIAS[d.getDay()], f = fechaStr(d);
+    const d = new Date(l); d.setDate(l.getDate() + i); const k = sesionDe(d.getDay()), f = fechaStr(d);
     h += `<div class="${k ? "en" : ""} ${f === hoyStr() ? "hoy" : ""} ${E.entrenos[f] ? "hecho" : ""}">${NOMBRE_DIA[d.getDay()].slice(0, 2)}<br>${E.entrenos[f] ? "✅" : k ? k[0] === "U" ? "💪" : "🦵" : "·"}</div>`;
   }
   return h + `</div><p class="small muted" style="margin:8px 0 0">💪 tren superior · 🦵 piernas · ✅ hecho</p>`;
@@ -748,7 +761,7 @@ function instalarCard(){
 
 // ---------- ENTRENAR ----------
 let diaElegido = null;
-function proximoDia(){ for (let i = 1; i <= 7; i++) { const d = new Date(); d.setDate(d.getDate() + i); if (SEMANA_DIAS[d.getDay()]) return SEMANA_DIAS[d.getDay()]; } return "UA"; }
+function proximoDia(){ for (let i = 1; i <= 7; i++) { const d = new Date(); d.setDate(d.getDate() + i); if (sesionDe(d.getDay())) return sesionDe(d.getDay()); } return "UA"; }
 function pEntreno(){
   const s = semanaActual(), S = SEMANAS[s.n - 1], k = diaElegido || hoyEntrena() || proximoDia(), R = RUTINA[k];
   let h = `<div class="seg" style="margin:0 0 14px">${Object.keys(RUTINA).map(x => `<button class="${x === k ? "on" : ""}" data-a="dia" data-d="${x}">${RUTINA[x].corto}</button>`).join("")}</div>`;
@@ -791,7 +804,7 @@ function nombrePorHora(m){ m = ((m % 1440) + 1440) % 1440; return m < 630 ? "Col
 function planDia(dow = new Date().getDay()){
   const H = horario(), lev = aMin(H.levanta);
   let dorm = aMin(H.acuesta); if (dorm <= lev) dorm += 1440;
-  const T = aMin(H.entrena) < lev ? aMin(H.entrena) + 1440 : aMin(H.entrena), fin = T + DUR_ENTRENO, entrena = !!SEMANA_DIAS[dow];
+  const T = aMin(H.entrena) < lev ? aMin(H.entrena) + 1440 : aMin(H.entrena), fin = T + DUR_ENTRENO, entrena = !!sesionDe(dow);
   const acts = (H.acts || []).filter(a => a.dias.includes(dow)).map(a => { let d = aMin(a.desde), h = aMin(a.hasta); if (d < lev) { d += 1440; h += 1440; } if (h <= d) h += 1440; return {...a, d, h}; });
   const bloqueado = m => acts.find(a => m >= a.d && m < a.h) || (m >= T && m < fin ? {d:T, h:fin} : null);
   // saca una comida de adentro de una actividad o del entrenamiento: 30 min antes o 15 min después, lo que quede más cerca dentro de [lo, hi]
@@ -826,7 +839,7 @@ function planDia(dow = new Date().getDay()){
       prep:`Entre ${sin(fac.ia)} y ${sin(fac.ib)} pasan ${Math.round((fac.b - fac.a) / 60)} h: este shake mantiene la construcción de músculo.${act ? " Llevalo medido en una bolsita." : ""}`};
   }
   const bloques = acts.map(a => ({m:a.d, ic:iconoAct(a.n), t:`${aHora(a.d)} – ${aHora(a.h)} · ${esc(a.n)}`}));
-  if (entrena) bloques.push({m:T, ic:"🏋️", t:`${aHora(T)} – ${aHora(fin)} · Entrenamiento`, sub:RUTINA[SEMANA_DIAS[dow]].nombre});
+  if (entrena) bloques.push({m:T, ic:"🏋️", t:`${aHora(T)} – ${aHora(fin)} · Entrenamiento`, sub:RUTINA[sesionDe(dow)].nombre});
   return {m:t, n, fac, bloques, lev};
 }
 const horaComida = (c, P = planDia()) => c.id === "fac" ? (P.fac ? P.fac.m : null) : P.m[c.id];
@@ -916,7 +929,7 @@ function pProgreso(){
     <p class="small muted">Reps: ejercicios compuestos / de aislamiento.</p></details></div>`;
   h += `<div class="card"><h3>⚙️ Ajustes</h3>
     <div class="row" style="margin-top:8px"><span>🎯 ${bajando() ? "Bajar de peso" : "Ganar músculo"} · meta ${fmtKg(pesoMeta())} kg<br><small class="muted">${E.sexo === "f" ? "Mujer" : "Hombre"} · ${E.edad} años · ${E.altura} cm</small></span><span class="sp"></span><button class="btn chico sec" data-a="objetivo">Cambiar</button></div>
-    <div class="row" style="margin-top:8px"><span>🕒 Mi horario<br><small class="muted">Me levanto ${horario().levanta} · entreno ${horario().entrena} · me acuesto ${horario().acuesta}</small></span><span class="sp"></span><button class="btn chico sec" data-a="horario">Cambiar</button></div>
+    <div class="row" style="margin-top:8px"><span>🕒 Mi horario<br><small class="muted">Me levanto ${horario().levanta} · entreno ${horario().entrena} (${ORDEN_SEMANA.filter(d => sesionDe(d)).map(d => NOMBRE_DIA[d].slice(0, 2)).join(", ")}) · me acuesto ${horario().acuesta}</small></span><span class="sp"></span><button class="btn chico sec" data-a="horario">Cambiar</button></div>
     <div class="row" style="margin-top:8px"><span>🍽️ Menú: ${E.menuFijo ? "siempre el mismo" : "variado (7 días)"}</span><span class="sp"></span><button class="btn chico sec" data-a="menuFijo">${E.menuFijo ? "Variar" : "Fijar"}</button></div>
     <div class="row" style="margin-top:8px"><span>🔊 Sonido al terminar el descanso</span><span class="sp"></span><button class="btn chico sec" data-a="sonido">${E.sonido ? "Sí" : "No"}</button></div>
     <div class="row" style="margin-top:10px"><span>📤 Pasar mis datos a otro dispositivo</span><span class="sp"></span><button class="btn chico sec" data-a="exportar">Link</button></div>
@@ -1206,7 +1219,7 @@ if (E && E.sesion && E.sesion.f === hoyStr() && E.sesion.descansoHasta) abrirGui
 setInterval(() => { if (E && E.inicio && !$("#guia").innerHTML && !(document.activeElement && document.activeElement.tagName === "INPUT")) render(); }, 60000);
 </script>
 <script>
-const VERSION_APP = "20260928130322";
+const VERSION_APP = "20260928130918";
 if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").then(reg => {
   document.addEventListener("visibilitychange", () => { if (!document.hidden) reg.update().catch(() => {}); });
 }).catch(() => {}));
