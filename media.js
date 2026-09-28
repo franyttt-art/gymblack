@@ -121,5 +121,119 @@ const MEDIA = {
   lb6:{img:"Seated_Calf_Raise", alt:[
     {n:"Pantorrilla sentado con barra",eq:"Banco + barra sobre las rodillas + disco",img:"Barbell_Seated_Calf_Raise",tip:"Puntas sobre un disco, barra (con toalla) sobre las rodillas."},
     {n:"Pantorrilla sentado con mancuerna",eq:"Banco + mancuerna + escalón",img:"Dumbbell_Seated_One-Leg_Calf_Raise",tip:"Mancuerna sobre la rodilla, de a una pierna."},
-    {n:"Pantorrilla en la prensa",eq:"Máquina leg press",img:"Calf_Press_On_The_Leg_Press_Machine",tip:"Puntas en el borde de la plataforma, empujá en puntas."}]}
+    {n:"Pantorrilla en la prensa",eq:"Máquina leg press",img:"Calf_Press_On_The_Leg_Press_Machine",tip:"Puntas en el borde de la plataforma, empujá en puntas."}]},
+  // ================= RUTINA EN CASA (solo con el propio cuerpo) =================
+  // nota = aclaración cuando la foto usa algún elemento que en casa no hace falta
+  // ---------- Día 1 · Upper A en casa ----------
+  ca1:{img:"Push-Ups_With_Feet_Elevated", alt:[
+    {n:"Flexiones",eq:"Piso",img:"Pushups",c:1,tip:"Manos un poco más abiertas que los hombros, cuerpo recto. Bajá el pecho hasta casi tocar el piso."},
+    {n:"Flexiones inclinadas (manos en la silla)",eq:"Silla firme contra la pared",img:"Incline_Push-Up",c:1,tip:"Manos en el asiento de la silla: es más fácil. Cuerpo recto de la cabeza a los talones."},
+    {n:"Flexiones con rodillas apoyadas",eq:"Piso",img:"Incline_Push-Up_Medium",c:1,tip:"Rodillas en el piso y cuerpo recto de las rodillas a la cabeza. Bajá el pecho entre las manos."}]},
+  ca2:{img:"Inverted_Row", nota:"En la foto es una barra: en casa usá el borde de una mesa firme.", alt:[
+    {n:"Remo invertido con rodillas dobladas",eq:"Mesa firme",img:"Inverted_Row",c:1,tip:"Igual que el remo bajo la mesa pero con las rodillas dobladas y los pies cerca: es más fácil."},
+    {n:"Remo con toalla en la puerta",eq:"Toalla atada al picaporte de una puerta cerrada",img:"Inverted_Row_with_Straps",c:1,tip:"Puerta bien cerrada, agarrá la toalla con las dos manos, inclinate hacia atrás y tirá los codos hacia atrás."},
+    {n:"Superman con tirón",eq:"Piso",img:"Superman",tip:"Boca abajo, brazos estirados adelante. Levantá pecho y brazos y tirá los codos hacia las costillas."}]},
+  ca3:{img:"Push-Up_Wide", alt:[
+    {n:"Flexiones inclinadas abiertas",eq:"Silla firme contra la pared",img:"Incline_Push-Up_Wide",c:1,tip:"Manos bien abiertas sobre la silla: es más fácil. Pausa de 2 s abajo."},
+    {n:"Flexiones con rodillas abiertas",eq:"Piso",img:"Incline_Push-Up_Wide",tip:"Rodillas apoyadas y manos bien abiertas. Pausa de 2 s abajo."},
+    {n:"Aprieto isométrico de pecho",eq:"Nada",img:"Isometric_Chest_Squeezes",tip:"Palmas juntas frente al pecho, apretá fuerte 20–30 s. Contá cada 5 s como una rep."}]},
+  ca4:{img:"Superman", alt:[
+    {n:"Remo bajo la mesa",eq:"Mesa firme",img:"Inverted_Row",c:1,tip:"Acostado bajo la mesa, llevá el pecho al borde con el cuerpo recto."},
+    {n:"Remo con toalla en la puerta",eq:"Toalla atada al picaporte de una puerta cerrada",img:"Inverted_Row_with_Straps",c:1,tip:"Inclinate hacia atrás y tirá los codos hacia atrás apretando la espalda."},
+    {n:"Hiperextensión en el piso",eq:"Piso",img:"Superman",tip:"Boca abajo, manos detrás de la cabeza. Levantá el pecho 2 s y bajá lento."}]},
+  ca5:{img:"Handstand_Push-Ups", nota:"La foto muestra la versión más difícil (contra la pared). Arrancá con los pies en el piso y la cadera bien arriba, en forma de V invertida.", alt:[
+    {n:"Flexiones pike con rodillas",eq:"Piso",img:"Handstand_Push-Ups",c:1,tip:"Igual, con las rodillas apoyadas y la cadera arriba: es más fácil."},
+    {n:"Flexiones pike con pies en la silla",eq:"Silla firme",img:"Handstand_Push-Ups",c:1,tip:"Más difícil: pies en la silla, cadera arriba, bajá la cabeza entre las manos."},
+    {n:"Flexiones inclinadas",eq:"Silla firme contra la pared",img:"Incline_Push-Up",c:1,tip:"Si todavía no te salen las pike: manos en la silla y cuerpo recto."}]},
+  ca6:{img:"Lying_Rear_Delt_Raise", nota:"La foto usa mancuernas y un banco: en casa hacelo boca abajo en el piso, sin peso.", alt:[
+    {n:"Elevaciones en T boca abajo",eq:"Piso",img:"Lying_Rear_Delt_Raise",tip:"Brazos abiertos en cruz, pulgares arriba. Subí los brazos 2 s apretando atrás."},
+    {n:"Elevación lateral isométrica contra la pared",eq:"Pared",img:"Shoulder_Raise",tip:"De costado a la pared, empujá la pared con el dorso de la mano 20–30 s. Cada 5 s es una rep."},
+    {n:"Plancha lateral con brazo arriba",eq:"Piso",img:"Side_Bridge",tip:"En plancha de costado, subí y bajá el brazo de arriba bien lento."}]},
+  ca7:{img:"Bench_Dips", nota:"En la foto es un banco: en casa usá una silla firme apoyada contra la pared.", alt:[
+    {n:"Fondos en silla con rodillas dobladas",eq:"Silla firme contra la pared",img:"Bench_Dips",tip:"Pies cerca de la silla y rodillas dobladas: es más fácil."},
+    {n:"Flexiones diamante",eq:"Piso",img:"Push-Ups_-_Close_Triceps_Position",tip:"Manos juntas debajo del pecho, codos pegados al cuerpo."},
+    {n:"Extensión de tríceps en la mesa",eq:"Borde de la mesada o una mesa firme",img:"Body_Tricep_Press",tip:"Manos en el borde, cuerpo inclinado y recto. Doblá solo los codos y volvé a estirar."}]},
+  ca8:{img:"Inverted_Row", nota:"Palmas mirando hacia vos. En la foto es una barra: en casa, el borde de una mesa firme.", alt:[
+    {n:"Remo supino con rodillas dobladas",eq:"Mesa firme",img:"Inverted_Row",tip:"Palmas hacia vos y rodillas dobladas: es más fácil."},
+    {n:"Curl con toalla (contra el pie)",eq:"Toalla",img:"Standing_Towel_Triceps_Extension",tip:"Pisá la toalla con un pie y tirá hacia arriba como en un curl, haciendo fuerza con la pierna en contra."},
+    {n:"Remo con toalla en la puerta, palmas arriba",eq:"Toalla atada al picaporte de una puerta cerrada",img:"Inverted_Row_with_Straps",tip:"Palmas mirando hacia arriba y codos pegados al cuerpo para que trabaje el bíceps."}]},
+  // ---------- Día 2 · Lower A en casa ----------
+  cl1:{img:"Split_Squat_with_Dumbbells", nota:"La foto usa mancuernas y el pie de atrás en el piso: vos sin peso y con el pie de atrás sobre la silla.", alt:[
+    {n:"Estocada fija (pie de atrás en el piso)",eq:"Piso",img:"Split_Squat_with_Dumbbells",c:1,tip:"Igual, con el pie de atrás en el piso: es más fácil. Bajá la rodilla de atrás casi al piso."},
+    {n:"Sentadilla",eq:"Piso",img:"Bodyweight_Squat",c:1,tip:"Pies al ancho de hombros, bajá sacando la cola atrás con el pecho arriba."},
+    {n:"Estocadas saltando",eq:"Piso",img:"Split_Squats",c:1,tip:"Más difícil: saltá cambiando de pierna en el aire y caé suave."}]},
+  cl2:{img:"Bodyweight_Squat", alt:[
+    {n:"Sentadilla a la silla",eq:"Silla",img:"Sit_Squats",c:1,tip:"Bajá hasta rozar la silla con la cola y volvé a subir: es más fácil."},
+    {n:"Sentadilla con salto",eq:"Piso",img:"Freehand_Jump_Squat",c:1,tip:"Más difícil: subí saltando y caé suave, doblando las rodillas."},
+    {n:"Sentadilla sumo con pausa",eq:"Piso",img:"Bodyweight_Squat",c:1,tip:"Pies bien abiertos y puntas afuera. Pausa de 2 s abajo."}]},
+  cl3:{img:"Bodyweight_Walking_Lunge", alt:[
+    {n:"Estocada hacia atrás",eq:"Piso",img:"Crossover_Reverse_Lunge",tip:"Dá el paso hacia atrás: cuida más las rodillas."},
+    {n:"Subidas a la silla",eq:"Silla firme o un escalón",img:"Step-up_with_Knee_Raise",tip:"Subí empujando con la pierna de arriba, sin impulsarte con la de abajo."},
+    {n:"Sentadilla a la silla",eq:"Silla",img:"Sit_Squats",tip:"Si las estocadas te molestan: bajá hasta la silla y volvé a subir."}]},
+  cl4:{img:"Ball_Leg_Curl", nota:"La foto usa una pelota: vos apoyá los talones sobre una toalla en un piso liso (o con medias) y deslizá.", alt:[
+    {n:"Curl con toalla a una pierna",eq:"Piso liso + toalla",img:"Ball_Leg_Curl",tip:"Más difícil: con una sola pierna, la otra en el aire."},
+    {n:"Puente de glúteo con talones lejos",eq:"Piso",img:"Butt_Lift_Bridge",tip:"Talones bien lejos de la cola: trabaja más la parte de atrás del muslo."},
+    {n:"Nórdico asistido",eq:"Pies trabados bajo el sillón o la cama",img:"Floor_Glute-Ham_Raise",tip:"Bajá lo más lento que puedas con el cuerpo recto y frená con las manos."}]},
+  cl5:{img:"Kettlebell_One-Legged_Deadlift", nota:"La foto usa una pesa: en casa hacelo igual, sin peso.", alt:[
+    {n:"Peso muerto a una pierna apoyado en la pared",eq:"Pared",img:"Kettlebell_One-Legged_Deadlift",c:1,tip:"Una mano en la pared para el equilibrio: es más fácil."},
+    {n:"Buenos días",eq:"Piso",img:"Hyperextensions_With_No_Hyperextension_Bench",c:1,tip:"Manos detrás de la cabeza, rodillas apenas dobladas, bajá el torso llevando la cadera atrás."},
+    {n:"Puente de glúteo a una pierna",eq:"Piso",img:"Single_Leg_Glute_Bridge",c:1,tip:"Acostado, un pie en el piso y la otra pierna arriba. Subí la cadera apretando el glúteo."}]},
+  cl6:{img:"Standing_Dumbbell_Calf_Raise", nota:"La foto usa mancuernas: vos a una pierna, sin peso, con el talón colgando del escalón.", alt:[
+    {n:"Pantorrilla con las dos piernas en el escalón",eq:"Un escalón + la pared",img:"Standing_Dumbbell_Calf_Raise",tip:"Con las dos piernas: es más fácil."},
+    {n:"Pantorrilla en el piso a una pierna",eq:"Piso + la pared",img:"Calf_Raises_-_With_Bands",tip:"Sin escalón: subí en puntas de a una pierna."},
+    {n:"Saltos en puntas",eq:"Piso",img:"Fast_Skipping",tip:"Saltitos rápidos y chicos en puntas de pie."}]},
+  // ---------- Día 3 · Upper B en casa ----------
+  cu1:{img:"Handstand_Push-Ups", nota:"La foto muestra la versión contra la pared. La de tu rutina: pies en la silla, cadera arriba y la cabeza baja entre las manos.", alt:[
+    {n:"Flexiones pike (pies en el piso)",eq:"Piso",img:"Handstand_Push-Ups",c:1,tip:"Cadera bien arriba en V invertida: es más fácil."},
+    {n:"Flexiones en parada de manos contra la pared",eq:"Pared",img:"Handstand_Push-Ups",c:1,tip:"Solo si ya sos avanzado: de manos contra la pared, bajá la cabeza al piso con control."},
+    {n:"Flexiones con pies elevados",eq:"Pies sobre una silla",img:"Push-Ups_With_Feet_Elevated",c:1,tip:"Si la pike te cuesta demasiado: flexiones con los pies en la silla."}]},
+  cu2:{img:"Inverted_Row", nota:"En la foto es una barra: en casa, el borde de una mesa firme.", alt:[
+    {n:"Remo invertido con rodillas dobladas",eq:"Mesa firme",img:"Inverted_Row",c:1,tip:"Rodillas dobladas y pies cerca: es más fácil."},
+    {n:"Remo con toalla en la puerta",eq:"Toalla atada al picaporte de una puerta cerrada",img:"Inverted_Row_with_Straps",c:1,tip:"Inclinate hacia atrás y tirá los codos hacia atrás."},
+    {n:"Remo con toalla a un brazo",eq:"Toalla atada al picaporte de una puerta cerrada",img:"Inverted_Row_with_Straps",c:1,tip:"Más difícil: de a un brazo. Series con uno y después con el otro."}]},
+  cu3:{img:"Pushups", alt:[
+    {n:"Flexiones inclinadas",eq:"Silla firme contra la pared",img:"Incline_Push-Up",c:1,tip:"Manos en la silla: es más fácil."},
+    {n:"Flexiones con rodillas apoyadas",eq:"Piso",img:"Incline_Push-Up_Medium",c:1,tip:"Rodillas apoyadas, cuerpo recto de las rodillas a la cabeza."},
+    {n:"Flexiones con pies elevados",eq:"Pies sobre una silla",img:"Push-Ups_With_Feet_Elevated",c:1,tip:"Más difícil: pies en la silla."}]},
+  cu4:{img:"Lying_Rear_Delt_Raise", nota:"La foto usa mancuernas y un banco: en casa, boca abajo en el piso y sin peso.", alt:[
+    {n:"Elevaciones en Y boca abajo",eq:"Piso",img:"Lying_Rear_Delt_Raise",tip:"Brazos en forma de Y, pulgares arriba. Subí 2 s y bajá lento."},
+    {n:"Superman con tirón",eq:"Piso",img:"Superman",tip:"Levantá pecho y brazos y tirá los codos hacia atrás apretando la espalda alta."},
+    {n:"Remo con toalla en la puerta, codos abiertos",eq:"Toalla atada al picaporte de una puerta cerrada",img:"Inverted_Row_with_Straps",tip:"Codos bien abiertos, a la altura de los hombros: trabaja la parte de atrás del hombro."}]},
+  cu5:{img:"Inverted_Row", nota:"Palmas mirando hacia vos. En la foto es una barra: en casa, el borde de una mesa firme.", alt:[
+    {n:"Remo supino con rodillas dobladas",eq:"Mesa firme",img:"Inverted_Row",tip:"Palmas hacia vos y rodillas dobladas: es más fácil."},
+    {n:"Curl con toalla (contra el pie)",eq:"Toalla",img:"Standing_Towel_Triceps_Extension",tip:"Pisá la toalla con un pie y tirá hacia arriba como en un curl, con la pierna haciendo fuerza en contra."},
+    {n:"Remo con toalla en la puerta, palmas arriba",eq:"Toalla atada al picaporte de una puerta cerrada",img:"Inverted_Row_with_Straps",tip:"Palmas hacia arriba y codos pegados al cuerpo."}]},
+  cu6:{img:"Body_Tricep_Press", nota:"En la foto es una barra: en casa usá el borde de la mesada o de una mesa firme.", alt:[
+    {n:"Extensión de tríceps en la pared",eq:"Pared",img:"Body_Tricep_Press",tip:"Antebrazos en la pared, cuerpo inclinado: es más fácil. Empujá estirando los codos."},
+    {n:"Fondos en silla",eq:"Silla firme contra la pared",img:"Bench_Dips",tip:"Bajá doblando los codos hacia atrás y empujá hasta estirar."},
+    {n:"Extensión con toalla por detrás",eq:"Toalla",img:"Standing_Towel_Triceps_Extension",tip:"Una mano arriba y otra abajo en la espalda: la de abajo hace fuerza en contra mientras la de arriba estira."}]},
+  cu7:{img:"Push-Ups_-_Close_Triceps_Position", alt:[
+    {n:"Flexiones cerradas con rodillas",eq:"Piso",img:"Incline_Push-Up_Close-Grip",tip:"Manos juntas y rodillas apoyadas: es más fácil."},
+    {n:"Flexiones cerradas inclinadas",eq:"Silla firme contra la pared",img:"Incline_Push-Up_Close-Grip",tip:"Manos juntas sobre la silla."},
+    {n:"Fondos en silla",eq:"Silla firme contra la pared",img:"Bench_Dips",tip:"Codos hacia atrás, bajá hasta 90° y empujá."}]},
+  // ---------- Día 4 · Lower B en casa ----------
+  cb1:{img:"Single_Leg_Glute_Bridge", nota:"En la foto es en el piso: con la espalda alta apoyada en el sillón tenés más recorrido.", alt:[
+    {n:"Puente de glúteo a una pierna en el piso",eq:"Piso",img:"Single_Leg_Glute_Bridge",c:1,tip:"En el piso: es más fácil."},
+    {n:"Puente de glúteo con las dos piernas",eq:"Espalda alta en el sillón",img:"Butt_Lift_Bridge",c:1,tip:"Con las dos piernas: es más fácil. Pausa de 2 s arriba."},
+    {n:"Patada de glúteo en cuatro patas",eq:"Piso",img:"Glute_Kickback",tip:"En cuatro patas, llevá la pierna doblada hacia el techo apretando el glúteo."}]},
+  cb2:{img:"Floor_Glute-Ham_Raise", alt:[
+    {n:"Nórdico con recorrido corto",eq:"Pies trabados bajo el sillón",img:"Floor_Glute-Ham_Raise",c:1,tip:"Bajá solo hasta donde puedas controlar y volvé empujándote con las manos."},
+    {n:"Curl con toalla deslizando",eq:"Piso liso + toalla",img:"Ball_Leg_Curl",c:1,tip:"Cadera arriba, llevá los talones hacia la cola y volvé lento."},
+    {n:"Peso muerto a una pierna",eq:"Piso",img:"Kettlebell_One-Legged_Deadlift",c:1,tip:"Sin peso: bajá el torso con la espalda recta y la pierna de atrás estirada."}]},
+  cb3:{img:"Step-up_with_Knee_Raise", nota:"Usá una silla firme contra la pared o un escalón alto.", alt:[
+    {n:"Subidas a un escalón bajo",eq:"Escalón",img:"Step-up_with_Knee_Raise",c:1,tip:"Escalón más bajo: es más fácil."},
+    {n:"Sentadilla búlgara",eq:"Pie de atrás sobre una silla",img:"Split_Squat_with_Dumbbells",c:1,tip:"Pie de atrás en la silla, bajá la rodilla de atrás casi al piso."},
+    {n:"Estocada hacia atrás",eq:"Piso",img:"Crossover_Reverse_Lunge",c:1,tip:"Paso hacia atrás, bajá y volvé empujando con la pierna de adelante."}]},
+  cb4:{img:"Ball_Leg_Curl", nota:"La foto usa una pelota: vos con los talones sobre una toalla en un piso liso.", alt:[
+    {n:"Curl con toalla a una pierna",eq:"Piso liso + toalla",img:"Ball_Leg_Curl",tip:"Más difícil: una sola pierna."},
+    {n:"Puente de glúteo con talones lejos",eq:"Piso",img:"Butt_Lift_Bridge",tip:"Talones lejos de la cola para que trabaje la parte de atrás del muslo."},
+    {n:"Patada de glúteo en cuatro patas",eq:"Piso",img:"Glute_Kickback",tip:"Llevá la pierna hacia el techo apretando el glúteo."}]},
+  cb5:{img:"Superman", alt:[
+    {n:"Hiperextensión en el piso",eq:"Piso",img:"Superman",tip:"Manos detrás de la cabeza: levantá el pecho 2 s y bajá lento."},
+    {n:"Buenos días",eq:"Piso",img:"Hyperextensions_With_No_Hyperextension_Bench",tip:"Manos detrás de la cabeza, bajá el torso llevando la cadera atrás."},
+    {n:"Puente de glúteo",eq:"Piso",img:"Butt_Lift_Bridge",tip:"Subí la cadera apretando el glúteo, pausa de 2 s."}]},
+  cb6:{img:"Standing_Dumbbell_Calf_Raise", nota:"La foto usa mancuernas: vos a una pierna, sin peso, con el talón colgando del escalón.", alt:[
+    {n:"Pantorrilla con las dos piernas en el escalón",eq:"Un escalón + la pared",img:"Standing_Dumbbell_Calf_Raise",tip:"Con las dos piernas: es más fácil."},
+    {n:"Pantorrilla en el piso a una pierna",eq:"Piso + la pared",img:"Calf_Raises_-_With_Bands",tip:"Sin escalón: subí en puntas de a una pierna."},
+    {n:"Saltos en puntas",eq:"Piso",img:"Fast_Skipping",tip:"Saltitos rápidos y chicos en puntas de pie."}]}
 };

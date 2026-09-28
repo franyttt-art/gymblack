@@ -191,6 +191,42 @@ const RUTINA = {
     {id:"lb5",n:"Hip thrust con barra",eq:"Banco + barra + almohadilla",m:"Glúteo mayor",s:3,r:"12–15",d:90,t:"2-2-1-0",c:1,tip:"Espalda alta apoyada en el banco. Subí hasta alinear torso y muslos y apretá los glúteos."},
     {id:"lb6",n:"Pantorrilla sentado",eq:"Máquina de gemelos sentado",m:"Sóleo",s:4,r:"15–20",d:60,t:"2-2-1-0",tip:"2 s abajo estirando, subí bien arriba."}]}
 };
+// Rutina en casa: solo con el propio cuerpo (y una silla, una mesa firme, la pared o una toalla). Mismas 4 sesiones,
+// mismo orden y los mismos músculos que la del gimnasio. casa = sin peso: se progresa con repeticiones y con la versión
+// más difícil de cada ejercicio (botón «No se puede realizar» → variantes), no con kilos. Las reps salen de cada ejercicio.
+const RUTINA_CASA = {
+  UA:{nombre:"Día 1 · Upper A en casa", corto:"Upper A", foco:"Pecho + Espalda + Hombros + Tríceps", ej:[
+    {id:"ca1",casa:1,n:"Flexiones con pies elevados",eq:"Pies sobre una silla o el sillón",m:"Pecho (parte alta) / hombros",s:4,r:"8–15",d:90,t:"3-1-1-0",c:1,tip:"Manos un poco más abiertas que los hombros y cuerpo recto. Bajá el pecho hasta casi tocar el piso."},
+    {id:"ca2",casa:1,n:"Remo invertido bajo la mesa",eq:"Mesa firme (probá antes que no se mueva)",m:"Dorsal / romboides / bíceps",s:4,r:"8–15",d:90,t:"3-1-1-0",c:1,tip:"Acostado bajo la mesa, agarrá el borde con las manos al ancho de hombros. Cuerpo recto como una tabla: llevá el pecho al borde."},
+    {id:"ca3",casa:1,n:"Flexiones abiertas con pausa",eq:"Piso",m:"Pecho (estiramiento)",s:3,r:"10–20",d:75,t:"3-2-1-0",tip:"Manos bien abiertas. Pausa de 2 s abajo, a un dedo del piso, estirando el pecho."},
+    {id:"ca4",casa:1,n:"Superman con tirón",eq:"Piso",m:"Dorsal / espalda baja",s:3,r:"12–15",d:60,t:"2-1-1-0",tip:"Boca abajo, brazos estirados adelante. Levantá pecho y brazos y tirá los codos hacia las costillas como en un jalón; volvé a estirar."},
+    {id:"ca5",casa:1,n:"Flexiones pike",eq:"Piso (cadera arriba, forma de V invertida)",m:"Hombros ★",s:4,r:"6–12",d:90,t:"3-0-1-0",c:1,tec:"myo",mas:3,tip:"Cadera bien arriba y manos al ancho de hombros. Bajá la cabeza entre las manos doblando los codos y empujá."},
+    {id:"ca6",casa:1,n:"Elevaciones en Y boca abajo",eq:"Piso",m:"Deltoides lateral y posterior ★",s:3,r:"12–20",d:45,t:"2-1-1-0",tip:"Boca abajo, brazos en forma de Y con los pulgares arriba. Subí los brazos 1 s arriba y bajá lento."},
+    {id:"ca7",casa:1,n:"Fondos en silla",eq:"Silla firme apoyada contra la pared",m:"Tríceps ★",s:4,r:"10–15",d:75,t:"2-0-1-0",tip:"Manos en el borde de la silla, cola cerca. Bajá doblando los codos hacia atrás hasta 90° y empujá hasta estirar."},
+    {id:"ca8",casa:1,n:"Remo invertido supino",eq:"Mesa firme",m:"Bíceps / dorsal ★",s:3,r:"8–12",d:75,t:"3-0-1-0",tip:"Como el remo bajo la mesa pero con las palmas mirando hacia vos y los codos pegados al cuerpo."}]},
+  LA:{nombre:"Día 2 · Lower A en casa", corto:"Lower A", foco:"Piernas · cuádriceps dominante", ej:[
+    {id:"cl1",casa:1,n:"Sentadilla búlgara",eq:"Pie de atrás sobre una silla o el sillón",m:"Cuádriceps / glúteos",s:4,r:"8–15",d:90,t:"3-1-1-0",c:1,tip:"Pie de atrás sobre la silla, bajá la rodilla de atrás casi al piso con el torso derecho. Hacé las reps con una pierna y después con la otra."},
+    {id:"cl2",casa:1,n:"Sentadilla con pausa",eq:"Piso",m:"Cuádriceps / glúteos",s:3,r:"15–25",d:75,t:"3-2-1-0",c:1,tec:"dropcasa",tip:"Pies al ancho de hombros. Bajá lo más profundo que puedas con el pecho arriba y quedate 2 s abajo."},
+    {id:"cl3",casa:1,n:"Estocadas caminando",eq:"Un pasillo o espacio libre",m:"Cuádriceps / glúteos",s:3,r:"10–15",d:75,t:"2-0-1-0",tip:"Pasos largos: bajá la rodilla de atrás casi al piso y avanzá. Las reps son por pierna."},
+    {id:"cl4",casa:1,n:"Curl femoral con toalla",eq:"Piso liso + toalla bajo los talones",m:"Isquiotibiales",s:4,r:"8–15",d:75,t:"3-1-1-0",tip:"Boca arriba con los talones sobre la toalla. Subí la cadera y, sin bajarla, llevá los talones hacia la cola. Volvé lento."},
+    {id:"cl5",casa:1,n:"Peso muerto a una pierna",eq:"Sin peso (la pared cerca para el equilibrio)",m:"Isquiotibiales / glúteos",s:3,r:"10–15",d:75,t:"3-1-1-0",c:1,tip:"Parado en una pierna, bajá el torso con la espalda recta mientras la otra pierna va hacia atrás. Series por pierna."},
+    {id:"cl6",casa:1,n:"Pantorrilla a una pierna en escalón",eq:"Un escalón + la pared para apoyarte",m:"Gemelos",s:4,r:"12–20",d:60,t:"2-2-1-0",tip:"Talón colgando del escalón: 2 s abajo estirando y subí bien arriba en puntas. Series por pierna."}]},
+  UB:{nombre:"Día 3 · Upper B en casa", corto:"Upper B", foco:"Hombros + Espalda + Brazos", ej:[
+    {id:"cu1",casa:1,n:"Flexiones pike con pies en la silla",eq:"Pies sobre una silla firme",m:"Hombros / tríceps",s:4,r:"6–12",d:120,t:"3-1-1-0",c:1,tip:"Pies en la silla y cadera bien arriba. Bajá la cabeza entre las manos y empujá."},
+    {id:"cu2",casa:1,n:"Remo bajo la mesa con pausa",eq:"Mesa firme",m:"Dorsal / romboides / bíceps",s:4,r:"8–15",d:90,t:"3-2-1-0",c:1,tip:"Cuerpo recto, llevá el pecho al borde y quedate 2 s arriba apretando la espalda."},
+    {id:"cu3",casa:1,n:"Flexiones",eq:"Piso",m:"Pecho / tríceps",s:3,r:"10–20",d:90,t:"3-1-1-0",c:1,tip:"Codos a unos 45° del cuerpo, bajá hasta casi tocar el piso."},
+    {id:"cu4",casa:1,n:"Elevaciones en T boca abajo",eq:"Piso",m:"Deltoides posterior ★",s:4,r:"12–20",d:45,t:"2-1-1-0",tec:"rest",mas:3,tip:"Boca abajo con los brazos abiertos en cruz. Subí los brazos apretando atrás, 1 s arriba."},
+    {id:"cu5",casa:1,n:"Remo invertido supino lento",eq:"Mesa firme",m:"Bíceps (cabeza larga) ★",s:4,r:"8–12",d:90,t:"4-0-1-0",tip:"Palmas hacia vos y codos pegados. Bajá en 4 s."},
+    {id:"cu6",casa:1,n:"Extensión de tríceps en la mesa",eq:"Borde de la mesada o de una mesa firme",m:"Tríceps (cabeza larga) ★",s:4,r:"8–15",d:90,t:"3-0-1-0",tip:"Manos en el borde, cuerpo inclinado y recto. Doblá solo los codos llevando la frente hacia el borde y estirá."},
+    {id:"cu7",casa:1,n:"Flexiones diamante",eq:"Piso",m:"Tríceps ★",s:3,r:"8–15",d:75,t:"3-0-1-0",tip:"Manos juntas debajo del pecho formando un diamante, codos pegados al cuerpo."}]},
+  LB:{nombre:"Día 4 · Lower B en casa", corto:"Lower B", foco:"Piernas · cadena posterior", ej:[
+    {id:"cb1",casa:1,n:"Puente de glúteo a una pierna en el sillón",eq:"Espalda alta apoyada en el sillón o la cama",m:"Glúteo mayor / isquios",s:4,r:"10–15",d:90,t:"2-2-1-0",c:1,tip:"Espalda alta en el sillón, un pie en el piso. Subí la cadera hasta alinear el torso y el muslo, 2 s arriba apretando el glúteo. Series por pierna."},
+    {id:"cb2",casa:1,n:"Nórdico asistido",eq:"Pies trabados bajo el sillón o la cama (o alguien que te los sostenga)",m:"Isquiotibiales",s:3,r:"4–8",d:120,t:"4-0-1-0",c:1,tip:"De rodillas, cuerpo recto. Bajá lo más lento que puedas, frená con las manos y empujate para volver."},
+    {id:"cb3",casa:1,n:"Subidas a la silla",eq:"Silla firme contra la pared o un escalón alto",m:"Cuádriceps / glúteos",s:3,r:"10–15",d:90,t:"2-0-1-0",c:1,tip:"Subí empujando solo con la pierna de arriba, sin impulsarte con la de abajo. Reps por pierna."},
+    {id:"cb4",casa:1,n:"Curl femoral con toalla",eq:"Piso liso + toalla bajo los talones",m:"Isquiotibiales",s:4,r:"10–15",d:75,t:"3-1-1-0",tec:"dropcasa",tip:"Cadera arriba todo el tiempo, llevá los talones hacia la cola y volvé lento."},
+    {id:"cb5",casa:1,n:"Hiperextensión en el piso",eq:"Piso",m:"Espalda baja / glúteos",s:3,r:"12–15",d:60,t:"2-2-1-0",tip:"Boca abajo con las manos detrás de la cabeza. Levantá el pecho, 2 s arriba, y bajá lento."},
+    {id:"cb6",casa:1,n:"Pantorrilla a una pierna con pausa",eq:"Un escalón + la pared",m:"Sóleo / gemelos",s:4,r:"15–20",d:60,t:"2-2-1-1",tip:"Talón colgando del escalón, 2 s abajo estirando y 1 s arriba en puntas. Series por pierna."}]}
+};
 // getDay(): 0 = domingo … 6 = sábado
 // Días de entreno: cada uno elige 4 en «Mi horario» (E.horario.diasEntreno, 0 = domingo … 6 = sábado).
 // Las 4 sesiones del programa se reparten en orden (Upper A, Lower A, Upper B, Lower B) empezando por el lunes.
@@ -217,7 +253,8 @@ const SEMANAS = [
 const TECNICAS = {
   myo:{n:"Myo-Reps",t:"Hacé ~15 reps dejando 1 en reserva. Después 4–5 mini-series de 3–5 reps descansando solo 5–10 s entre cada una."},
   rest:{n:"Rest-Pause",t:"Llegá al fallo técnico, descansá 15 s y sacá 3–5 reps más. Repetí eso una vez más."},
-  drop:{n:"Drop set",t:"Al terminar (RIR 1), sin descansar bajá el peso un 20% y seguí hasta dejar 1–2 en reserva."}
+  drop:{n:"Drop set",t:"Al terminar (RIR 1), sin descansar bajá el peso un 20% y seguí hasta dejar 1–2 en reserva."},
+  dropcasa:{n:"Drop set en casa",t:"Al terminar (RIR 1), sin descansar pasá a la versión más fácil (menos recorrido, las dos piernas o con apoyo) y seguí hasta dejar 1–2 en reserva."}
 };
 
 /* ============ COMIDAS: PLAN NUTRICIONAL — HIPERTROFIA NATURAL (Fase 1) ============ */
@@ -280,7 +317,7 @@ const K = "forja-v1";
 let E = cargar();
 function cargar(){ try { return JSON.parse(localStorage.getItem(K)) || null; } catch { return null; } }
 function guardar(){ try { localStorage.setItem(K, JSON.stringify(E)); } catch {} }
-function nuevoEstado(){ return {nombre:"", hv:1, horario:JSON.parse(JSON.stringify(HORARIO_BASE)), horarioVisto:false, obj:null, meta:null, sexo:null, edad:null, altura:null, ajuste:0, inicio:null, pesos:[], hist:{}, var:{}, comidas:{}, eleccion:{}, menuFijo:false, agua:{}, entrenos:{}, sesion:null, sonido:true, ultimoKg:{}}; }
+function nuevoEstado(){ return {nombre:"", hv:1, lugar:"gym", lugarDia:{}, horario:JSON.parse(JSON.stringify(HORARIO_BASE)), horarioVisto:false, obj:null, meta:null, sexo:null, edad:null, altura:null, ajuste:0, inicio:null, pesos:[], hist:{}, var:{}, comidas:{}, eleccion:{}, menuFijo:false, agua:{}, entrenos:{}, sesion:null, sonido:true, ultimoKg:{}}; }
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -403,7 +440,11 @@ const hoyEntrena = () => sesionDe(new Date().getDay());
 
 /* ============ FOTOS Y VARIANTES ============ */
 // E.var[id] = {k: número de variante, f: fecha (vale solo ese día) o null (siempre)}
-const todosEj = () => Object.values(RUTINA).flatMap(R => R.ej);
+const todosEj = () => [...Object.values(RUTINA), ...Object.values(RUTINA_CASA)].flatMap(R => R.ej);
+// Dónde entrena: E.lugar ("gym" | "casa") en el perfil, y E.lugarDia[fecha] para cambiarlo solo un día.
+const lugarHoy = () => (E.lugarDia && E.lugarDia[hoyStr()]) || E.lugar || "gym";
+const RUT = lugar => lugar === "casa" ? RUTINA_CASA : RUTINA;
+const rutinaSesion = () => RUT(E.sesion.lugar)[E.sesion.dia];
 function varDe(ej){ const v = E.var && E.var[ej.id]; return v && (v.f === null || v.f === hoyStr()) && MEDIA[ej.id] && MEDIA[ej.id].alt[v.k] ? v : null; }
 function ejActivo(ej){
   const v = varDe(ej); if (!v) return ej;
@@ -507,7 +548,7 @@ function fichaEj(id){
     <div class="row w" style="margin-top:8px"><span class="chip">🛠️ ${ej.eq}</span><span class="chip">🎯 ${ej.m}</span></div>
     ${foto(ej)}<p style="margin:12px 0 0">💬 ${ej.tip}</p>
     <button class="btn no" data-h="variantes" data-id="${id}" style="margin-top:14px">🚫 No se puede realizar</button>
-    <p class="small muted" style="margin:8px 0 0">Si la máquina está ocupada, rota o tu gimnasio no la tiene, te doy una variante que trabaja el mismo músculo.</p>`);
+    <p class="small muted" style="margin:8px 0 0">${ej.casa ? "Si te cuesta demasiado, te queda muy fácil o no tenés dónde hacerlo, te doy otra versión que trabaja el mismo músculo." : "Si la máquina está ocupada, rota o tu gimnasio no la tiene, te doy una variante que trabaja el mismo músculo."}</p>`);
 }
 function hojaVariantes(id){
   const base = todosEj().find(e => e.id === id), m = MEDIA[id], v = varDe(base);
@@ -515,7 +556,7 @@ function hojaVariantes(id){
     <p class="small muted" style="margin:6px 0 4px">En lugar de <b style="color:var(--ink)">${base.n}</b>. Mismas series, reps y descansos. Tocá una:</p>
     ${m.alt.map((a, k) => `<button class="alt ${v && v.k === k ? "on" : ""}" data-h="elegir" data-id="${id}" data-k="${k}"><img class="mini" src="${rutaFoto(a.img, 1)}" alt=""><div style="flex:1"><b>${a.n}</b><div class="small muted">🛠️ ${a.eq}</div></div><span>${v && v.k === k ? "✓" : "›"}</span></button>`).join("")}
     ${v ? `<button class="alt" data-h="original" data-id="${id}"><img class="mini" src="${rutaFoto(m.img, 1)}" alt=""><div style="flex:1"><b>↩ Volver al original</b><div class="small muted">${base.n}</div></div></button>` : ""}
-    <label class="chk"><input type="checkbox" id="siempre" ${v && v.f === null ? "checked" : ""}> Usar siempre esta variante (por ej. si mi gimnasio no tiene la máquina). Sin tildar, vale solo por hoy.</label>`);
+    <label class="chk"><input type="checkbox" id="siempre" ${v && v.f === null ? "checked" : ""}> Usar siempre esta variante (por ej. si no tengo la máquina o ya me sale la versión más difícil). Sin tildar, vale solo por hoy.</label>`);
 }
 function hojaAccion(a, b){
   if (a === "cerrar") return cerrarHoja();
@@ -534,7 +575,7 @@ function hojaAccion(a, b){
     guardar(); sonar("listo"); cerrarHoja();
     toast(a === "original" ? "↩ Volviste al ejercicio original" : "🔁 Cambiado a: " + MEDIA[id].alt[+b.dataset.k].n);
     if (E.sesion && $("#guia").innerHTML) {
-      const R = RUTINA[E.sesion.dia];
+      const R = rutinaSesion();
       if (R.ej[E.sesion.i] && R.ej[E.sesion.i].id === id) { const ea = ejActivo(R.ej[E.sesion.i]); E.sesion.serie = Math.min(objetivo(ea, semanaActual().n).series - 1, (E.sesion.sets[ea.id] || []).length); }
       guardar(); pintarGuia();
     } else render();
@@ -542,12 +583,22 @@ function hojaAccion(a, b){
 }
 
 // Lo que toca en cada ejercicio según la semana del programa (tabla de progresión)
+// En casa no hay kilos: se sube de reps dentro del rango y, cuando todas las series llegan arriba con reserva de sobra,
+// se pasa a la versión más difícil (o se hace la bajada más lenta).
+function sugerenciaCasa(ej, obj, h){
+  const [rmin, rmax] = rango(obj.reps);
+  if (!h || !h.length) return {kg:null, tipo:"inicio", txt:`Primera vez: hacé las reps que puedas con buena técnica dejando ${obj.rir} en reserva. Si no llegás a ${rmin}, tocá «No se puede realizar» y elegí una versión más fácil.`};
+  const sets = h[h.length - 1].sets, reps = sets.map(s => s.reps).join(" / ");
+  if (sets.filter(s => s.reps < rmin).length >= 2) return {kg:null, tipo:"baja", txt:`La vez pasada (${reps}) no llegaste a ${rmin} reps en varias series: usá una versión más fácil hasta lograrlo.`};
+  if (sets.every(s => s.reps >= rmax && s.rir > obj.rirMin)) return {kg:null, tipo:"sube", txt:`La vez pasada (${reps}) te quedó fácil: pasá a la versión más difícil (botón «No se puede realizar») o bajá en 4–5 s.`};
+  return {kg:null, tipo:"igual", txt:`La vez pasada: ${reps}. Buscá sumar 1–2 reps por serie hasta llegar a ${rmax} dejando ${obj.rir} en reserva.`};
+}
 function objetivo(ej, sem){
   const S = SEMANAS[sem - 1];
   const series = sem === 12 ? 2 : Math.max(2, ej.s + ((ej.c ? S.sc : S.sa) - 4)) + (ej.mas && sem >= ej.mas ? 1 : 0);
   const rirMin = parseInt(S.rir, 10);
   const tec = ej.tec && sem >= 7 && sem <= 11 ? TECNICAS[ej.tec] : null;
-  return {series, reps: ej.c ? S.rc : S.ra, rir: S.rir, rirMin, tec, desc: sem === 12 ? Math.max(90, Math.min(120, ej.d)) : ej.d};
+  return {series, reps: ej.casa ? ej.r : ej.c ? S.rc : S.ra, rir: S.rir, rirMin, tec, desc: sem === 12 ? Math.max(90, Math.min(120, ej.d)) : ej.d};
 }
 // Peso sugerido: criterios de progresión de cargas (página 8 del PDF)
 // Factor = kg por cada kg de peso corporal para ~10 reps dejando 2–3 en reserva (nivel intermedio).
@@ -571,6 +622,7 @@ function pesoArranque(ej){
 function sugerencia(ej, obj){
   const h = E.hist[ej.id];
   const [rmin] = rango(obj.reps);
+  if (ej.casa) return sugerenciaCasa(ej, obj, h);
   if (!h || !h.length) {
     const a = pesoArranque(ej);
     if (a) return {kg:a.kg, tipo:"inicio", txt:`Primera vez: arrancá con ~${fmtKg(a.kg)} kg${a.unidad} (calculado para tu peso de ${fmtKg(pesoActual())} kg). Si la primera serie te sale muy fácil o muy difícil, ajustalo: tenés que llegar a ${obj.reps} reps dejando ${obj.rir} en reserva.`};
@@ -593,7 +645,7 @@ function duracion(ej, obj){
 }
 const minutos = s => Math.round(s / 60);
 const fmtDesc = s => s >= 60 ? Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0") : s + " s";
-function duracionDia(k, sem){ return RUTINA[k].ej.reduce((t, ej) => t + duracion(ej, objetivo(ej, sem)), 0) + 600; }
+function duracionDia(k, sem, lugar = lugarHoy()){ return RUT(lugar)[k].ej.reduce((t, ej) => t + duracion(ej, objetivo(ej, sem)), 0) + 600; }
 
 /* ============ SONIDOS (grabaciones CC0 de Kenney, nada sintetizado) ============ */
 const SND = {};
@@ -640,6 +692,10 @@ function conectarObjetivo(){
     $("#bObj").value = b.dataset.obj; sonar("toque");
     $("#bMetaAyuda").textContent = b.dataset.obj === "bajar" ? "El peso al que querés llegar (menor que el de hoy)." : "El peso al que querés llegar ganando músculo.";
   });
+  document.querySelectorAll("[data-lugar]").forEach(b => b.onclick = () => {
+    document.querySelectorAll("[data-lugar]").forEach(x => x.classList.toggle("sec", x !== b));
+    $("#bLugar").value = b.dataset.lugar; sonar("toque");
+  });
   document.querySelectorAll("[data-sexo]").forEach(b => b.onclick = () => {
     document.querySelectorAll("[data-sexo]").forEach(x => x.classList.toggle("sec", x !== b));
     $("#bSexo").value = b.dataset.sexo; sonar("toque");
@@ -657,10 +713,15 @@ function leerObjetivo(){
   if (!sexo) { toast("Elegí hombre o mujer: cambia cuántas calorías gastás"); return null; }
   if (!(edad >= 14 && edad <= 90)) { toast("Poné tu edad en años, por ejemplo 24"); return null; }
   if (!(altura >= 120 && altura <= 230)) { toast("Poné tu altura en cm, por ejemplo 175"); return null; }
-  return {obj, kg, meta, sexo, edad, altura};
+  return {obj, kg, meta, sexo, edad, altura, lugar:$("#bLugar").value === "casa" ? "casa" : "gym"};
 }
 // Guarda en E lo leído del formulario de objetivo.
-function aplicarObjetivo(o){ E.obj = o.obj; E.meta = o.meta; E.sexo = o.sexo; E.edad = o.edad; E.altura = o.altura; }
+function aplicarObjetivo(o){ E.obj = o.obj; E.meta = o.meta; E.sexo = o.sexo; E.edad = o.edad; E.altura = o.altura; E.lugar = o.lugar; }
+function camposLugar(){
+  const l = (E && E.lugar) || "gym", bot = (k, t) => `<button class="btn chico ${l === k ? "" : "sec"}" data-lugar="${k}" style="flex:1">${t}</button>`;
+  return `<div class="lbl">¿Dónde entrenás?</div><div class="row">${bot("gym", "🏋️ Gimnasio")}${bot("casa", "🏠 En casa")}</div><input id="bLugar" type="hidden" value="${l}">
+    <p class="small muted" style="margin:6px 0 0">En casa: la misma rutina, solo con tu cuerpo y una silla o una mesa. Igual, cualquier día podés cambiar.</p>`;
+}
 function camposCuerpo(){
   const sx = E && E.sexo, bot = (k, t) => `<button class="btn chico ${sx === k ? "" : "sec"}" data-sexo="${k}" style="flex:1">${t}</button>`;
   return `<div id="bCuerpo">
@@ -673,7 +734,7 @@ function camposObjetivo(sel, kg, meta){
   return `${botonesObjetivo(sel)}<input id="bObj" type="hidden" value="${sel || ""}">
     <div class="lbl">¿Cuánto pesás hoy? (kg)</div><input id="bKg" class="campo" type="number" inputmode="decimal" step="0.1" value="${kg || ""}" placeholder="Ej: 72,5">
     <div class="lbl">¿Cuál es tu peso objetivo? (kg)</div><input id="bMeta" class="campo" type="number" inputmode="decimal" step="0.1" value="${meta || ""}" placeholder="Ej: 75">
-    <p class="small muted" id="bMetaAyuda">${sel === "bajar" ? "El peso al que querés llegar (menor que el de hoy)." : "El peso al que querés llegar."} Con tu peso y tu objetivo te armo las calorías, la proteína y las porciones.</p>${camposCuerpo()}`;
+    <p class="small muted" id="bMetaAyuda">${sel === "bajar" ? "El peso al que querés llegar (menor que el de hoy)." : "El peso al que querés llegar."} Con tu peso y tu objetivo te armo las calorías, la proteína y las porciones.</p>${camposCuerpo()}${camposLugar()}`;
 }
 function pantallaObjetivo(){
   const cambio = elegirObjetivo, completar = !cambio && E.obj;
@@ -721,17 +782,18 @@ function pHoy(){
   const d = new Date(), dia = hoyEntrena(), s = semanaActual(), S = SEMANAS[s.n - 1], hecho = E.entrenos[hoyStr()];
   let h = instalarCard() + `<div id="offlineEstado">${textoOffline()}</div>`;
   if (dia) {
-    const R = RUTINA[dia], enCurso = E.sesion && E.sesion.f === hoyStr() && !hecho;
-    h += `<div class="card hero"><div class="row w"><span class="chip f">${NOMBRE_DIA[d.getDay()]}</span><span class="chip">⏱️ ~${minutos(duracionDia(dia, s.n))} min</span><span class="chip">🕛 ${aHora(aMin(horario().entrena))}</span></div>
+    const R = RUT(lugarHoy())[dia], enCurso = E.sesion && E.sesion.f === hoyStr() && !hecho, casa = lugarHoy() === "casa";
+    h += `<div class="card hero"><div class="row w"><span class="chip f">${NOMBRE_DIA[d.getDay()]}</span><span class="chip">⏱️ ~${minutos(duracionDia(dia, s.n))} min</span><span class="chip">🕛 ${aHora(aMin(horario().entrena))}</span>${casa ? '<span class="chip f">🏠 en casa</span>' : ""}</div>
       <h2 style="margin-top:10px">${hecho ? "✅ " : "🏋️ "}${R.nombre}</h2><p class="muted" style="margin:4px 0 12px">${R.foco} · ${R.ej.length} ejercicios</p>
       ${hecho ? `<p style="color:var(--ok);font-weight:800;margin:0 0 10px">¡Entrenamiento de hoy terminado! 🔥</p>` : ""}
-      ${enCurso ? `<button class="btn" data-a="seguir">▶ Seguir donde quedé</button>` : `<button class="btn ${hecho ? "sec" : ""}" data-a="empezar" data-d="${dia}">${hecho ? "Hacerlo de nuevo" : "▶ Empezar entrenamiento"}</button>`}</div>`;
+      ${enCurso ? `<button class="btn" data-a="seguir">▶ Seguir donde quedé</button>` : `<button class="btn ${hecho ? "sec" : ""}" data-a="empezar" data-d="${dia}">${hecho ? "Hacerlo de nuevo" : "▶ Empezar entrenamiento"}</button>`}
+      ${enCurso ? "" : botonLugarHoy()}</div>`;
   } else {
     h += `<div class="card hero"><span class="chip">${NOMBRE_DIA[d.getDay()]}</span><h2 style="margin-top:10px">😌 Hoy descansás</h2>
       <p class="muted" style="margin:6px 0 0">El músculo crece recuperando. Comé todo el plan, tomá la creatina y dormí 7–8 h.${siguienteEntreno()}</p></div>`;
   }
   h += tarjetaHorario();
-  h += `<div class="card"><h3>📅 Semana ${s.n} · ${S.b}</h3><p class="small muted" style="margin:6px 0 0">${S.nota}</p>${diasSemana()}</div>`;
+  h += `<div class="card"><h3>📅 Semana ${s.n} · ${S.b}</h3><p class="small muted" style="margin:6px 0 0">${lugarHoy() === "casa" ? "En casa: sumá 1–2 reps por serie y, cuando llegues arriba del rango con reserva, pasá a la versión más difícil. Series y RIR de esta semana, igual que en el gimnasio." : S.nota}</p>${diasSemana()}</div>`;
   const prox = comidaAhora();
   h += `<div class="card"><div class="row"><h3>🍽️ Comidas de hoy</h3><span class="sp"></span><span class="chip">${comidasHechas()}/${COMIDAS.filter(c => !c.opc).length}</span></div>
     ${prox ? `<p style="margin:8px 0 10px">Ahora toca: <b style="color:var(--fuego2)">${aHora(horaComida(prox))} · ${nombreComida(prox)}</b><br><span class="small">${prox.o[opcion(prox)].t}</span></p>` : `<p style="color:var(--ok);font-weight:800">¡Todas las comidas del día listas! 🎉</p>`}
@@ -739,9 +801,14 @@ function pHoy(){
   h += aguaCard();
   return h;
 }
+// «Hoy entreno en casa» / «Hoy voy al gimnasio»: cambia solo el día de hoy; el lugar de siempre se elige en Ajustes.
+function botonLugarHoy(){
+  const casa = lugarHoy() === "casa";
+  return `<button class="btn sec chico" data-a="lugarHoy" style="width:100%;margin-top:8px">${casa ? "🏋️ Hoy voy al gimnasio" : "🏠 Hoy entreno en casa"}</button>`;
+}
 function siguienteEntreno(){
   for (let i = 1; i <= 7; i++) { const d = new Date(); d.setDate(d.getDate() + i); const k = sesionDe(d.getDay());
-    if (k) return `<br><br>Próximo: <b style="color:var(--ink)">${NOMBRE_DIA[d.getDay()]} · ${RUTINA[k].nombre}</b>`; }
+    if (k) return `<br><br>Próximo: <b style="color:var(--ink)">${NOMBRE_DIA[d.getDay()]} · ${RUT(E.lugar)[k].nombre}</b>`; }
   return "";
 }
 function diasSemana(){
@@ -770,18 +837,20 @@ function instalarCard(){
 let diaElegido = null;
 function proximoDia(){ for (let i = 1; i <= 7; i++) { const d = new Date(); d.setDate(d.getDate() + i); if (sesionDe(d.getDay())) return sesionDe(d.getDay()); } return "UA"; }
 function pEntreno(){
-  const s = semanaActual(), S = SEMANAS[s.n - 1], k = diaElegido || hoyEntrena() || proximoDia(), R = RUTINA[k];
-  let h = `<div class="seg" style="margin:0 0 14px">${Object.keys(RUTINA).map(x => `<button class="${x === k ? "on" : ""}" data-a="dia" data-d="${x}">${RUTINA[x].corto}</button>`).join("")}</div>`;
+  const s = semanaActual(), S = SEMANAS[s.n - 1], k = diaElegido || hoyEntrena() || proximoDia(), lugar = lugarHoy(), R = RUT(lugar)[k];
+  let h = `<div class="seg" style="margin:0 0 8px"><button class="${lugar === "gym" ? "on" : ""}" data-a="lugarVer" data-l="gym">🏋️ Gimnasio</button><button class="${lugar === "casa" ? "on" : ""}" data-a="lugarVer" data-l="casa">🏠 En casa</button></div>
+    <div class="seg" style="margin:0 0 14px">${Object.keys(RUTINA).map(x => `<button class="${x === k ? "on" : ""}" data-a="dia" data-d="${x}">${RUTINA[x].corto}</button>`).join("")}</div>`;
+  if (lugar === "casa") h += `<div class="card" style="padding:12px 16px"><b>🏠 Rutina en casa</b><div class="small muted">Solo con tu cuerpo y una silla, una mesa firme, la pared o una toalla. Se progresa con repeticiones: cuando te quede fácil, pasá a la versión más difícil con «No se puede realizar».</div></div>`;
   h += `<div class="card hero"><h2>${R.nombre}</h2><p class="muted" style="margin:4px 0 10px">${R.foco}${k === hoyEntrena() ? " · <b style='color:var(--fuego2)'>te toca hoy</b>" : ""}</p>
-    <div class="row w"><span class="chip f">Semana ${s.n}</span><span class="chip">Carga ${S.carga}</span><span class="chip">RIR ${S.rir}</span><span class="chip">⏱️ ~${minutos(duracionDia(k, s.n))} min</span></div>
+    <div class="row w"><span class="chip f">Semana ${s.n}</span>${lugar === "casa" ? "" : `<span class="chip">Carga ${S.carga}</span>`}<span class="chip">RIR ${S.rir}</span><span class="chip">⏱️ ~${minutos(duracionDia(k, s.n))} min</span></div>
     <button class="btn" data-a="empezar" data-d="${k}" style="margin-top:14px">▶ Empezar guiado</button>
     <p class="small muted" style="margin:10px 0 0">📷 Tocá un ejercicio para ver cómo se hace o cambiarlo si no lo podés hacer.</p></div>`;
-  h += `<div class="card"><h3>🔥 Entrada en calor · 10 min</h3><p class="small muted" style="margin:6px 0 0">5 min de cardio suave + 3 min de movilidad. Antes del primer ejercicio, 2 series livianas de aproximación (40–50% del peso).</p></div><div class="card">`;
+  h += `<div class="card"><h3>🔥 Entrada en calor · 10 min</h3><p class="small muted" style="margin:6px 0 0">${lugar === "casa" ? "5 min de trote en el lugar o saltos suaves + 3 min de movilidad. Antes del primer ejercicio, 2 series cortas en su versión más fácil." : "5 min de cardio suave + 3 min de movilidad. Antes del primer ejercicio, 2 series livianas de aproximación (40–50% del peso)."}</p></div><div class="card">`;
   R.ej.forEach((ej0, i) => {
     const ej = ejActivo(ej0), o = objetivo(ej, s.n), sg = sugerencia(ej, o), img = imgDe(ej);
     h += `<div class="ej" data-a="ficha" data-id="${ej0.id}" style="cursor:pointer"><div class="num">${i + 1}</div><div style="flex:1"><b>${ej.n}</b>${ej.base ? ' <span class="tag tec">🔁 variante</span>' : ""}<div class="d">🛠️ ${ej.eq} · ${ej.m}</div>
       <div class="tags"><span class="tag">${o.series} × ${o.reps}</span><span class="tag">RIR ${o.rir}</span><span class="tag">⏸ ${fmtDesc(o.desc)}</span><span class="tag">Tempo ${ej.t}</span>
-      ${sg.kg != null ? `<span class="tag" style="background:#3DDC8422;color:var(--ok)">${fmtKg(sg.kg)} kg</span>` : ""}${o.tec ? `<span class="tag tec">★ ${o.tec.n}</span>` : ""}${ej.mas && s.n >= ej.mas && s.n < 12 ? `<span class="tag tec">+1 serie desde sem. ${ej.mas}</span>` : ""}</div></div>${img ? `<img class="mini" src="${rutaFoto(img, 1)}" alt="" loading="lazy">` : ""}</div>`;
+      ${sg.kg != null ? `<span class="tag" style="background:#3DDC8422;color:var(--ok)">${fmtKg(sg.kg)} kg</span>` : ej.casa ? `<span class="tag">sin peso</span>` : ""}${o.tec ? `<span class="tag tec">★ ${o.tec.n}</span>` : ""}${ej.mas && s.n >= ej.mas && s.n < 12 ? `<span class="tag tec">+1 serie desde sem. ${ej.mas}</span>` : ""}</div></div>${img ? `<img class="mini" src="${rutaFoto(img, 1)}" alt="" loading="lazy">` : ""}</div>`;
   });
   h += `</div><details class="card"><summary>❓ ¿Qué significa RIR, tempo y ★?</summary><p class="small">
     <b>RIR</b> = repeticiones que te quedan «en el tanque». RIR 2 = terminás la serie sabiendo que podías hacer 2 más. RIR 0 = no sale ni una más.<br><br>
@@ -846,7 +915,7 @@ function planDia(dow = new Date().getDay()){
       prep:`Entre ${sin(fac.ia)} y ${sin(fac.ib)} pasan ${Math.round((fac.b - fac.a) / 60)} h: este shake mantiene la construcción de músculo.${act ? " Llevalo medido en una bolsita." : ""}`};
   }
   const bloques = acts.map(a => ({m:a.d, ic:iconoAct(a.n), t:`${aHora(a.d)} – ${aHora(a.h)} · ${esc(a.n)}`}));
-  if (entrena) bloques.push({m:T, ic:"🏋️", t:`${aHora(T)} – ${aHora(fin)} · Entrenamiento`, sub:RUTINA[sesionDe(dow)].nombre});
+  if (entrena) bloques.push({m:T, ic:"🏋️", t:`${aHora(T)} – ${aHora(fin)} · Entrenamiento`, sub:RUT(dow === new Date().getDay() ? lugarHoy() : E.lugar)[sesionDe(dow)].nombre});
   return {m:t, n, fac, bloques, lev};
 }
 const horaComida = (c, P = planDia()) => c.id === "fac" ? (P.fac ? P.fac.m : null) : P.m[c.id];
@@ -926,8 +995,9 @@ function pProgreso(){
   let alguno = false;
   todosEj().flatMap(e0 => [e0, ...(MEDIA[e0.id] ? MEDIA[e0.id].alt.map((a, k) => ({id: e0.id + "~" + k, n: a.n})) : [])]).forEach(ej => {
     const hh = E.hist[ej.id]; if (!hh || !hh.length) return; alguno = true;
-    const ult = hh[hh.length - 1], mejor = Math.max(...hh.flatMap(x => x.sets.map(s => s.kg))), top = Math.max(...ult.sets.map(s => s.kg));
-    h += `<div class="ej"><div style="flex:1"><b>${ej.n}</b><div class="d">Última vez (${ult.f.slice(8)}/${ult.f.slice(5, 7)}): ${fmtKg(top)} kg · reps ${ult.sets.map(s => s.reps).join(" / ")}</div></div><span class="chip f">🏆 ${fmtKg(mejor)}</span></div>`;
+    const ult = hh[hh.length - 1], casa = /^c[alub]\d/.test(ej.id), campo = s => casa ? s.reps : s.kg;
+    const mejor = Math.max(...hh.flatMap(x => x.sets.map(campo))), top = Math.max(...ult.sets.map(campo));
+    h += `<div class="ej"><div style="flex:1"><b>${casa ? "🏠 " : ""}${ej.n}</b><div class="d">Última vez (${ult.f.slice(8)}/${ult.f.slice(5, 7)}): ${casa ? "" : fmtKg(top) + " kg · "}reps ${ult.sets.map(s => s.reps).join(" / ")}</div></div><span class="chip f">🏆 ${casa ? mejor + " reps" : fmtKg(mejor)}</span></div>`;
   });
   if (!alguno) h += `<p class="muted small">Cuando termines tu primer entrenamiento, acá vas a ver el peso de cada máquina.</p>`;
   h += `</div><div class="card"><h3>📅 Programa</h3><p class="small muted">Estás en la semana <b style="color:var(--ink)">${s.n}</b> de 12${s.ciclo > 1 ? " (vuelta " + s.ciclo + ")" : ""}. Si no coincide, corregila:</p>
@@ -936,6 +1006,7 @@ function pProgreso(){
     <p class="small muted">Reps: ejercicios compuestos / de aislamiento.</p></details></div>`;
   h += `<div class="card"><h3>⚙️ Ajustes</h3>
     <div class="row" style="margin-top:8px"><span>🎯 ${bajando() ? "Bajar de peso" : "Ganar músculo"} · meta ${fmtKg(pesoMeta())} kg<br><small class="muted">${E.sexo === "f" ? "Mujer" : "Hombre"} · ${E.edad} años · ${E.altura} cm</small></span><span class="sp"></span><button class="btn chico sec" data-a="objetivo">Cambiar</button></div>
+    <div class="row" style="margin-top:8px"><span>${(E.lugar || "gym") === "casa" ? "🏠 Entreno en casa" : "🏋️ Entreno en el gimnasio"}<br><small class="muted">Si un día no podés ir, en Hoy tocá «Hoy entreno en casa».</small></span><span class="sp"></span><button class="btn chico sec" data-a="lugarSiempre">Cambiar</button></div>
     <div class="row" style="margin-top:8px"><span>🕒 Mi horario<br><small class="muted">Me levanto ${horario().levanta} · entreno ${horario().entrena} (${ORDEN_SEMANA.filter(d => sesionDe(d)).map(d => NOMBRE_DIA[d].slice(0, 2)).join(", ")}) · me acuesto ${horario().acuesta}</small></span><span class="sp"></span><button class="btn chico sec" data-a="horario">Cambiar</button></div>
     <div class="row" style="margin-top:8px"><span>🍽️ Menú: ${E.menuFijo ? "siempre el mismo" : "variado (7 días)"}</span><span class="sp"></span><button class="btn chico sec" data-a="menuFijo">${E.menuFijo ? "Variar" : "Fijar"}</button></div>
     <div class="row" style="margin-top:8px"><span>🔊 Sonido al terminar el descanso</span><span class="sp"></span><button class="btn chico sec" data-a="sonido">${E.sonido ? "Sí" : "No"}</button></div>
@@ -1006,6 +1077,13 @@ function accion(a, b){
     E.pesos = E.pesos.filter(p => p.f !== hoyStr()); E.pesos.push({f:hoyStr(), kg}); guardar(); sonar("listo"); toast("⚖️ Peso guardado"); return render();
   }
   if (a === "sem") { const d = aFecha(E.inicio); d.setDate(d.getDate() - 7 * +b.dataset.d); E.inicio = fechaStr(d); guardar(); sonar("toque"); return render(); }
+  if (a === "lugarHoy" || a === "lugarVer") {
+    const nuevo = a === "lugarVer" ? b.dataset.l : lugarHoy() === "casa" ? "gym" : "casa";
+    E.lugarDia = E.lugarDia || {};
+    if (nuevo === (E.lugar || "gym")) delete E.lugarDia[hoyStr()]; else E.lugarDia[hoyStr()] = nuevo;
+    guardar(); sonar("toque"); toast(nuevo === "casa" ? "🏠 Hoy entrenás en casa" : "🏋️ Hoy vas al gimnasio"); return render();
+  }
+  if (a === "lugarSiempre") { E.lugar = (E.lugar || "gym") === "casa" ? "gym" : "casa"; if (E.lugarDia) delete E.lugarDia[hoyStr()]; guardar(); sonar("listo"); return render(); }
   if (a === "horario") { sonar("toque"); borrador = null; return hojaHorario(); }
   if (a === "horarioOk") { E.horarioVisto = true; guardar(); sonar("listo"); return render(); }
   if (a === "objetivo") { elegirObjetivo = true; sonar("toque"); render(); return scrollTo(0, 0); }
@@ -1019,7 +1097,7 @@ function accion(a, b){
 /* ============ ENTRENAMIENTO GUIADO PASO A PASO ============ */
 let reloj = null, wake = null, ritmoOn = null;
 function empezar(dia){
-  if (!(E.sesion && E.sesion.f === hoyStr() && E.sesion.dia === dia && !E.entrenos[hoyStr()])) E.sesion = {f:hoyStr(), dia, i:-1, serie:0, sets:{}, desde:Date.now()};
+  if (!(E.sesion && E.sesion.f === hoyStr() && E.sesion.dia === dia && (E.sesion.lugar || "gym") === lugarHoy() && !E.entrenos[hoyStr()])) E.sesion = {f:hoyStr(), dia, lugar:lugarHoy(), i:-1, serie:0, sets:{}, desde:Date.now()};
   guardar(); abrirGuia();
 }
 async function pedirPantalla(){ try { if ("wakeLock" in navigator && !wake) { wake = await navigator.wakeLock.request("screen"); wake.addEventListener("release", () => wake = null); } } catch {} }
@@ -1030,7 +1108,7 @@ function cerrarGuia(){ detenerRitmo(); cerrarHoja(); $("#guia").innerHTML = ""; 
 function pintarGuia(){
   clearInterval(reloj); reloj = null; detenerRitmo();
   const ss = E.sesion; if (!ss) return cerrarGuia();
-  const R = RUTINA[ss.dia], sem = semanaActual().n;
+  const R = rutinaSesion(), sem = semanaActual().n, casa = ss.lugar === "casa";
   const arriba = `<div class="row"><button class="chip" data-g="salir">✕ Salir</button><span class="sp"></span><span class="chip">${R.nombre}</span></div>
     <div class="prog">${R.ej.map((e, i) => `<i class="${i < ss.i ? "ok" : i === ss.i ? "on" : ""}"></i>`).join("")}</div>`;
   if (ss.i >= R.ej.length && !ss.descansoHasta) return resumenFinal();
@@ -1038,9 +1116,9 @@ function pintarGuia(){
   let h;
   if (ss.i === -1) {
     h = `${arriba}<div style="text-align:center;padding:18px 0"><div style="font-size:64px">🔥</div><h1>Entrada en calor</h1><p class="muted">10 minutos. No te la saltees: cuida las articulaciones y rendís más.</p></div>
-      <div class="card"><div class="ej"><div class="num">1</div><div><b>5 min de cardio suave</b><div class="d">Bici o cinta, a ritmo de poder charlar.</div></div></div>
+      <div class="card"><div class="ej"><div class="num">1</div><div><b>5 min de cardio suave</b><div class="d">${casa ? "Trote en el lugar, saltos suaves o subir y bajar una escalera." : "Bici o cinta, a ritmo de poder charlar."}</div></div></div>
       <div class="ej"><div class="num">2</div><div><b>3 min de movilidad</b><div class="d">Círculos de hombros, cadera, rodillas y muñecas.</div></div></div>
-      <div class="ej"><div class="num">3</div><div><b>2 series livianas de aproximación</b><div class="d">Del primer ejercicio (${ejActivo(R.ej[0]).n}) con 40–50% del peso.</div></div></div></div>
+      <div class="ej"><div class="num">3</div><div><b>2 series livianas de aproximación</b><div class="d">Del primer ejercicio (${ejActivo(R.ej[0]).n}) ${casa ? "en su versión más fácil y con pocas reps" : "con 40–50% del peso"}.</div></div></div></div>
       <button class="btn" data-g="arrancar">Listo, arranquemos 💪</button>`;
   } else {
     const ej = ejActivo(R.ej[ss.i]), o = objetivo(ej, sem), sg = sugerencia(ej, o), hechos = ss.sets[ej.id] || [];
@@ -1059,24 +1137,24 @@ function pintarGuia(){
       <div class="lbl">Ritmo de cada repetición · ${ej.t}</div>
       <div class="tempo" id="tempo"><div><b>${tp[0]}s</b>bajá</div><div><b>${tp[1]}s</b>pausa</div><div><b>${tp[2]}s</b>subí</div><div><b>${tp[3]}s</b>arriba</div></div>
       <button class="btn sec chico" data-g="ritmo" style="margin-top:8px;width:100%">▶ Marcame el ritmo</button>
-      <div class="lbl">Peso que usaste (kg)</div>
-      <div class="num-in"><button data-g="kg" data-d="-${paso}">−</button><input id="gKg" type="number" inputmode="decimal" step="0.25" value="${kgPrevio}" placeholder="kg"><button data-g="kg" data-d="${paso}">+</button></div>
+      ${ej.casa ? "" : `<div class="lbl">Peso que usaste (kg)</div>
+      <div class="num-in"><button data-g="kg" data-d="-${paso}">−</button><input id="gKg" type="number" inputmode="decimal" step="0.25" value="${kgPrevio}" placeholder="kg"><button data-g="kg" data-d="${paso}">+</button></div>`}
       <div class="lbl">Repeticiones que hiciste</div>
       <div class="num-in"><button data-g="rep" data-d="-1">−</button><input id="gRep" type="number" inputmode="numeric" value="${repsPrevio}"><button data-g="rep" data-d="1">+</button></div>
       <div class="lbl">¿Cuántas más podías hacer? (RIR)</div>
       <div class="rirs">${[0, 1, 2, 3, 4].map(r => `<button data-g="rir" data-r="${r}" class="${r === Math.min(4, o.rirMin) ? "on" : ""}">${r}${r === 4 ? "+" : ""}<small>${["ninguna", "1 más", "2 más", "3 más", "4 o más"][r]}</small></button>`).join("")}</div>
       <button class="btn ok" data-g="serie" style="margin-top:16px">✓ Terminé la serie ${ss.serie + 1}</button>
-      ${hechos.length ? `<div class="series">${hechos.map((s, i) => `<div class="serie"><span>Serie ${i + 1}</span><span>${fmtKg(s.kg)} kg × ${s.reps} · RIR ${s.rir}</span></div>`).join("")}</div>` : ""}
+      ${hechos.length ? `<div class="series">${hechos.map((s, i) => `<div class="serie"><span>Serie ${i + 1}</span><span>${ej.casa ? `${s.reps} reps` : `${fmtKg(s.kg)} kg × ${s.reps}`} · RIR ${s.rir}</span></div>`).join("")}</div>` : ""}
       <div class="row" style="margin-top:14px"><button class="btn sec chico" data-g="atras">← Anterior</button><span class="sp"></span><button class="btn sec chico" data-g="saltar">Saltar ejercicio →</button></div>`;
   }
   $("#guia").innerHTML = `<div class="guia"><div class="in">${h}</div></div>`;
   engancharGuia();
 }
 function pintarDescanso(arriba){
-  const ss = E.sesion, R = RUTINA[ss.dia], sem = semanaActual().n, total = ss.descansoTotal || 60;
+  const ss = E.sesion, R = rutinaSesion(), sem = semanaActual().n, total = ss.descansoTotal || 60;
   let prox;
   if (ss.i >= R.ej.length) prox = "¡Era la última serie! 🏁";
-  else if (ss.serie === 0) { const pe = ejActivo(R.ej[ss.i]), pi = imgDe(pe); prox = `Próximo ejercicio:<br><b style="font-size:20px">${pe.n}</b><br><span class="small muted">🛠️ ${pe.eq} — andá preparando la máquina</span>${pi ? `<br><img class="mini" style="width:140px;height:105px;margin-top:10px" src="${rutaFoto(pi, 1)}" alt="">` : ""}`; }
+  else if (ss.serie === 0) { const pe = ejActivo(R.ej[ss.i]), pi = imgDe(pe); prox = `Próximo ejercicio:<br><b style="font-size:20px">${pe.n}</b><br><span class="small muted">🛠️ ${pe.eq} — ${ss.lugar === "casa" ? "prepará el lugar" : "andá preparando la máquina"}</span>${pi ? `<br><img class="mini" style="width:140px;height:105px;margin-top:10px" src="${rutaFoto(pi, 1)}" alt="">` : ""}`; }
   else prox = `Próximo: <b>serie ${ss.serie + 1} de ${objetivo(ejActivo(R.ej[ss.i]), sem).series}</b>`;
   $("#guia").innerHTML = `<div class="guia"><div class="in">${arriba}
     <div style="text-align:center"><div class="lbl" style="margin-top:6px">DESCANSO</div>
@@ -1100,7 +1178,7 @@ function pintarDescanso(arriba){
 function finDescanso(){ E.sesion.descansoHasta = null; guardar(); pintarGuia(); }
 function engancharGuia(){ document.querySelectorAll("#guia [data-g]").forEach(b => b.onclick = () => guia(b.dataset.g, b)); }
 function guia(a, b){
-  const ss = E.sesion, R = RUTINA[ss.dia], sem = semanaActual().n;
+  const ss = E.sesion, R = rutinaSesion(), sem = semanaActual().n;
   if (a === "salir") return cerrarGuia();
   if (a === "arrancar") { ss.i = 0; ss.serie = 0; guardar(); sonar("listo"); return pintarGuia(); }
   if (a === "kg" || a === "rep") { const i = a === "kg" ? $("#gKg") : $("#gRep"); i.value = Math.max(0, Math.round(((parseFloat(String(i.value).replace(",", ".")) || 0) + parseFloat(b.dataset.d)) * 100) / 100); sonar("toque"); return; }
@@ -1110,12 +1188,13 @@ function guia(a, b){
   if (a === "serie") {
     detenerRitmo();
     const ej = ejActivo(R.ej[ss.i]), o = objetivo(ej, sem);
-    const kg = parseFloat(String($("#gKg").value).replace(",", ".")) || 0, reps = parseInt($("#gRep").value, 10) || 0;
-    if (!kg) { toast("Anotá el peso que usaste (kg)"); $("#gKg").focus(); return; }
+    const kg = ej.casa ? 0 : parseFloat(String($("#gKg").value).replace(",", ".")) || 0, reps = parseInt($("#gRep").value, 10) || 0;
+    if (!kg && !ej.casa) { toast("Anotá el peso que usaste (kg)"); $("#gKg").focus(); return; }
     if (!reps) { toast("Anotá cuántas repeticiones hiciste"); return; }
     const sel = document.querySelector("[data-g=rir].on"), rir = sel ? +sel.dataset.r : o.rirMin;
     (ss.sets[ej.id] = ss.sets[ej.id] || []).push({kg, reps, rir});
-    E.ultimoKg[ej.id] = kg; sonar("listo"); vibrar(30);
+    if (!ej.casa) E.ultimoKg[ej.id] = kg;
+    sonar("listo"); vibrar(30);
     ss.serie++;
     let desc = o.desc;
     if (ss.serie >= o.series) { ss.i++; ss.serie = 0; if (ss.i >= R.ej.length) { guardar(); return pintarGuia(); } desc = Math.max(desc, 90); }
@@ -1150,11 +1229,11 @@ function marcarRitmo(ej){
 }
 function detenerRitmo(){ clearInterval(ritmoOn); ritmoOn = null; }
 function resumenFinal(){
-  const ss = E.sesion, R = RUTINA[ss.dia];
-  let vol = 0, series = 0; Object.values(ss.sets).forEach(a => a.forEach(s => { vol += s.kg * s.reps; series++; }));
+  const ss = E.sesion, R = rutinaSesion(), casa = ss.lugar === "casa";
+  let vol = 0, series = 0; Object.values(ss.sets).forEach(a => a.forEach(s => { vol += casa ? s.reps : s.kg * s.reps; series++; }));
   const min = Math.round((Date.now() - ss.desde) / 60000);
   $("#guia").innerHTML = `<div class="guia"><div class="in" style="text-align:center;padding-top:30px"><div style="font-size:80px">🏆</div><h1>¡Terminaste!</h1><p class="muted">${R.nombre}</p>
-    <div class="stats" style="margin:18px 0"><div class="stat"><b>${series}</b><small>series</small></div><div class="stat"><b>${Math.round(vol).toLocaleString("es-AR")}</b><small>kg movidos</small></div><div class="stat"><b>${min}</b><small>minutos</small></div></div>
+    <div class="stats" style="margin:18px 0"><div class="stat"><b>${series}</b><small>series</small></div><div class="stat"><b>${Math.round(vol).toLocaleString("es-AR")}</b><small>${casa ? "repeticiones" : "kg movidos"}</small></div><div class="stat"><b>${min}</b><small>minutos</small></div></div>
     <div class="consejo" style="text-align:left">🍗 Ahora toca el <b>almuerzo post-entreno</b> con la creatina (5 g). Es la comida más importante del día.</div>
     <button class="btn ok" data-g="terminar" style="margin-top:16px">Guardar y salir</button></div></div>`;
   engancharGuia();
@@ -1206,7 +1285,7 @@ async function prepararOffline(){
   if (!("caches" in window) || offline.corriendo) return;
   offline.corriendo = true;
   try {
-    const fotos = [...new Set(Object.values(MEDIA).flatMap(m => [m.img, ...m.alt.map(a => a.img)]))].flatMap(i => [rutaFoto(i, 0), rutaFoto(i, 1)]);
+    const fotos = [...new Set(Object.values(MEDIA).flatMap(m => [m.img, ...m.alt.map(a => a.img)]).filter(Boolean))].flatMap(i => [rutaFoto(i, 0), rutaFoto(i, 1)]);
     const c = await caches.open("gymblack-fotos");
     const ya = new Set((await c.keys()).map(r => decodeURIComponent(new URL(r.url).pathname).split("/ejercicios/")[1]));
     const faltan = fotos.filter(f => !ya.has(f.split("ejercicios/")[1]));
@@ -1237,7 +1316,7 @@ if (E && E.sesion && E.sesion.f === hoyStr() && E.sesion.descansoHasta) abrirGui
 setInterval(() => { if (E && E.inicio && !$("#guia").innerHTML && !(document.activeElement && document.activeElement.tagName === "INPUT")) render(); }, 60000);
 </script>
 <script>
-const VERSION_APP = "20260928132108";
+const VERSION_APP = "20260928133431";
 if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").then(reg => {
   document.addEventListener("visibilitychange", () => { if (!document.hidden) reg.update().catch(() => {}); });
 }).catch(() => {}));
