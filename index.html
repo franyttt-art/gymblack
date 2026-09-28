@@ -110,6 +110,8 @@ input{font:inherit;color:var(--ink)}
 .late{animation:late 1s infinite}
 .dias{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:10px}
 .dias div{text-align:center;padding:8px 0;border-radius:10px;background:var(--s2);font-size:12px;font-weight:800;color:var(--muted)}
+.dias button{padding:8px 0;border-radius:10px;background:var(--s2);font-size:12px;font-weight:800;color:var(--muted);border:1px solid var(--line)}
+.dias button.on{color:var(--ink);border-color:var(--fuego);background:#C9CED61F}
 .dias div.en{color:var(--ink)}.dias div.hoy{outline:2px solid var(--fuego)}.dias div.hecho{background:#132218;color:var(--ok)}
 .graf{width:100%;height:160px}
 details summary{cursor:pointer;font-weight:800;padding:4px 0}
@@ -215,7 +217,7 @@ const BATATA = (k, g) => ["Batata (al horno o microondas)", g + " g", {k, g, kca
 const FID = (k, g) => ["Fideos (secos, cualquier tipo)", g + " g", {k, g, kcal: 3.6}];
 const ENS = g => ["Lechuga + tomate" + (g >= 200 ? " + cebolla" : ""), g ? g + " g" : "a gusto"];
 const COMIDAS = [
-  {id:"des",h:"07:30",n:"Desayuno",ic:"🥣",sup:"💊 Multivitamínico (opcional) con el desayuno.",o:{
+  {id:"des",n:"Desayuno",ic:"🥣",sup:"💊 Multivitamínico (opcional) con el desayuno.",o:{
     D1:{t:"Avena con leche + huevos + banana",kcal:700,p:37,min:5,items:[AV("des",60),["Leche entera (para la avena)","250 ml"],["Huevos revueltos","3"],["Banana mediana","1"]],prep:"Avena en leche caliente (microondas 2–3 min). Huevos en sartén seca o con spray."},
     D2:{t:"Omelette de queso + tostadas + leche + banana",kcal:685,p:38,min:8,items:[["Huevos (omelette)","3"],["Queso port salut (dentro del omelette)","30 g"],["Pan lactal tostado","2 rebanadas"],["Leche entera","200 ml"],["Banana","1"]],prep:"Omelette en sartén seca con el queso adentro."},
     D3:{t:"Panqueques de avena y huevo + leche + banana",kcal:670,p:35,min:10,items:[["Huevos","3"],AV("des",60),["Leche (un chorrito para la mezcla)","un chorrito"],["Leche entera para tomar","200 ml"],["Banana (encima)","1"]],prep:"Mezclá huevos + avena + un chorrito de leche y hacé panqueques en sartén seca."},
@@ -223,12 +225,12 @@ const COMIDAS = [
     D5:{t:"French toast + leche + banana",kcal:650,p:35,min:8,items:[["Huevos batidos","3"],["Pan lactal","3 rebanadas"],["Leche entera","200 ml"],["Banana (aparte)","1"]],prep:"Remojá cada rebanada 30 s en el huevo batido y dorala en sartén seca."},
     D6:{t:"Huevos con queso + avena + manzana",kcal:710,p:38,min:8,items:[["Huevos revueltos","4"],["Queso rallado (encima)","20 g"],AV("des",50),["Leche entera caliente (para la avena)","200 ml"],["Manzana mediana","1"]],prep:"Avena con la leche caliente; huevos revueltos con el queso rallado arriba."},
     D7:{t:"Overnight oats + huevos duros",kcal:670,p:34,min:2,items:[AV("des",50),["Yogur natural entero","200 g"],["Leche entera","150 ml"],["Banana cortada","1"],["Huevos duros","2"]],prep:"La noche anterior: mezclá avena + yogur + leche y dejalo tapado en la heladera. A la mañana: banana cortada y los huevos duros (7 min hirviendo)."}}},
-  {id:"pre",h:"11:00",n:"Pre-entreno",nD:"Colación de media mañana",ic:"🥤",sup:"☕ Café: 200–250 mg de cafeína (~2 cafés) entre 45 y 60 min antes de entrenar.",o:{
+  {id:"pre",n:"Pre-entreno",ic:"🥤",sup:"☕ Café: 200–250 mg de cafeína (~2 cafés) entre 45 y 60 min antes de entrenar.",o:{
     PE1:{t:"Whey + agua + 2 frutas",kcal:310,p:27,min:1,items:[["Whey protein","1 scoop (~30 g)"],["Agua fría","300 ml"],["Banana","1"],["Manzana o pera","1"]],prep:"45 min antes de entrenar. Whey en agua: se digiere rápido y no cae pesado."},
     PE2:{t:"Whey + agua + pan lactal + banana",kcal:360,p:32,min:2,items:[["Whey protein","1 scoop"],["Agua","300 ml"],["Pan lactal","2 rebanadas"],["Banana","1"]],prep:"45 min antes de entrenar."},
     PE3:{t:"Whey con leche + banana",kcal:365,p:34,min:1,items:[["Whey protein","1 scoop"],["Leche entera","250 ml"],["Banana","1"]],prep:"Agitá bien en el shaker. Más proteína y calorías: usala cuando tengas más hambre."},
     PE4:{t:"Yogur + pan lactal + 2 bananas (sin whey)",kcal:470,p:15,min:1,items:[["Yogur natural entero","200 g"],["Pan lactal","2 rebanadas"],["Bananas","2"]],prep:"Para cuando se terminó el whey o preferís comida sólida. Menos proteína, pero el día igual cierra bien."}}},
-  {id:"alm",h:"13:30",n:"Almuerzo post-entreno ★",nD:"Almuerzo",ic:"🍗",sup:"💪 Creatina 5 g con esta comida (todos los días, también los de descanso). 🐟 Omega 3 (opcional) acá.",o:{
+  {id:"alm",n:"Almuerzo post-entreno ★",ic:"🍗",sup:"💪 Creatina 5 g con esta comida (todos los días, también los de descanso). 🐟 Omega 3 (opcional) acá.",o:{
     A1:{t:"Pollo + arroz + ensalada",kcal:790,p:47,min:15,items:[["Pechuga de pollo (cruda, sin piel) a la plancha","160 g"],ARZ("alm",110),ENS(200),["Aceite de girasol o canola","10 ml"],["Fruta de postre","1"]],prep:"La comida principal del día."},
     A2:{t:"Cuadrada o peceto + arroz + ensalada",kcal:830,p:47,min:15,items:[["Cuadrada o peceto (crudo, magro) a la plancha","170 g"],ARZ("alm",110),ENS(200),["Aceite","8 ml"],["Fruta","1"]],prep:"Carne a la plancha, 5 min por lado."},
     A3:{t:"Carne picada + arroz + tomate + queso",kcal:845,p:50,min:20,items:[["Carne picada magra","170 g"],ARZ("alm",110),["Tomate natural picado (para la salsa)","200 g"],["Aceite","8 ml"],["Queso rallado (encima)","30 g"]],prep:"Salteá la carne en sartén sin aceite y sumale el tomate como salsa."},
@@ -236,15 +238,15 @@ const COMIDAS = [
     A5:{t:"Milanesa de pollo al horno + puré",kcal:830,p:57,min:30,items:[["Pechuga de pollo","180 g"],["Huevo (para pasar la milanesa)","1"],["Pan rallado","20 g"],PAPA("alm",250,"Papa (para el puré)"),["Leche (para el puré, sin manteca)","50 ml"],["Aceite","10 ml"],ENS(0)],prep:"Horno a 200 °C, 20 min. Es la más larga: podés dejar la milanesa hecha la noche anterior."},
     A6:{t:"Lomo de cerdo + batata + pan + ensalada",kcal:870,p:50,min:20,items:[["Lomo de cerdo (crudo) a la plancha","170 g"],BATATA("alm",300),["Pan lactal","2 rebanadas"],["Aceite","8 ml"],["Fruta","1"],ENS(0)],prep:"Batata al horno 30 min o al microondas 10 min."},
     A7:{t:"Fideos con carne picada + tomate + queso",kcal:850,p:50,min:25,items:[FID("alm",100),["Carne picada magra","150 g"],["Tomate natural picado","150 g"],["Aceite","8 ml"],["Queso rallado","30 g"]],prep:"Salsa de carne y tomate; queso rallado arriba."}}},
-  {id:"mer",h:"15:30",n:"Merienda",ic:"🥪",o:{
-    M1:{t:"Yogur + banana + pan + queso",kcal:490,p:21,min:2,items:[["Yogur natural entero (sin sabor)","200 g"],["Banana","1"],["Pan lactal","2 rebanadas"],["Queso port salut o cuartirolo","30 g"]],prep:"Sin cocinar nada. 30 min antes de salir a la facultad."},
+  {id:"mer",n:"Merienda",ic:"🥪",o:{
+    M1:{t:"Yogur + banana + pan + queso",kcal:490,p:21,min:2,items:[["Yogur natural entero (sin sabor)","200 g"],["Banana","1"],["Pan lactal","2 rebanadas"],["Queso port salut o cuartirolo","30 g"]],prep:"Sin cocinar nada: se arma en un minuto o se lleva."},
     M2:{t:"Licuado de leche, avena y banana + queso",kcal:515,p:22,min:3,items:[["Leche entera","250 ml"],["Avena","40 g"],["Banana","1"],["Queso (aparte)","30 g"]],prep:"Licuá leche + avena + banana; el queso, aparte."},
     M3:{t:"Pan con queso + leche + banana",kcal:520,p:22,min:2,items:[["Pan lactal","3 rebanadas"],["Queso port salut (encima del pan)","30 g"],["Leche entera","200 ml"],["Banana","1"]],prep:"Sin cocinar nada."},
     M4:{t:"Yogur + banana + manzana + tostadas",kcal:480,p:18,min:1,items:[["Yogur natural entero","200 g"],["Banana","1"],["Manzana","1"],["Tostadas de pan lactal","2"]],prep:"Sin cocinar nada."},
     M5:{t:"Licuado proteico express",kcal:475,p:36,min:1,items:[["Whey protein","1 scoop"],["Leche entera","250 ml"],["Bananas","2"]],prep:"Shaker o licuadora. La más rápida y con más proteína para días con apuro."}}},
-  {id:"fac",h:"18:00",n:"Shake en la facu (opcional)",ic:"🎒",opc:1,o:{
-    F1:{t:"Whey con agua",kcal:110,p:25,min:1,items:[["Whey (medido en casa, en una bolsita)","1 scoop"],["Agua del dispenser","300 ml"]],prep:"Entre la merienda y la cena pasan 6 h: este shake mantiene la construcción de músculo."}}},
-  {id:"cen",h:"21:30",n:"Cena",ic:"🍳",sup:"😴 Magnesio bisglicinato (opcional) 30–45 min antes de dormir.",o:{
+  {id:"fac",n:"Shake (opcional)",ic:"🎒",opc:1,o:{
+    F1:{t:"Whey con agua",kcal:110,p:25,min:1,items:[["Whey (medido en casa, en una bolsita)","1 scoop"],["Agua del dispenser","300 ml"]],prep:"Entre dos comidas pasan muchas horas: este shake mantiene la construcción de músculo."}}},
+  {id:"cen",n:"Cena",ic:"🍳",sup:"😴 Magnesio bisglicinato (opcional) 30–45 min antes de dormir.",o:{
     C1:{t:"4 huevos revueltos + papa + ensalada",kcal:536,p:30,min:12,items:[["Huevos revueltos","4"],PAPA("cen",200),ENS(150),["Aceite","8 ml"]],prep:"Papa al microondas 10 min con cáscara."},
     C2:{t:"Fideos + atún + tomate",kcal:560,p:40,min:15,items:[FID("cen",90),["Atún al natural (escurrido, 1 lata)","120 g"],["Tomate natural picado","150 g"],["Aceite","10 ml"]],prep:"Cena de emergencia: no hay que cocinar la proteína. Sal y orégano a gusto."},
     C3:{t:"Arroz + 4 huevos + queso",kcal:620,p:38,min:15,items:[ARZ("cen",80),["Huevos revueltos (encima del arroz)","4"],["Queso rallado","30 g"],["Aceite","5 ml"]],prep:"Huevos revueltos arriba del arroz caliente."},
@@ -266,7 +268,7 @@ const K = "forja-v1";
 let E = cargar();
 function cargar(){ try { return JSON.parse(localStorage.getItem(K)) || null; } catch { return null; } }
 function guardar(){ try { localStorage.setItem(K, JSON.stringify(E)); } catch {} }
-function nuevoEstado(){ return {nombre:"", obj:null, meta:null, sexo:null, edad:null, altura:null, ajuste:0, inicio:null, pesos:[], hist:{}, var:{}, comidas:{}, eleccion:{}, menuFijo:false, agua:{}, entrenos:{}, sesion:null, sonido:true, ultimoKg:{}}; }
+function nuevoEstado(){ return {nombre:"", horario:JSON.parse(JSON.stringify(HORARIO_BASE)), horarioVisto:false, obj:null, meta:null, sexo:null, edad:null, altura:null, ajuste:0, inicio:null, pesos:[], hist:{}, var:{}, comidas:{}, eleccion:{}, menuFijo:false, agua:{}, entrenos:{}, sesion:null, sonido:true, ultimoKg:{}}; }
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -411,6 +413,67 @@ function hojaMenu(id){
     <p class="small muted" style="margin:6px 0 4px">Todas tienen calorías parecidas: elegí la que quieras para hoy. Mañana vuelve la del menú.</p>
     ${Object.entries(x.o).map(([k, o]) => `<button class="alt ${k === op ? "on" : ""}" data-h="comer" data-id="${id}" data-k="${k}"><div class="num">${k}</div><div style="flex:1"><b>${o.t}</b><div class="small muted">${kcalComida(o, id)} kcal · ${protComida(o, id)} g proteína · ⏱️ ${o.min} min${k === rot ? " · 📅 la de hoy" : ""}</div></div><span>${k === op ? "✓" : "›"}</span></button>`).join("")}`);
 }
+// Aviso en Hoy hasta que cada uno confirme o arme su horario.
+function tarjetaHorario(){
+  if (E.horarioVisto) return "";
+  const H = horario(), acts = H.acts.map(a => `${esc(a.n)} de ${a.desde} a ${a.hasta}`).join(", ");
+  return `<div class="card"><h3>🕒 ¿Es este tu horario?</h3><p class="small muted" style="margin:6px 0 10px">Las comidas se acomodan a tu día. Ahora están armadas para levantarte a las ${H.levanta}, entrenar a las ${H.entrena} y acostarte a las ${H.acuesta}${acts ? ", con " + acts : ""}.</p>
+    <div class="row"><button class="btn chico" data-a="horario" style="flex:1">✏️ Armar mi horario</button><button class="btn chico sec" data-a="horarioOk" style="flex:1">Sí, es este</button></div></div>`;
+}
+let borrador = null;  // horario que se está editando en la hoja (se guarda recién al tocar «Guardar»)
+function hojaHorario(){
+  if (!borrador) borrador = JSON.parse(JSON.stringify(horario()));
+  const B = borrador, semana = [1, 2, 3, 4, 5, 6, 0], scroll = $("#hoja .in") ? $("#hoja .in").scrollTop : 0;
+  abrirHoja(`<div class="row"><h2 style="flex:1">🕒 Mi horario</h2><button class="chip" data-h="hcerrar">✕</button></div>
+    <p class="small muted" style="margin:6px 0 4px">Con esto acomodo las comidas: el pre-entreno antes de entrenar, la comida grande justo después, y nada en el medio de tus actividades.</p>
+    <div class="lbl">Me levanto</div><input id="hLev" class="campo" type="time" value="${B.levanta}">
+    <div class="lbl">Entreno a las</div><input id="hEnt" class="campo" type="time" value="${B.entrena}">
+    <p class="small muted" style="margin:4px 0 0">Los días de entreno: lunes, martes, jueves y viernes · ~1 h 30 min.</p>
+    <div class="lbl">Me acuesto</div><input id="hDor" class="campo" type="time" value="${B.acuesta}">
+    <div class="lbl">Actividades fijas (facultad, trabajo…)</div>
+    ${B.acts.length ? "" : `<p class="small muted" style="margin:0">No tenés ninguna. Si tenés facultad, trabajo o algo con horario fijo, agregalo y las comidas no caen en el medio.</p>`}
+    ${B.acts.map((x, i) => `<div class="card" style="padding:12px;margin:8px 0">
+      <div class="row"><input class="campo" data-an="${i}" value="${esc(x.n)}" placeholder="Ej: Facultad" maxlength="24" style="flex:1"><button class="chip" data-h="hquitar" data-i="${i}" aria-label="Quitar ${esc(x.n)}">✕</button></div>
+      <div class="row" style="margin-top:8px"><input class="campo" type="time" data-ad="${i}" value="${x.desde}"><span class="muted">a</span><input class="campo" type="time" data-ah="${i}" value="${x.hasta}"></div>
+      <div class="dias">${semana.map(d => `<button class="${x.dias.includes(d) ? "on" : ""}" data-h="hdia" data-i="${i}" data-d="${d}">${NOMBRE_DIA[d].slice(0, 2)}</button>`).join("")}</div></div>`).join("")}
+    ${B.acts.length < 4 ? `<button class="btn sec chico" data-h="hagregar" style="width:100%;margin-top:8px">＋ Agregar actividad</button>` : ""}
+    <button class="btn" data-h="hguardar" style="margin-top:14px">Guardar horario</button>`);
+  $("#hoja .in").scrollTop = scroll;
+}
+function leerBorrador(){
+  const B = borrador, v = q => $(q) && $(q).value;
+  B.levanta = v("#hLev") || B.levanta; B.entrena = v("#hEnt") || B.entrena; B.acuesta = v("#hDor") || B.acuesta;
+  B.acts.forEach((x, i) => { const q = k => document.querySelector(`[data-${k}="${i}"]`);
+    x.n = q("an").value.trim().slice(0, 24); x.desde = q("ad").value || x.desde; x.hasta = q("ah").value || x.hasta; });
+}
+function validarHorario(B){
+  const lev = aMin(B.levanta); let dor = aMin(B.acuesta), T = aMin(B.entrena);
+  if (dor <= lev) dor += 1440; if (T < lev) T += 1440;
+  if (dor - lev < 12 * 60) return "Entre que te levantás y te acostás tiene que haber al menos 12 horas";
+  if (T - lev < 60) return "Poné el entrenamiento al menos 1 hora después de levantarte, así llegás a desayunar";
+  if (dor - (T + DUR_ENTRENO) < 60) return "Terminá de entrenar al menos 1 hora antes de acostarte";
+  for (const x of B.acts) {
+    if (!x.n) return "Ponele nombre a cada actividad (por ejemplo: Facultad)";
+    if (!x.dias.length) return `Elegí qué días tenés ${x.n}`;
+    const d = aMin(x.desde), h = aMin(x.hasta);
+    if (h <= d) return `${x.n}: la hora de fin tiene que ser después de la de inicio`;
+    if (x.dias.some(dd => SEMANA_DIAS[dd]) && d < aMin(B.entrena) + DUR_ENTRENO && h > aMin(B.entrena)) return `${x.n} se superpone con el entrenamiento (${B.entrena} a ${aHora(aMin(B.entrena) + DUR_ENTRENO)}) en un día de entreno`;
+  }
+  return null;
+}
+function accionHorario(a, b){
+  if (a === "hcerrar") { borrador = null; return cerrarHoja(); }
+  leerBorrador(); const B = borrador, i = +b.dataset.i;
+  if (a === "hquitar") B.acts.splice(i, 1);
+  if (a === "hagregar") B.acts.push({n:"", desde:"09:00", hasta:"13:00", dias:[1, 2, 3, 4, 5]});
+  if (a === "hdia") { const d = +b.dataset.d, l = B.acts[i].dias; B.acts[i].dias = l.includes(d) ? l.filter(x => x !== d) : [...l, d]; }
+  if (a === "hguardar") {
+    const err = validarHorario(B); if (err) return toast(err);
+    E.horario = B; E.horarioVisto = true; borrador = null; guardar(); sonar("listo"); cerrarHoja();
+    toast("🕒 Horario guardado: las comidas ya se acomodaron"); return render();
+  }
+  sonar("toque"); hojaHorario();
+}
 function cerrarHoja(){ $("#hoja").innerHTML = ""; }
 function abrirHoja(html){
   $("#hoja").innerHTML = `<div class="hojaF"><div class="in">${html}</div></div>`;
@@ -436,6 +499,7 @@ function hojaVariantes(id){
 }
 function hojaAccion(a, b){
   if (a === "cerrar") return cerrarHoja();
+  if (/^h[a-z]/.test(a)) return accionHorario(a, b);
   if (a === "variantes") return hojaVariantes(b.dataset.id);
   if (a === "comer") {
     const d = E.eleccion[hoyStr()] || (E.eleccion[hoyStr()] = {}), x = COMIDAS.find(c => c.id === b.dataset.id);
@@ -638,7 +702,7 @@ function pHoy(){
   let h = instalarCard() + `<div id="offlineEstado">${textoOffline()}</div>`;
   if (dia) {
     const R = RUTINA[dia], enCurso = E.sesion && E.sesion.f === hoyStr() && !hecho;
-    h += `<div class="card hero"><div class="row w"><span class="chip f">${NOMBRE_DIA[d.getDay()]}</span><span class="chip">⏱️ ~${minutos(duracionDia(dia, s.n))} min</span><span class="chip">🕛 12:00</span></div>
+    h += `<div class="card hero"><div class="row w"><span class="chip f">${NOMBRE_DIA[d.getDay()]}</span><span class="chip">⏱️ ~${minutos(duracionDia(dia, s.n))} min</span><span class="chip">🕛 ${aHora(aMin(horario().entrena))}</span></div>
       <h2 style="margin-top:10px">${hecho ? "✅ " : "🏋️ "}${R.nombre}</h2><p class="muted" style="margin:4px 0 12px">${R.foco} · ${R.ej.length} ejercicios</p>
       ${hecho ? `<p style="color:var(--ok);font-weight:800;margin:0 0 10px">¡Entrenamiento de hoy terminado! 🔥</p>` : ""}
       ${enCurso ? `<button class="btn" data-a="seguir">▶ Seguir donde quedé</button>` : `<button class="btn ${hecho ? "sec" : ""}" data-a="empezar" data-d="${dia}">${hecho ? "Hacerlo de nuevo" : "▶ Empezar entrenamiento"}</button>`}</div>`;
@@ -646,10 +710,11 @@ function pHoy(){
     h += `<div class="card hero"><span class="chip">${NOMBRE_DIA[d.getDay()]}</span><h2 style="margin-top:10px">😌 Hoy descansás</h2>
       <p class="muted" style="margin:6px 0 0">El músculo crece recuperando. Comé todo el plan, tomá la creatina y dormí 7–8 h.${siguienteEntreno()}</p></div>`;
   }
+  h += tarjetaHorario();
   h += `<div class="card"><h3>📅 Semana ${s.n} · ${S.b}</h3><p class="small muted" style="margin:6px 0 0">${S.nota}</p>${diasSemana()}</div>`;
   const prox = comidaAhora();
   h += `<div class="card"><div class="row"><h3>🍽️ Comidas de hoy</h3><span class="sp"></span><span class="chip">${comidasHechas()}/${COMIDAS.filter(c => !c.opc).length}</span></div>
-    ${prox ? `<p style="margin:8px 0 10px">Ahora toca: <b style="color:var(--fuego2)">${prox.h} · ${nombreComida(prox)}</b><br><span class="small">${prox.o[opcion(prox)].t}</span></p>` : `<p style="color:var(--ok);font-weight:800">¡Todas las comidas del día listas! 🎉</p>`}
+    ${prox ? `<p style="margin:8px 0 10px">Ahora toca: <b style="color:var(--fuego2)">${aHora(horaComida(prox))} · ${nombreComida(prox)}</b><br><span class="small">${prox.o[opcion(prox)].t}</span></p>` : `<p style="color:var(--ok);font-weight:800">¡Todas las comidas del día listas! 🎉</p>`}
     ${barraKcal()}<button class="btn sec" data-a="tab" data-t="comidas" style="margin-top:12px">Ver qué comer</button></div>`;
   h += aguaCard();
   return h;
@@ -707,17 +772,76 @@ function pEntreno(){
 }
 
 // ---------- COMIDAS ----------
-function nombreComida(c){ return !hoyEntrena() && c.nD ? c.nD : c.n; }
+/* ============ HORARIO DEL DÍA (lo arma cada uno en «Mi horario») ============ */
+// E.horario = {levanta:"07:00", entrena:"12:00", acuesta:"23:00", acts:[{n:"Facultad", desde:"16:00", hasta:"21:00", dias:[1,2,3,4,5]}]}
+// (dias: 0 = domingo … 6 = sábado). Las comidas se acomodan solas a eso.
+const aMin = t => { const [h, m] = String(t).split(":").map(Number); return h * 60 + (m || 0); };
+const aHora = m => { m = ((Math.round(m) % 1440) + 1440) % 1440; return String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0"); };
+const DUR_ENTRENO = 90;
+const HORARIO_BASE = {levanta:"07:00", entrena:"12:00", acuesta:"23:00", acts:[]};
+// Quien ya usaba la app tenía el horario del plan original (facultad de 16 a 21): se conserva hasta que arme el suyo.
+const HORARIO_VIEJO = {levanta:"07:00", entrena:"12:00", acuesta:"23:00", acts:[{n:"Facultad", desde:"16:00", hasta:"21:00", dias:[0, 1, 2, 3, 4, 5, 6]}]};
+function horario(){ if (!E.horario) { E.horario = JSON.parse(JSON.stringify(HORARIO_VIEJO)); guardar(); } return E.horario; }
+const iconoAct = n => /facu|univ|clase|colegio|escuela|estudi|curso/i.test(n) ? "🎓" : /trab|oficina|labur|turno/i.test(n) ? "💼" : "📌";
+function nombrePorHora(m){ m = ((m % 1440) + 1440) % 1440; return m < 630 ? "Colación de la mañana" : m < 720 ? "Colación de media mañana" : m < 900 ? "Almuerzo" : m < 1170 ? "Merienda" : "Cena"; }
+// Arma el día: a qué hora va cada comida (en minutos desde las 00:00; pasa de 1440 si te acostás después de medianoche),
+// cómo se llama y qué bloques fijos hay (entrenamiento y actividades). Los días de descanso usan los mismos horarios.
+// Desayuno 30 min después de levantarte · pre-entreno 1 h antes de entrenar · la comida grande del plan justo al terminar
+// · cena 1 h 30 antes de acostarte · el resto, en el medio de los huecos más largos y nunca adentro de una actividad.
+function planDia(dow = new Date().getDay()){
+  const H = horario(), lev = aMin(H.levanta);
+  let dorm = aMin(H.acuesta); if (dorm <= lev) dorm += 1440;
+  const T = aMin(H.entrena) < lev ? aMin(H.entrena) + 1440 : aMin(H.entrena), fin = T + DUR_ENTRENO, entrena = !!SEMANA_DIAS[dow];
+  const acts = (H.acts || []).filter(a => a.dias.includes(dow)).map(a => { let d = aMin(a.desde), h = aMin(a.hasta); if (d < lev) { d += 1440; h += 1440; } if (h <= d) h += 1440; return {...a, d, h}; });
+  const bloqueado = m => acts.find(a => m >= a.d && m < a.h) || (m >= T && m < fin ? {d:T, h:fin} : null);
+  // saca una comida de adentro de una actividad o del entrenamiento: 30 min antes o 15 min después, lo que quede más cerca dentro de [lo, hi]
+  const afuera = (m, lo, hi) => { for (let i = 0; i < 3; i++) { const b = bloqueado(m); if (!b) return m;
+    const c = [b.d - 30, b.h + 15].filter(x => x >= lo && x <= hi).sort((x, y) => Math.abs(x - m) - Math.abs(y - m));
+    if (!c.length) return m; m = c[0]; } return m; };
+  const t = {des:lev + 30, alm:fin}, libres = [];
+  if (T - 60 >= t.des + 90) t.pre = afuera(T - 60, t.des + 60, T - 30); else libres.push("pre");
+  if (dorm - 90 - fin >= 150) t.cen = afuera(dorm - 90, fin + 90, dorm - 45); else libres.push("cen");
+  // las comidas sin hora fija van al medio del hueco más largo; después se reparten en el orden del plan (merienda, pre, cena)
+  const horas = [];
+  for (let k = 0; k < libres.length + 1; k++) {
+    const puntos = [...Object.values(t), ...horas, dorm - 60].sort((a, b) => a - b); let a = 0, b = 0;
+    for (let i = 1; i < puntos.length; i++) if (puntos[i] - puntos[i - 1] > b - a) { a = puntos[i - 1]; b = puntos[i]; }
+    horas.push(afuera(Math.round((a + b) / 2 / 30) * 30, a + 60, b - 60));
+  }
+  horas.sort((a, b) => a - b);
+  ["mer", "pre", "cen"].filter(id => id === "mer" || libres.includes(id)).forEach((id, i) => t[id] = horas[i]);
+  const orden = Object.entries(t).sort((x, y) => x[1] - y[1]), n = {}, usados = new Set();
+  orden.forEach(([id, m]) => {
+    let nom = id === "des" ? "Desayuno" : entrena && id === "pre" && !libres.includes("pre") ? "Pre-entreno" : nombrePorHora(m);
+    if (entrena && id === "alm") nom = (m % 1440 < 630 ? "Post-entreno" : nombrePorHora(m) + " post-entreno") + " ★";
+    if (usados.has(nom)) nom = "Colación";
+    usados.add(nom); n[id] = nom;
+  });
+  // shake opcional: solo si entre dos comidas quedan 5 h o más
+  let fac = null;
+  for (let i = 1; i < orden.length; i++) { const [ia, a] = orden[i - 1], [ib, b] = orden[i]; if (b - a >= 300 && (!fac || b - a > fac.b - fac.a)) fac = {a, b, ia, ib}; }
+  if (fac) {
+    const m = Math.floor((fac.a + fac.b) / 2 / 60) * 60, act = acts.find(x => m >= x.d && m < x.h), sin = x => n[x].replace(" ★", "").toLowerCase();
+    fac = {m, n:act ? `Shake en ${act.n} (opcional)` : "Shake (opcional)", ic:act ? "🎒" : "🥤",
+      prep:`Entre ${sin(fac.ia)} y ${sin(fac.ib)} pasan ${Math.round((fac.b - fac.a) / 60)} h: este shake mantiene la construcción de músculo.${act ? " Llevalo medido en una bolsita." : ""}`};
+  }
+  const bloques = acts.map(a => ({m:a.d, ic:iconoAct(a.n), t:`${aHora(a.d)} – ${aHora(a.h)} · ${esc(a.n)}`}));
+  if (entrena) bloques.push({m:T, ic:"🏋️", t:`${aHora(T)} – ${aHora(fin)} · Entrenamiento`, sub:RUTINA[SEMANA_DIAS[dow]].nombre});
+  return {m:t, n, fac, bloques, lev};
+}
+const horaComida = (c, P = planDia()) => c.id === "fac" ? (P.fac ? P.fac.m : null) : P.m[c.id];
+function nombreComida(c){ const P = planDia(); return c.id === "fac" ? (P.fac ? P.fac.n : c.n) : P.n[c.id] || c.n; }
 function comidasHoy(){ return E.comidas[hoyStr()] || (E.comidas[hoyStr()] = {}); }
 function comidasHechas(){ const c = comidasHoy(); return COMIDAS.filter(x => !x.opc && c[x.id]).length; }
 function opcionDeHoy(c){ return (E.menuFijo ? MENU_FIJO : ROTACION[new Date().getDay()])[c.id] || Object.keys(c.o)[0]; }
 function opcion(c){ const el = (E.eleccion[hoyStr()] || {})[c.id]; return c.o[el] ? el : opcionDeHoy(c); }
 function comidaAhora(){
-  const c = comidasHoy(), n = new Date(), min = n.getHours() * 60 + n.getMinutes();
-  const pend = COMIDAS.filter(x => !c[x.id] && !x.opc);
+  const c = comidasHoy(), n = new Date(), P = planDia();
+  let min = n.getHours() * 60 + n.getMinutes(); if (min < P.lev) min += 1440;  // después de medianoche sigue siendo «hoy»
+  const pend = COMIDAS.filter(x => !c[x.id] && !x.opc).sort((a, b) => horaComida(a, P) - horaComida(b, P));
   if (!pend.length) return null;
   // la última pendiente cuyo horario ya llegó (o está a menos de 30 min); si ninguna, la primera pendiente
-  const llegadas = pend.filter(x => { const [hh, mm] = x.h.split(":").map(Number); return hh * 60 + mm - 30 <= min; });
+  const llegadas = pend.filter(x => horaComida(x, P) - 30 <= min);
   return llegadas.length ? llegadas[llegadas.length - 1] : pend[0];
 }
 function kcalHoy(){ const c = comidasHoy(); let k = 0, p = 0;
@@ -736,17 +860,19 @@ function pComidas(){
     ${bajando() ? `<p class="small" style="margin:10px 0 0">⚖️ Las porciones marcadas con ⚖️ ya están ajustadas para bajar de peso: lácteos descremados, la mitad de aceite y queso, y menos carbohidratos. La proteína que necesitás no se toca, para no perder músculo. Se actualizan solas cuando anotás tu peso.</p>`
       : achicar() ? `<p class="small" style="margin:10px 0 0">⚖️ Tu meta es menor que el plan base del PDF (${PLAN_BASE} kcal): las porciones marcadas con ⚖️ ya están achicadas (primero los carbohidratos; la proteína que necesitás no se toca). Se actualizan solas cuando anotás tu peso.</p>`
       : extraKcal() ? `<p class="small" style="margin:10px 0 0">⚖️ Las porciones marcadas con ⚖️ ya están ajustadas a tus datos (+${extraKcal()} kcal respecto del plan base del PDF, ${PLAN_BASE} kcal). Se actualizan solas cuando anotás tu peso en Progreso.</p>` : ""}</div>`;
-  COMIDAS.forEach(x => {
+  const P = planDia();
+  const lista = [...COMIDAS.filter(x => horaComida(x, P) != null).map(x => ({m:horaComida(x, P), x})), ...P.bloques.map(bl => ({m:bl.m - .5, bl}))].sort((p, q) => p.m - q.m);
+  lista.forEach(({x, bl}) => {
+    if (bl) { h += `<div class="card" style="padding:12px 16px"><div class="row"><span style="font-size:22px">${bl.ic}</span><div><b>${bl.t}</b>${bl.sub ? `<div class="small muted">${bl.sub}</div>` : ""}</div></div></div>`; return; }
     const op = opcion(x), o = x.o[op], ya = c[x.id], varias = Object.keys(x.o).length > 1;
-    h += `<div class="comida ${ya ? "ya" : ""} ${prox === x ? "ahora" : ""}"><div class="row"><div class="h">${x.h}</div>
-      <div style="flex:1"><b>${x.ic} ${nombreComida(x)}</b><div style="font-weight:800;color:var(--fuego2);margin-top:2px">${o.t}</div><div class="small muted">${kcalComida(o, x.id)} kcal · ${protComida(o, x.id)} g proteína · ⏱️ ${o.min} min${prox === x ? ' · <span style="color:var(--fuego2)">ahora</span>' : ""}</div></div>
+    h += `<div class="comida ${ya ? "ya" : ""} ${prox === x ? "ahora" : ""}"><div class="row"><div class="h">${aHora(horaComida(x, P))}</div>
+      <div style="flex:1"><b>${x.id === "fac" ? P.fac.ic : x.ic} ${nombreComida(x)}</b><div style="font-weight:800;color:var(--fuego2);margin-top:2px">${o.t}</div><div class="small muted">${kcalComida(o, x.id)} kcal · ${protComida(o, x.id)} g proteína · ⏱️ ${o.min} min${prox === x ? ' · <span style="color:var(--fuego2)">ahora</span>' : ""}</div></div>
       <button class="check" data-a="comi" data-id="${x.id}" aria-label="Marcar como comida">${ya ? "✓" : ""}</button></div>
       <ul class="items">${itemsComida(o, x.id).map(i => `<li><span>${i.n}</span><span>${i.marca ? "⚖️ " : ""}${i.txt}</span></li>`).join("")}</ul>
-      <p class="small muted" style="margin:8px 0 0">${o.prep}</p>
+      <p class="small muted" style="margin:8px 0 0">${x.id === "fac" ? P.fac.prep : o.prep}</p>
       ${varias ? `<button class="btn sec chico" data-a="menu" data-id="${x.id}" style="width:100%;margin-top:10px">🔁 Cambiar por otra opción${op !== opcionDeHoy(x) ? " · elegida por vos" : ""}</button>` : ""}${x.sup ? `<p class="small" style="margin:6px 0 0">${x.sup}</p>` : ""}</div>`;
-    if (x.id === "pre" && dia) h += `<div class="card" style="padding:12px 16px"><div class="row"><span style="font-size:22px">🏋️</span><div><b>12:00 – 13:30 · Entrenamiento</b><div class="small muted">${RUTINA[dia].nombre}</div></div></div></div>`;
-    if (x.id === "mer") h += `<div class="card" style="padding:12px 16px"><div class="row"><span style="font-size:22px">🎓</span><b>16:00 – 21:00 · Facultad</b></div></div>`;
   });
+  h += `<button class="btn sec" data-a="horario" style="margin-bottom:12px">🕒 Cambiar mi horario</button>`;
   h += aguaCard();
   if (bajando()) h += `<details class="card"><summary>🥗 Si te quedás con hambre</summary><p class="small muted">Verduras sin límite: lechuga, tomate, zapallito, brócoli, espinaca, pepino (sin aceite extra). Caldo casero, mate, té o café sin azúcar, agua con gas y gelatina light casi no suman calorías.<br><br>
     Comé despacio y empezá por la proteína y la verdura. Si el hambre no te deja seguir, sumá 1 fruta (~70 kcal) antes que cualquier otra cosa.</p></details>`;
@@ -790,6 +916,7 @@ function pProgreso(){
     <p class="small muted">Reps: ejercicios compuestos / de aislamiento.</p></details></div>`;
   h += `<div class="card"><h3>⚙️ Ajustes</h3>
     <div class="row" style="margin-top:8px"><span>🎯 ${bajando() ? "Bajar de peso" : "Ganar músculo"} · meta ${fmtKg(pesoMeta())} kg<br><small class="muted">${E.sexo === "f" ? "Mujer" : "Hombre"} · ${E.edad} años · ${E.altura} cm</small></span><span class="sp"></span><button class="btn chico sec" data-a="objetivo">Cambiar</button></div>
+    <div class="row" style="margin-top:8px"><span>🕒 Mi horario<br><small class="muted">Me levanto ${horario().levanta} · entreno ${horario().entrena} · me acuesto ${horario().acuesta}</small></span><span class="sp"></span><button class="btn chico sec" data-a="horario">Cambiar</button></div>
     <div class="row" style="margin-top:8px"><span>🍽️ Menú: ${E.menuFijo ? "siempre el mismo" : "variado (7 días)"}</span><span class="sp"></span><button class="btn chico sec" data-a="menuFijo">${E.menuFijo ? "Variar" : "Fijar"}</button></div>
     <div class="row" style="margin-top:8px"><span>🔊 Sonido al terminar el descanso</span><span class="sp"></span><button class="btn chico sec" data-a="sonido">${E.sonido ? "Sí" : "No"}</button></div>
     <div class="row" style="margin-top:10px"><span>📤 Pasar mis datos a otro dispositivo</span><span class="sp"></span><button class="btn chico sec" data-a="exportar">Link</button></div>
@@ -859,6 +986,8 @@ function accion(a, b){
     E.pesos = E.pesos.filter(p => p.f !== hoyStr()); E.pesos.push({f:hoyStr(), kg}); guardar(); sonar("listo"); toast("⚖️ Peso guardado"); return render();
   }
   if (a === "sem") { const d = aFecha(E.inicio); d.setDate(d.getDate() - 7 * +b.dataset.d); E.inicio = fechaStr(d); guardar(); sonar("toque"); return render(); }
+  if (a === "horario") { sonar("toque"); borrador = null; return hojaHorario(); }
+  if (a === "horarioOk") { E.horarioVisto = true; guardar(); sonar("listo"); return render(); }
   if (a === "objetivo") { elegirObjetivo = true; sonar("toque"); render(); return scrollTo(0, 0); }
   if (a === "ajuste") { const d = +b.dataset.d; E.ajuste = d ? (E.ajuste || 0) + d : 0; guardar(); sonar("listo"); toast(`🍽️ Plan de hoy: ~${metaKcal()} kcal`); return render(); }
   if (a === "sonido") { E.sonido = !E.sonido; guardar(); sonar("listo"); return render(); }
@@ -1077,7 +1206,7 @@ if (E && E.sesion && E.sesion.f === hoyStr() && E.sesion.descansoHasta) abrirGui
 setInterval(() => { if (E && E.inicio && !$("#guia").innerHTML && !(document.activeElement && document.activeElement.tagName === "INPUT")) render(); }, 60000);
 </script>
 <script>
-const VERSION_APP = "20260928125035";
+const VERSION_APP = "20260928130322";
 if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").then(reg => {
   document.addEventListener("visibilitychange", () => { if (!document.hidden) reg.update().catch(() => {}); });
 }).catch(() => {}));
