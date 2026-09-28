@@ -151,7 +151,7 @@ details summary{cursor:pointer;font-weight:800;padding:4px 0}
 </div></nav>
 <div id="guia"></div>
 <div id="hoja"></div>
-<script src="media.js?v=20260928134633"></script>
+<script src="media.js?v=20260928135001"></script>
 <script>
 "use strict";
 /* ============ RUTINA: HYPERTROPHY ELITE PROGRAM v2 ============ */
@@ -317,7 +317,7 @@ const K = "forja-v1";
 let E = cargar();
 function cargar(){ try { return JSON.parse(localStorage.getItem(K)) || null; } catch { return null; } }
 function guardar(){ try { localStorage.setItem(K, JSON.stringify(E)); } catch {} }
-function nuevoEstado(){ return {nombre:"", hv:1, lugar:"gym", lugarDia:{}, horario:JSON.parse(JSON.stringify(HORARIO_BASE)), horarioVisto:false, obj:null, meta:null, sexo:null, edad:null, altura:null, ajuste:0, inicio:null, pesos:[], hist:{}, var:{}, comidas:{}, eleccion:{}, menuFijo:false, agua:{}, entrenos:{}, sesion:null, sonido:true, ultimoKg:{}}; }
+function nuevoEstado(){ return {nombre:"", hv:1, lugar:"gym", horario:JSON.parse(JSON.stringify(HORARIO_BASE)), horarioVisto:false, obj:null, meta:null, sexo:null, edad:null, altura:null, ajuste:0, inicio:null, pesos:[], hist:{}, var:{}, comidas:{}, eleccion:{}, menuFijo:false, agua:{}, entrenos:{}, sesion:null, sonido:true, ultimoKg:{}}; }
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -441,8 +441,8 @@ const hoyEntrena = () => sesionDe(new Date().getDay());
 /* ============ FOTOS Y VARIANTES ============ */
 // E.var[id] = {k: número de variante, f: fecha (vale solo ese día) o null (siempre)}
 const todosEj = () => [...Object.values(RUTINA), ...Object.values(RUTINA_CASA)].flatMap(R => R.ej);
-// Dónde entrena: E.lugar ("gym" | "casa") en el perfil, y E.lugarDia[fecha] para cambiarlo solo un día.
-const lugarHoy = () => (E.lugarDia && E.lugarDia[hoyStr()]) || E.lugar || "gym";
+// Dónde entrena: E.lugar ("gym" | "casa"). Queda guardado lo último que tocó (en Hoy, en Entrenar o en Ajustes).
+const lugarHoy = () => E.lugar || "gym";
 const RUT = lugar => lugar === "casa" ? RUTINA_CASA : RUTINA;
 const rutinaSesion = () => RUT(E.sesion.lugar)[E.sesion.dia];
 function varDe(ej){ const v = E.var && E.var[ej.id]; return v && (v.f === null || v.f === hoyStr()) && MEDIA[ej.id] && MEDIA[ej.id].alt[v.k] ? v : null; }
@@ -801,10 +801,10 @@ function pHoy(){
   h += aguaCard();
   return h;
 }
-// «Hoy entreno en casa» / «Hoy voy al gimnasio»: cambia solo el día de hoy; el lugar de siempre se elige en Ajustes.
+// Cambia entre gimnasio y casa; queda guardado hasta que se vuelva a tocar.
 function botonLugarHoy(){
   const casa = lugarHoy() === "casa";
-  return `<button class="btn sec chico" data-a="lugarHoy" style="width:100%;margin-top:8px">${casa ? "🏋️ Hoy voy al gimnasio" : "🏠 Hoy entreno en casa"}</button>`;
+  return `<button class="btn sec chico" data-a="lugarHoy" style="width:100%;margin-top:8px">${casa ? "🏋️ Entrenar en el gimnasio" : "🏠 Entrenar en casa"}</button>`;
 }
 function siguienteEntreno(){
   for (let i = 1; i <= 7; i++) { const d = new Date(); d.setDate(d.getDate() + i); const k = sesionDe(d.getDay());
@@ -1006,7 +1006,7 @@ function pProgreso(){
     <p class="small muted">Reps: ejercicios compuestos / de aislamiento.</p></details></div>`;
   h += `<div class="card"><h3>⚙️ Ajustes</h3>
     <div class="row" style="margin-top:8px"><span>🎯 ${bajando() ? "Bajar de peso" : "Ganar músculo"} · meta ${fmtKg(pesoMeta())} kg<br><small class="muted">${E.sexo === "f" ? "Mujer" : "Hombre"} · ${E.edad} años · ${E.altura} cm</small></span><span class="sp"></span><button class="btn chico sec" data-a="objetivo">Cambiar</button></div>
-    <div class="row" style="margin-top:8px"><span>${(E.lugar || "gym") === "casa" ? "🏠 Entreno en casa" : "🏋️ Entreno en el gimnasio"}<br><small class="muted">Si un día no podés ir, en Hoy tocá «Hoy entreno en casa».</small></span><span class="sp"></span><button class="btn chico sec" data-a="lugarSiempre">Cambiar</button></div>
+    <div class="row" style="margin-top:8px"><span>${(E.lugar || "gym") === "casa" ? "🏠 Entreno en casa" : "🏋️ Entreno en el gimnasio"}<br><small class="muted">Queda guardado lo último que elegiste, acá, en Hoy o en Entrenar.</small></span><span class="sp"></span><button class="btn chico sec" data-a="lugarSiempre">Cambiar</button></div>
     <div class="row" style="margin-top:8px"><span>🕒 Mi horario<br><small class="muted">Me levanto ${horario().levanta} · entreno ${horario().entrena} (${ORDEN_SEMANA.filter(d => sesionDe(d)).map(d => NOMBRE_DIA[d].slice(0, 2)).join(", ")}) · me acuesto ${horario().acuesta}</small></span><span class="sp"></span><button class="btn chico sec" data-a="horario">Cambiar</button></div>
     <div class="row" style="margin-top:8px"><span>🍽️ Menú: ${E.menuFijo ? "siempre el mismo" : "variado (7 días)"}</span><span class="sp"></span><button class="btn chico sec" data-a="menuFijo">${E.menuFijo ? "Variar" : "Fijar"}</button></div>
     <div class="row" style="margin-top:8px"><span>🔊 Sonido al terminar el descanso</span><span class="sp"></span><button class="btn chico sec" data-a="sonido">${E.sonido ? "Sí" : "No"}</button></div>
@@ -1079,11 +1079,10 @@ function accion(a, b){
   if (a === "sem") { const d = aFecha(E.inicio); d.setDate(d.getDate() - 7 * +b.dataset.d); E.inicio = fechaStr(d); guardar(); sonar("toque"); return render(); }
   if (a === "lugarHoy" || a === "lugarVer") {
     const nuevo = a === "lugarVer" ? b.dataset.l : lugarHoy() === "casa" ? "gym" : "casa";
-    E.lugarDia = E.lugarDia || {};
-    if (nuevo === (E.lugar || "gym")) delete E.lugarDia[hoyStr()]; else E.lugarDia[hoyStr()] = nuevo;
-    guardar(); sonar("toque"); toast(nuevo === "casa" ? "🏠 Hoy entrenás en casa" : "🏋️ Hoy vas al gimnasio"); return render();
+    if (nuevo === lugarHoy()) return;
+    E.lugar = nuevo; guardar(); sonar("toque"); toast(nuevo === "casa" ? "🏠 Entrenás en casa" : "🏋️ Entrenás en el gimnasio"); return render();
   }
-  if (a === "lugarSiempre") { E.lugar = (E.lugar || "gym") === "casa" ? "gym" : "casa"; if (E.lugarDia) delete E.lugarDia[hoyStr()]; guardar(); sonar("listo"); return render(); }
+  if (a === "lugarSiempre") { E.lugar = lugarHoy() === "casa" ? "gym" : "casa"; guardar(); sonar("listo"); return render(); }
   if (a === "horario") { sonar("toque"); borrador = null; return hojaHorario(); }
   if (a === "horarioOk") { E.horarioVisto = true; guardar(); sonar("listo"); return render(); }
   if (a === "objetivo") { elegirObjetivo = true; sonar("toque"); render(); return scrollTo(0, 0); }
@@ -1267,6 +1266,7 @@ importarDeLink();
 function completarEstado(d){
   const x = Object.assign(nuevoEstado(), d);
   if (!d.hv && !d.horarioVisto) x.horario = JSON.parse(JSON.stringify(HORARIO_VIEJO));
+  if (x.lugarDia) { const ult = Object.keys(x.lugarDia).sort().pop(); if (ult === hoyStr()) x.lugar = x.lugarDia[ult]; delete x.lugarDia; }
   x.hv = 1; return x;
 }
 if (E) E = completarEstado(E);
@@ -1316,7 +1316,7 @@ if (E && E.sesion && E.sesion.f === hoyStr() && E.sesion.descansoHasta) abrirGui
 setInterval(() => { if (E && E.inicio && !$("#guia").innerHTML && !(document.activeElement && document.activeElement.tagName === "INPUT")) render(); }, 60000);
 </script>
 <script>
-const VERSION_APP = "20260928134633";
+const VERSION_APP = "20260928135001";
 if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").then(reg => {
   document.addEventListener("visibilitychange", () => { if (!document.hidden) reg.update().catch(() => {}); });
 }).catch(() => {}));
