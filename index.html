@@ -22,6 +22,7 @@
   --f:"Barlow",system-ui,sans-serif;--fd:"Barlow Condensed","Barlow",system-ui,sans-serif;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+.ej .pasoT b{display:inline}  /* pasos de instalación: la negrita sigue en el mismo renglón */
 /* Intro al abrir la app: logo de ZafiroWeb y después la app (ver final del script) */
 #intro{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:radial-gradient(60% 40% at 50% 46%,#2A1E0B 0%,transparent 70%),var(--bg);transition:opacity .5s ease}
 #intro img{width:min(72vw,340px);height:auto;opacity:0;transform:scale(.9);animation:introLogo 1s .15s cubic-bezier(.2,.8,.2,1) forwards}
@@ -151,7 +152,7 @@ details summary{cursor:pointer;font-weight:800;padding:4px 0}
 </div></nav>
 <div id="guia"></div>
 <div id="hoja"></div>
-<script src="media.js?v=20260928135001"></script>
+<script src="media.js?v=20260928140012"></script>
 <script>
 "use strict";
 /* ============ RUTINA: HYPERTROPHY ELITE PROGRAM v2 ============ */
@@ -665,6 +666,7 @@ function ir(t){ pestana = t; render(); scrollTo(0, 0); }
 document.querySelectorAll("#nav button").forEach(b => b.onclick = () => { sonar("toque"); ir(b.dataset.t); });
 
 function render(){
+  if (debeInstalar()) { $("#nav").style.display = "none"; return pantallaInstalar(); }
   if (!E || !E.inicio) { $("#nav").style.display = "none"; return bienvenida(); }
   if (!E.obj || elegirObjetivo || !datosCuerpo()) { $("#nav").style.display = "none"; return pantallaObjetivo(); }
   $("#nav").style.display = "";
@@ -764,7 +766,11 @@ function bienvenida(){
     <div class="num-in"><button data-d="-1">−</button><input id="bSem" value="1" readonly><button data-d="1">+</button></div>
     <p class="small muted">Si recién empezás, dejalo en 1. El programa dura 12 semanas (la 12 es de descarga).</p>
     <button class="btn" id="bOk" style="margin-top:10px">Empezar 💪</button></div>
+    <details class="card"><summary>📦 Ya la usaba: pegar mis datos</summary>
+      <p class="small muted" style="margin:8px 0">Si la usabas en el navegador o en otro celular, pegá acá el link de tus datos («Copiar mis datos» o Progreso → «Pasar mis datos»).</p>
+      <input id="bDatos" class="campo" placeholder="Pegá acá el link" autocomplete="off"><button class="btn sec" id="bImp" style="margin-top:8px">Cargar mis datos</button></details>
     <p class="small muted" style="text-align:center">Todo queda guardado solo en este dispositivo. No hace falta cuenta.</p>`;
+  $("#bImp").onclick = () => { if (cargarDatosPegados($("#bDatos").value)) { sonar("listo"); render(); } };
   document.querySelectorAll(".num-in button").forEach(b => b.onclick = () => { const i = $("#bSem"); i.value = Math.min(12, Math.max(1, +i.value + +b.dataset.d)); });
   conectarObjetivo();
   $("#bOk").onclick = () => {
@@ -819,8 +825,67 @@ function diasSemana(){
   }
   return h + `</div><p class="small muted" style="margin:8px 0 0">💪 tren superior · 🦵 piernas · ✅ hecho</p>`;
 }
-let promptInstalar = null;
-addEventListener("beforeinstallprompt", e => { e.preventDefault(); promptInstalar = e; if (E && E.inicio && pestana === "hoy") render(); });
+let promptInstalar = null, recienInstalada = false;
+addEventListener("beforeinstallprompt", e => { e.preventDefault(); promptInstalar = e; if (debeInstalar() || (E && E.inicio && pestana === "hoy")) render(); });
+addEventListener("appinstalled", () => { recienInstalada = true; promptInstalar = null; if (debeInstalar()) render(); });
+
+/* ============ INSTALACIÓN OBLIGATORIA EN EL CELULAR ============ */
+// En el celular, si el link se abre en el navegador (no en la app instalada), en vez de la app aparece cómo instalarla.
+// En la computadora no se pide.
+const UA = navigator.userAgent;
+const esIOS = /iPhone|iPod|iPad/i.test(UA) || (/Macintosh/.test(UA) && navigator.maxTouchPoints > 1);
+const esCelular = esIOS || /Android/i.test(UA);
+// WhatsApp, Instagram, Facebook, TikTok… abren el link en su propio navegador, desde donde no se puede instalar.
+const navegadorInterno = /FBAN|FBAV|FB_IAB|Instagram|WhatsApp|Line\/|Twitter|TikTok|Snapchat|; wv\)/i.test(UA);
+const enApp = () => matchMedia("(display-mode: standalone)").matches || matchMedia("(display-mode: fullscreen)").matches || navigator.standalone === true;
+const debeInstalar = () => esCelular && !enApp();
+function pantallaInstalar(){
+  const crios = /CriOS/.test(UA), safari = esIOS && !/CriOS|FxiOS|EdgiOS|OPiOS|OPT\//.test(UA);
+  const paso = (ic, t) => `<div class="ej"><div class="num" style="font-size:20px">${ic}</div><div class="pasoT" style="flex:1">${t}</div></div>`;
+  let h, extra = "";
+  if (recienInstalada) h = paso("✅", "<b>¡Listo, GymBlack quedó instalada!</b> Cerrá el navegador y abrila desde el ícono nuevo de tu pantalla de inicio.");
+  else if (navegadorInterno) {
+    h = paso("🌐", "Este link se abrió <b>adentro de otra app</b> (WhatsApp, Instagram…) y desde acá no se puede instalar.")
+      + paso("↗️", esIOS ? "Tocá el menú <b>⋯</b> y elegí <b>«Abrir en Safari»</b> (o en el navegador)." : "Tocá el menú <b>⋮</b> y elegí <b>«Abrir en Chrome»</b> (o en el navegador).")
+      + paso("📲", "Ahí te aparecen los pasos para instalarla.");
+    extra = (esIOS ? "" : `<a class="btn" style="display:block;text-align:center;text-decoration:none;margin-top:12px" href="intent://${location.host}${location.pathname}#Intent;scheme=https;package=com.android.chrome;end">Abrir en Chrome</a>`)
+      + `<button class="btn sec" data-a="copiarLink" style="margin-top:8px">📋 Copiar el link</button>`;
+  } else if (esIOS && (safari || crios)) {
+    h = paso("⬆️", `Tocá <b>Compartir</b> ${crios ? "(arriba a la derecha, al lado de la barra de direcciones)" : "(el cuadradito con la flecha, en la barra de abajo)"}.`)
+      + paso("➕", "Elegí <b>«Agregar a pantalla de inicio»</b>. Si no la ves, deslizá la lista hacia arriba.")
+      + paso("✅", "Tocá <b>Agregar</b> y abrí GymBlack desde el ícono nuevo.");
+  } else if (esIOS) {
+    h = paso("🧭", "Desde este navegador no se puede instalar. Abrí el link en <b>Safari</b> o en <b>Chrome</b>.");
+    extra = `<button class="btn sec" data-a="copiarLink" style="margin-top:8px">📋 Copiar el link</button>`;
+  } else if (promptInstalar) {
+    h = paso("📲", "Tocá el botón y aceptá: queda el ícono de GymBlack en tu pantalla de inicio.");
+    extra = `<button class="btn" data-a="instalar" style="margin-top:12px">📲 Instalar GymBlack</button>`;
+  } else {
+    h = paso("⋮", "Tocá el menú <b>⋮</b> del navegador (arriba a la derecha).")
+      + paso("📲", "Elegí <b>«Instalar app»</b> o <b>«Agregar a pantalla de inicio»</b>.")
+      + paso("✅", "Abrí GymBlack desde el ícono nuevo.");
+  }
+  // En el iPhone la app instalada no ve lo guardado en el navegador: se llevan los datos con un link.
+  const datos = esIOS && E && E.inicio && !navegadorInterno && !recienInstalada ? `<div class="card"><h3>📦 Tus datos</h3>
+    <p class="small muted" style="margin:6px 0 10px">En el iPhone la app instalada arranca vacía. <b>Antes de instalarla</b>, copiá tus datos; al abrir la app, tocá «Ya la usaba: pegar mis datos».</p>
+    <button class="btn sec" data-a="copiarDatos">📋 Copiar mis datos</button></div>` : "";
+  $("#app").innerHTML = `<div style="padding-top:26px;text-align:center"><img src="icon-192.png?v=2" alt="Ícono de GymBlack" style="width:96px;height:96px;margin:0 auto 14px;border-radius:24px;display:block;box-shadow:0 0 0 1px #3A3E46,0 4px 18px #0008">
+    <h1 style="letter-spacing:2px">GYM<span style="color:var(--muted)">BLACK</span></h1>
+    <p class="muted">Para usarla en el celular, instalala: queda con su ícono, se abre en pantalla completa y funciona sin internet en el gimnasio.</p></div>
+    <div class="card"><h3>📲 Instalá GymBlack</h3>${h}${extra}</div>${datos}
+    <p class="small muted" style="text-align:center">Es gratis, no ocupa casi lugar y no pide ninguna cuenta.</p>`;
+  document.querySelectorAll("#app [data-a]").forEach(b => b.onclick = () => accion(b.dataset.a, b));
+}
+async function copiarTexto(t, ok){
+  try { await navigator.clipboard.writeText(t); toast(ok); }
+  catch { prompt("Copiá este texto:", t); }
+}
+// Carga datos pegados (link #p= que armó «Pasar mis datos» o «Copiar mis datos»).
+function cargarDatosPegados(txt){
+  const m = /#p=([\w-]+)/.exec(txt || ""); if (!m) { toast("Pegá el link completo que copiaste"); return false; }
+  try { const d = JSON.parse(deb64(m[1])); if (!d || !d.inicio) throw 0; E = completarEstado(d); guardar(); toast("✅ Datos cargados"); return true; }
+  catch { toast("Ese link de datos no es válido"); return false; }
+}
 function instalarCard(){
   if (matchMedia("(display-mode: standalone)").matches || navigator.standalone) return "";
   try { if (localStorage.getItem("forja-sin-instalar")) return ""; } catch {}
@@ -1089,7 +1154,9 @@ function accion(a, b){
   if (a === "ajuste") { const d = +b.dataset.d; E.ajuste = d ? (E.ajuste || 0) + d : 0; guardar(); sonar("listo"); toast(`🍽️ Plan de hoy: ~${metaKcal()} kcal`); return render(); }
   if (a === "sonido") { E.sonido = !E.sonido; guardar(); sonar("listo"); return render(); }
   if (a === "exportar") return exportar();
-  if (a === "instalar" && promptInstalar) { promptInstalar.prompt(); promptInstalar = null; return; }
+  if (a === "instalar" && promptInstalar) { const p = promptInstalar; promptInstalar = null; p.prompt(); p.userChoice.then(r => { if (r.outcome === "accepted") recienInstalada = true; render(); }); return; }
+  if (a === "copiarLink") return copiarTexto(location.href.split("#")[0], "📋 Link copiado: pegalo en Safari o en Chrome");
+  if (a === "copiarDatos") return copiarTexto(location.href.split("#")[0] + "#p=" + b64(JSON.stringify({...E, sesion:null, comidas:{}, agua:{}})), "📋 Datos copiados: pegalos al abrir la app");
   if (a === "noinstalar") { try { localStorage.setItem("forja-sin-instalar", "1"); } catch {} return render(); }
 }
 
@@ -1316,7 +1383,7 @@ if (E && E.sesion && E.sesion.f === hoyStr() && E.sesion.descansoHasta) abrirGui
 setInterval(() => { if (E && E.inicio && !$("#guia").innerHTML && !(document.activeElement && document.activeElement.tagName === "INPUT")) render(); }, 60000);
 </script>
 <script>
-const VERSION_APP = "20260928135001";
+const VERSION_APP = "20260928140012";
 if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").then(reg => {
   document.addEventListener("visibilitychange", () => { if (!document.hidden) reg.update().catch(() => {}); });
 }).catch(() => {}));
