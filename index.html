@@ -259,18 +259,13 @@ const ROTACION = [
   {des:"D3",pre:"PE1",alm:"A4",mer:"M3",cen:"C4"}, {des:"D4",pre:"PE3",alm:"A3",mer:"M4",cen:"C3"}, {des:"D5",pre:"PE2",alm:"A5",mer:"M5",cen:"C5"},
   {des:"D6",pre:"PE1",alm:"A6",mer:"M1",cen:"C6"}];
 const MENU_FIJO = {des:"D1",pre:"PE1",alm:"A1",mer:"M1",cen:"C1"};
-const FASES = [
-  {n:1,desde:0,hasta:65,kcal:2750,p:130,extra:null,vel:"0,4–0,5 kg por semana"},
-  {n:2,desde:65,hasta:70,kcal:2850,p:130,extra:["Extra de fase 2","1 banana más o +30 g de arroz seco"],vel:"0,3–0,4 kg por semana"},
-  {n:3,desde:70,hasta:999,kcal:2950,p:140,extra:["Extra de fase 3","1 papa más o +50 g de arroz seco"],vel:"0,25–0,35 kg por semana"}
-];
 
 /* ============ ESTADO (guardado solo en este dispositivo) ============ */
 const K = "forja-v1";
 let E = cargar();
 function cargar(){ try { return JSON.parse(localStorage.getItem(K)) || null; } catch { return null; } }
 function guardar(){ try { localStorage.setItem(K, JSON.stringify(E)); } catch {} }
-function nuevoEstado(){ return {nombre:"", obj:null, meta:null, ajuste:0, inicio:null, pesos:[], hist:{}, var:{}, comidas:{}, eleccion:{}, menuFijo:false, agua:{}, entrenos:{}, sesion:null, sonido:true, ultimoKg:{}}; }
+function nuevoEstado(){ return {nombre:"", obj:null, meta:null, sexo:null, edad:null, altura:null, ajuste:0, inicio:null, pesos:[], hist:{}, var:{}, comidas:{}, eleccion:{}, menuFijo:false, agua:{}, entrenos:{}, sesion:null, sonido:true, ultimoKg:{}}; }
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -290,28 +285,33 @@ function pesoActual(){ return E.pesos.length ? E.pesos[E.pesos.length - 1].kg : 
 const bajando = () => E.obj === "bajar";
 const pesoMeta = () => E.meta || 75;
 const pesoInicial = () => E.pesoIni || (E.pesos.length ? E.pesos[0].kg : pesoActual());  // peso del día en que eligió el objetivo
-// Bajar de peso: 20% menos de lo que gasta. Gasto = metabolismo basal de Mifflin-St Jeor (peso, altura, sexo;
-// edad de referencia 25 años) × 1,55 por entrenar 4 veces por semana. Nunca menos de 1500 kcal (hombres) o 1200 (mujeres).
-// Sin altura/sexo (datos viejos) se estima solo por el peso. E.ajuste lo corrige el propio usuario según cómo baja cada semana.
-const EDAD_REF = 25;
-function kcalBajar(kg){
-  const mujer = E.sexo === "f";
-  const base = E.sexo && E.altura ? (10 * kg + 6.25 * E.altura - 5 * EDAD_REF + (mujer ? -161 : 5)) * 1.55 * 0.8 : 1250 + 12 * kg;
-  return Math.max(mujer ? 1200 : 1500, Math.round(base / 10) * 10 + (E.ajuste || 0));
-}
-function metaKcal(kg = pesoActual()){
-  if (bajando()) return kcalBajar(kg);
+// Gasto diario = metabolismo basal de Mifflin-St Jeor (peso, altura, edad, sexo) × 1,55 por entrenar 4 veces por semana.
+// Ganar músculo: +12% (para un hombre de 20 años y 1,75 m da los mismos 2750/2850/2950 kcal del PDF a 58/65/70 kg).
+// Bajar de peso: −20%, nunca menos de 1500 kcal (hombres) o 1200 (mujeres).
+// E.ajuste (±kcal) lo corrige el propio usuario con los botones del consejo semanal de Progreso.
+const datosCuerpo = () => !!(E.sexo && E.altura && E.edad);
+function gastoDiario(kg){ return (10 * kg + 6.25 * E.altura - 5 * E.edad + (E.sexo === "f" ? -161 : 5)) * 1.55; }
+// Respaldo sin datos del cuerpo (no debería pasar: la app los pide antes de mostrar el plan).
+function kcalPDF(kg){
   const P = [[58, 2750], [65, 2850], [70, 2950]];
   if (kg <= P[0][0]) return Math.round(P[0][1] + (kg - 58) * 14.3);
   for (let i = 1; i < P.length; i++) if (kg <= P[i][0]) { const [a, ka] = P[i - 1], [b, kb] = P[i]; return Math.round(ka + (kg - a) / (b - a) * (kb - ka)); }
   return 2950;
 }
-function metaProt(kg = pesoActual()){ return bajando() ? Math.max(E.sexo === "f" ? 90 : 110, Math.min(170, Math.round(1.8 * pesoMeta()))) : Math.max(130, Math.round(kg * 2)); }
+function metaKcal(kg = pesoActual()){
+  const aj = E.ajuste || 0;
+  if (bajando()) return Math.max(E.sexo === "f" ? 1200 : 1500, Math.round((datosCuerpo() ? gastoDiario(kg) * .8 : 1250 + 12 * kg) / 10) * 10 + aj);
+  return (datosCuerpo() ? Math.round(gastoDiario(kg) * 1.12 / 10) * 10 : kcalPDF(kg)) + aj;
+}
+function metaProt(kg = pesoActual()){
+  if (bajando()) return Math.max(E.sexo === "f" ? 90 : 110, Math.min(170, Math.round(1.8 * pesoMeta())));
+  return Math.max(E.sexo === "f" ? 100 : 130, Math.round(kg * 2));
+}
 function metaAgua(entrena, kg = pesoActual()){ return Math.round((kg * 0.0375 + (entrena ? 0.625 : 0)) * 4) / 4; }
 // Las calorías de más (o de menos) respecto del plan base de 58 kg se reparten en carbohidratos, como indica el PDF:
 // mitad en el arroz del almuerzo, un cuarto en la avena del desayuno y un cuarto en la papa/batata de la cena.
-const REPARTO = {des: .25, alm: .5, cen: .25};
-function extraKcal(){ return metaKcal() - 2750; }
+const REPARTO = {des: .25, alm: .5, cen: .25}, PLAN_BASE = 2750;  // PLAN_BASE = kcal del plan del PDF tal cual
+function extraKcal(){ return metaKcal() - PLAN_BASE; }
 function porcion(i){
   const a = i[2]; if (!a) return {txt: i[1], kcal: 0};
   const g = Math.max(a.g * 0.6, Math.round((a.g + extraKcal() * REPARTO[a.k] / a.kcal) / 5) * 5), dk = Math.round((g - a.g) * a.kcal);
@@ -330,9 +330,14 @@ const PARTE = {des:.25, pre:.11, alm:.28, mer:.17, cen:.19};
 // Fuentes de proteína que se pueden achicar: kcal y g de proteína por unidad (gramo o huevo), paso de redondeo y mínimo.
 const PROTE = [[/^Pechuga de pollo/, 1.2, .23, 10, 80], [/^(Cuadrada|Lomo de cerdo)/, 1.35, .21, 10, 80], [/^Carne picada/, 1.6, .2, 10, 80],
   [/^Filete de merluza/, .9, .18, 10, 120], [/^Huevos/, 75, 6.5, 1, 2]];
-function cambioBajar(i){
+// suave = ganar músculo con una meta menor al plan base: se achica igual, pero la leche y el yogur siguen enteros
+// y el aceite y el queso no se tocan.
+function cambioBajar(i, suave){
   const [n, q] = i, m = /^(\d+)\s*(.*)$/.exec(q), v = m ? +m[1] : 0, u = m ? m[2] : "";
   if (i[2]) return {n, v:i[2].g, u:"g", kcal:i[2].kcal, flex:1, min:Math.round(i[2].g * .35), paso:5, a:i[2]};
+  if (suave && /^Leche entera/.test(n) && u === "ml") return {n, v, u, kcal:.62, pf:.034, flex:1, min:Math.min(v, 150), paso:50};
+  if (suave && /^Yogur natural entero/.test(n) && u === "g") return {n, v, u, kcal:.61, pf:.035, flex:1, min:Math.min(v, 150), paso:50};
+  if (suave && /^(Aceite|Queso)/.test(n)) return null;
   if (/^Leche entera/.test(n) && u === "ml") return {n:n.replace("entera", "descremada"), v, u, dk:-.27 * v, kcal:.35, pf:.034, flex:1, min:Math.min(v, 150), paso:50, cambio:1};
   if (/^Yogur natural entero/.test(n) && u === "g") return {n:n.replace("entero", "descremado"), v, u, dk:-.21 * v, kcal:.4, pf:.04, flex:1, min:Math.min(v, 150), paso:50, cambio:1};
   if (/^Aceite/.test(n) && u === "ml") { const nv = Math.max(3, Math.round(v / 2)); return {n, v:nv, u, dk:-(v - nv) * 9, cambio:1}; }
@@ -346,7 +351,7 @@ function cambioBajar(i){
 }
 const cantidad = (c, nv) => nv + (c.u ? " " + c.u : "") + (c.a && c.a.cocido ? " → ~" + Math.round(nv * c.a.cocido / 10) * 10 + " g cocido" : "");
 function itemsBajar(o, slot){
-  const cs = o.items.map(cambioBajar), meta = metaKcal() * (PARTE[slot] || 0), suma = (f) => cs.reduce((t, c) => t + (c ? f(c) : 0), 0);
+  const cs = o.items.map(i => cambioBajar(i, !bajando())), meta = metaKcal() * (PARTE[slot] || 0), suma = (f) => cs.reduce((t, c) => t + (c ? f(c) : 0), 0);
   const dk = suma(c => c.dk || 0), dp = suma(c => c.dp || 0);
   // 1) carbohidratos
   const flex = suma(c => c.flex ? c.v * c.kcal : 0);
@@ -363,17 +368,19 @@ function itemsBajar(o, slot){
     return {n:c.n, txt:c.nv ? cantidad(c, c.nv) : "hoy no", dk:Math.round((c.dk || 0) + (c.nv - c.v) * c.kcal), dp:(c.nv - c.v) * (c.prot || c.pf || 0), marca:c.cambio || c.nv !== c.v};
   });
 }
-// Gramos de proteína de la comida después de los ajustes (en hipertrofia no cambia).
-function protComida(o, slot){ return bajando() ? Math.round(o.p + itemsBajar(o, slot).reduce((t, i) => t + i.dp, 0)) : o.p; }
+// Se usa el achique por comida al bajar de peso, o al ganar músculo si la meta queda por debajo del plan base del PDF.
+// (con una diferencia chica, hasta 150 kcal, alcanza con el ajuste de carbohidratos de siempre)
+const achicar = () => bajando() || metaKcal() < PLAN_BASE - 150;
+// Gramos de proteína de la comida después de los ajustes.
+function protComida(o, slot){ return achicar() ? Math.round(o.p + itemsBajar(o, slot).reduce((t, i) => t + i.dp, 0)) : o.p; }
 // Lista de ingredientes de una comida ya ajustada al objetivo y al peso: [{n: nombre, txt: cantidad, dk: kcal de diferencia, marca}]
 function itemsComida(o, slot){
-  if (bajando()) return itemsBajar(o, slot);
+  if (achicar()) return itemsBajar(o, slot);
   const l = o.items.map(i => { const q = porcion(i); return {n:i[0], txt:q.txt, dk:q.kcal, marca:q.cambio}; }), pan = extraPan(o, slot);
   if (pan > 0) l.push({n:"Pan lactal extra (por tu peso)", txt:pan + " rebanada" + (pan > 1 ? "s" : ""), dk:pan * 65, marca:1});
   return l;
 }
 function kcalComida(o, slot){ return o.kcal + itemsComida(o, slot).reduce((t, i) => t + i.dk, 0); }
-function faseActual(){ const kg = pesoActual(); return FASES.find(f => kg >= f.desde && kg < f.hasta) || FASES[2]; }
 const rango = s => s.split("–").map(Number);
 const redondear = (kg, paso) => Math.max(0, Math.round(kg / paso) * paso);
 const fmtKg = kg => (Math.round(kg * 100) / 100).toString().replace(".", ",");
@@ -522,7 +529,7 @@ document.querySelectorAll("#nav button").forEach(b => b.onclick = () => { sonar(
 
 function render(){
   if (!E || !E.inicio) { $("#nav").style.display = "none"; return bienvenida(); }
-  if (!E.obj || elegirObjetivo || (bajando() && !(E.sexo && E.altura))) { $("#nav").style.display = "none"; return pantallaObjetivo(); }
+  if (!E.obj || elegirObjetivo || !datosCuerpo()) { $("#nav").style.display = "none"; return pantallaObjetivo(); }
   $("#nav").style.display = "";
   document.querySelectorAll("#nav button").forEach(b => b.classList.toggle("on", b.dataset.t === pestana));
   $("#app").innerHTML = cabecera() + {hoy:pHoy, entreno:pEntreno, comidas:pComidas, progreso:pProgreso}[pestana]();
@@ -547,7 +554,6 @@ function conectarObjetivo(){
     document.querySelectorAll("[data-obj]").forEach(x => { x.classList.toggle("on", x === b); x.lastElementChild.textContent = x === b ? "✓" : ""; });
     $("#bObj").value = b.dataset.obj; sonar("toque");
     $("#bMetaAyuda").textContent = b.dataset.obj === "bajar" ? "El peso al que querés llegar (menor que el de hoy)." : "El peso al que querés llegar ganando músculo.";
-    $("#bCuerpo").style.display = b.dataset.obj === "bajar" ? "" : "none";
   });
   document.querySelectorAll("[data-sexo]").forEach(b => b.onclick = () => {
     document.querySelectorAll("[data-sexo]").forEach(x => x.classList.toggle("sec", x !== b));
@@ -561,42 +567,42 @@ function leerObjetivo(){
   if (!(kg > 30 && kg < 250)) { toast("Poné tu peso en kg, por ejemplo 72,5"); return null; }
   if (!(meta > 30 && meta < 250)) { toast("Poné tu peso objetivo en kg"); return null; }
   if (obj === "bajar" && meta >= kg) { toast("Para bajar de peso, el objetivo tiene que ser menor que tu peso de hoy"); return null; }
-  const sexo = $("#bSexo").value, cm = parseFloat(String($("#bAlt").value).replace(",", "."));
-  const altura = cm > 0 && cm < 3 ? Math.round(cm * 100) : cm;  // si escribe 1,75 lo tomo como 175 cm
-  if (obj === "bajar" && !sexo) { toast("Elegí hombre o mujer: cambia cuántas calorías gastás"); return null; }
-  if (obj === "bajar" && !(altura >= 120 && altura <= 230)) { toast("Poné tu altura en cm, por ejemplo 175"); return null; }
-  return {obj, kg, meta, sexo:sexo || null, altura:altura >= 120 && altura <= 230 ? altura : null};
+  const sexo = $("#bSexo").value, cm = parseFloat(String($("#bAlt").value).replace(",", ".")), edad = parseInt($("#bEdad").value, 10);
+  const altura = cm > 0 && cm < 3 ? Math.round(cm * 100) : Math.round(cm);  // si escribe 1,75 lo tomo como 175 cm
+  if (!sexo) { toast("Elegí hombre o mujer: cambia cuántas calorías gastás"); return null; }
+  if (!(edad >= 14 && edad <= 90)) { toast("Poné tu edad en años, por ejemplo 24"); return null; }
+  if (!(altura >= 120 && altura <= 230)) { toast("Poné tu altura en cm, por ejemplo 175"); return null; }
+  return {obj, kg, meta, sexo, edad, altura};
 }
-// Guarda en E lo leído del formulario de objetivo (sexo y altura solo si los completó).
-function aplicarObjetivo(o){
-  E.obj = o.obj; E.meta = o.meta;
-  if (o.sexo) E.sexo = o.sexo;
-  if (o.altura) E.altura = o.altura;
-}
-function camposCuerpo(sel){
+// Guarda en E lo leído del formulario de objetivo.
+function aplicarObjetivo(o){ E.obj = o.obj; E.meta = o.meta; E.sexo = o.sexo; E.edad = o.edad; E.altura = o.altura; }
+function camposCuerpo(){
   const sx = E && E.sexo, bot = (k, t) => `<button class="btn chico ${sx === k ? "" : "sec"}" data-sexo="${k}" style="flex:1">${t}</button>`;
-  return `<div id="bCuerpo" style="${sel === "bajar" ? "" : "display:none"}">
+  return `<div id="bCuerpo">
     <div class="lbl">Sexo</div><div class="row">${bot("m", "👨 Hombre")}${bot("f", "👩 Mujer")}</div><input id="bSexo" type="hidden" value="${sx || ""}">
+    <div class="lbl">¿Cuántos años tenés?</div><input id="bEdad" class="campo" type="number" inputmode="numeric" step="1" value="${(E && E.edad) || ""}" placeholder="Ej: 24">
     <div class="lbl">¿Cuánto medís? (cm)</div><input id="bAlt" class="campo" type="number" inputmode="decimal" step="1" value="${(E && E.altura) || ""}" placeholder="Ej: 175">
-    <p class="small muted">Con tu sexo, altura y peso calculo cuántas calorías gastás por día, y el plan te deja un 20% abajo para bajar de forma sostenida.</p></div>`;
+    <p class="small muted">Con tu sexo, edad, altura y peso calculo cuántas calorías gastás por día. Para ganar músculo el plan te deja un 12% arriba; para bajar de peso, un 20% abajo.</p></div>`;
 }
 function camposObjetivo(sel, kg, meta){
   return `${botonesObjetivo(sel)}<input id="bObj" type="hidden" value="${sel || ""}">
     <div class="lbl">¿Cuánto pesás hoy? (kg)</div><input id="bKg" class="campo" type="number" inputmode="decimal" step="0.1" value="${kg || ""}" placeholder="Ej: 72,5">
     <div class="lbl">¿Cuál es tu peso objetivo? (kg)</div><input id="bMeta" class="campo" type="number" inputmode="decimal" step="0.1" value="${meta || ""}" placeholder="Ej: 75">
-    <p class="small muted" id="bMetaAyuda">${sel === "bajar" ? "El peso al que querés llegar (menor que el de hoy)." : "El peso al que querés llegar."} Con tu peso y tu objetivo te armo las calorías, la proteína y las porciones.</p>${camposCuerpo(sel)}`;
+    <p class="small muted" id="bMetaAyuda">${sel === "bajar" ? "El peso al que querés llegar (menor que el de hoy)." : "El peso al que querés llegar."} Con tu peso y tu objetivo te armo las calorías, la proteína y las porciones.</p>${camposCuerpo()}`;
 }
 function pantallaObjetivo(){
-  const cambio = elegirObjetivo;
+  const cambio = elegirObjetivo, completar = !cambio && E.obj;
   $("#app").innerHTML = `<div style="padding-top:24px;text-align:center"><div class="logo" style="width:90px;height:90px;margin:0 auto 12px;border-radius:24px"></div>
-    <h2>${cambio ? "🎯 Cambiar objetivo" : "🎯 ¿Qué querés lograr?"}</h2><p class="muted">${cambio ? "Tus entrenamientos y pesos quedan guardados." : "Ahora podés elegir entre ganar músculo o bajar de peso. La rutina es la misma; lo que cambia es la comida."}</p></div>
+    <h2>${cambio ? "🎯 Cambiar objetivo" : completar ? "🎯 Completá tus datos" : "🎯 ¿Qué querés lograr?"}</h2><p class="muted">${cambio ? "Tus entrenamientos y pesos quedan guardados."
+      : completar ? "Ahora las comidas se calculan con tu sexo, edad y altura, además del peso. Es una sola vez; tus entrenamientos quedan guardados."
+      : "Ahora podés elegir entre ganar músculo o bajar de peso. La rutina es la misma; lo que cambia es la comida."}</p></div>
     <div class="card">${camposObjetivo(E.obj || (cambio ? "hiper" : ""), pesoActual(), E.meta || (E.obj ? "" : 75))}
     <button class="btn" id="bOk" style="margin-top:10px">Listo ✓</button>${cambio ? `<button class="btn sec" id="bNo" style="margin-top:8px">Cancelar</button>` : ""}</div>`;
   conectarObjetivo();
   if ($("#bNo")) $("#bNo").onclick = () => { elegirObjetivo = false; render(); };
   $("#bOk").onclick = () => {
     const o = leerObjetivo(); if (!o) return;
-    if (o.obj !== E.obj || o.sexo !== (E.sexo || null) || o.altura !== (E.altura || null)) E.ajuste = 0;
+    if (o.obj !== E.obj || o.sexo !== E.sexo || o.altura !== E.altura || o.edad !== E.edad) E.ajuste = 0;
     if (o.obj !== E.obj) E.pesoIni = o.kg;
     aplicarObjetivo(o);
     if (Math.abs(o.kg - pesoActual()) >= 0.05) { E.pesos = E.pesos.filter(p => p.f !== hoyStr()); E.pesos.push({f:hoyStr(), kg:o.kg}); }
@@ -721,13 +727,14 @@ function barraKcal(){
     <div class="barra"><i style="width:${Math.min(100, t.k / mk * 100)}%"></i></div>`;
 }
 function pComidas(){
-  const dia = hoyEntrena(), f = faseActual(), c = comidasHoy(), prox = comidaAhora();
-  let h = `<div class="card hero"><div class="row"><h2>🍽️ Hoy comés</h2><span class="sp"></span><span class="chip f">${bajando() ? "🔥 Bajar de peso" : "Fase " + f.n}</span></div>
-    <p class="muted small" style="margin:4px 0 12px">Objetivo para tus ${fmtKg(pesoActual())} kg: ~${metaKcal()} kcal · ${metaProt()} g de proteína o más · ${dia ? "día de entreno 🏋️" : "día de descanso 😌"}. Tocá ✓ cuando comas.</p>${barraKcal()}
+  const dia = hoyEntrena(), c = comidasHoy(), prox = comidaAhora();
+  let h = `<div class="card hero"><div class="row"><h2>🍽️ Hoy comés</h2><span class="sp"></span><span class="chip f">${bajando() ? "🔥 Bajar de peso" : "💪 Ganar músculo"}</span></div>
+    <p class="muted small" style="margin:4px 0 12px">Objetivo para vos (${fmtKg(pesoActual())} kg, ${E.edad} años, ${E.altura} cm): ~${metaKcal()} kcal · ${metaProt()} g de proteína o más · ${dia ? "día de entreno 🏋️" : "día de descanso 😌"}. Tocá ✓ cuando comas.</p>${barraKcal()}
     ${(() => { const tot = COMIDAS.filter(c => !c.opc).reduce((t, c) => t + kcalComida(c.o[opcion(c)], c.id), 0), dif = tot - metaKcal();
       return `<p class="small" style="margin:10px 0 0">📋 El menú de hoy suma <b>~${tot} kcal</b>${Math.abs(dif) >= 100 ? ` (${dif > 0 ? "+" : ""}${dif} respecto de tu meta; está bien, se compensa en la semana)` : ""}.</p>`; })()}
-    ${bajando() ? `<p class="small" style="margin:10px 0 0">⚖️ Las porciones marcadas con ⚖️ ya están ajustadas para bajar de peso: lácteos descremados, la mitad de aceite y queso, y menos carbohidratos. La proteína (carne, pollo, huevos, whey) queda igual para no perder músculo. Se actualizan solas cuando anotás tu peso.</p>`
-      : extraKcal() ? `<p class="small" style="margin:10px 0 0">⚖️ Las porciones marcadas con ⚖️ ya están ajustadas a tu peso (${extraKcal() > 0 ? "+" : ""}${extraKcal()} kcal respecto del plan de 58 kg). Se actualizan solas cuando anotás tu peso en Progreso.</p>` : ""}</div>`;
+    ${bajando() ? `<p class="small" style="margin:10px 0 0">⚖️ Las porciones marcadas con ⚖️ ya están ajustadas para bajar de peso: lácteos descremados, la mitad de aceite y queso, y menos carbohidratos. La proteína que necesitás no se toca, para no perder músculo. Se actualizan solas cuando anotás tu peso.</p>`
+      : achicar() ? `<p class="small" style="margin:10px 0 0">⚖️ Tu meta es menor que el plan base del PDF (${PLAN_BASE} kcal): las porciones marcadas con ⚖️ ya están achicadas (primero los carbohidratos; la proteína que necesitás no se toca). Se actualizan solas cuando anotás tu peso.</p>`
+      : extraKcal() ? `<p class="small" style="margin:10px 0 0">⚖️ Las porciones marcadas con ⚖️ ya están ajustadas a tus datos (+${extraKcal()} kcal respecto del plan base del PDF, ${PLAN_BASE} kcal). Se actualizan solas cuando anotás tu peso en Progreso.</p>` : ""}</div>`;
   COMIDAS.forEach(x => {
     const op = opcion(x), o = x.o[op], ya = c[x.id], varias = Object.keys(x.o).length > 1;
     h += `<div class="comida ${ya ? "ya" : ""} ${prox === x ? "ahora" : ""}"><div class="row"><div class="h">${x.h}</div>
@@ -756,18 +763,18 @@ function aguaCard(){
 
 // ---------- PROGRESO ----------
 function pProgreso(){
-  const f = faseActual(), s = semanaActual();
+  const s = semanaActual(), [subeLo, subeHi] = rangoSubir();
   const ini = pesoInicial(), meta = pesoMeta(), dif = pesoActual() - ini, avance = meta !== ini ? (pesoActual() - ini) / (meta - ini) * 100 : 100;
   let h = `<div class="card hero"><h2>⚖️ Tu peso</h2><div class="stats" style="margin-top:12px">
     <div class="stat"><b>${fmtKg(pesoActual())}</b><small>kg ahora</small></div><div class="stat"><b>${fmtKg(meta)}</b><small>kg objetivo</small></div>
-    ${bajando() ? `<div class="stat"><b>${fmtKg(Math.max(0, -dif))}</b><small>kg bajados</small></div>` : `<div class="stat"><b>${f.n}</b><small>fase</small></div>`}</div>
+    ${bajando() ? `<div class="stat"><b>${fmtKg(Math.max(0, -dif))}</b><small>kg bajados</small></div>` : `<div class="stat"><b>${fmtKg(Math.max(0, dif))}</b><small>kg ganados</small></div>`}</div>
     <div class="barra" style="margin-top:12px"><i style="width:${Math.max(3, Math.min(100, avance))}%"></i></div>
     <div class="row small muted"><span>Arrancaste: ${fmtKg(ini)} kg</span><span class="sp"></span><span>Meta: ${fmtKg(meta)} kg</span></div>
     ${bajando() && pesoActual() <= meta ? `<div class="consejo" style="border-color:var(--ok)">🎉 <b>¡Llegaste a tu meta!</b> Si querés, en Ajustes cambiá el objetivo a «Ganar músculo» o poné una meta nueva.</div>` : ""}
     ${grafico()}${consejoPeso()}
     <div class="lbl">Anotar el peso de hoy</div>
     <div class="row"><input id="kgIn" class="campo" type="number" inputmode="decimal" step="0.1" placeholder="${fmtKg(pesoActual())}"><button class="btn chico" data-a="peso" style="padding:14px 18px">Guardar</button></div>
-    <p class="small muted">Pesate 3 veces por semana: a la mañana, en ayunas, después de ir al baño. ${bajando() ? `Lo ideal es bajar entre ${fmtKg(Math.round(pesoActual() * 5) / 1000)} y ${fmtKg(Math.round(pesoActual() * 10) / 1000)} kg por semana (0,5–1% de tu peso).` : `En tu fase lo ideal es subir ${f.vel}.`}</p></div>`;
+    <p class="small muted">Pesate 3 veces por semana: a la mañana, en ayunas, después de ir al baño. ${bajando() ? `Lo ideal es bajar entre ${fmtKg(Math.round(pesoActual() * 5) / 1000)} y ${fmtKg(Math.round(pesoActual() * 10) / 1000)} kg por semana (0,5–1% de tu peso).` : `Lo ideal es subir entre ${fmtKg(subeLo / 1000)} y ${fmtKg(subeHi / 1000)} kg por semana.`}</p></div>`;
   h += `<div class="card"><h3>🏆 Tus pesos por ejercicio</h3>`;
   let alguno = false;
   todosEj().flatMap(e0 => [e0, ...(MEDIA[e0.id] ? MEDIA[e0.id].alt.map((a, k) => ({id: e0.id + "~" + k, n: a.n})) : [])]).forEach(ej => {
@@ -781,7 +788,7 @@ function pProgreso(){
     <details style="margin-top:10px"><summary>Ver las 12 semanas</summary><table class="tabla">${SEMANAS.map((S, i) => `<tr style="${i + 1 === s.n ? "color:var(--fuego2)" : ""}"><td>${i + 1}</td><td>${S.b}</td><td>${S.rc} / ${S.ra} reps</td><td>RIR ${S.rir}</td></tr>`).join("")}</table>
     <p class="small muted">Reps: ejercicios compuestos / de aislamiento.</p></details></div>`;
   h += `<div class="card"><h3>⚙️ Ajustes</h3>
-    <div class="row" style="margin-top:8px"><span>🎯 ${bajando() ? "Bajar de peso" : "Ganar músculo"} · meta ${fmtKg(pesoMeta())} kg</span><span class="sp"></span><button class="btn chico sec" data-a="objetivo">Cambiar</button></div>
+    <div class="row" style="margin-top:8px"><span>🎯 ${bajando() ? "Bajar de peso" : "Ganar músculo"} · meta ${fmtKg(pesoMeta())} kg<br><small class="muted">${E.sexo === "f" ? "Mujer" : "Hombre"} · ${E.edad} años · ${E.altura} cm</small></span><span class="sp"></span><button class="btn chico sec" data-a="objetivo">Cambiar</button></div>
     <div class="row" style="margin-top:8px"><span>🍽️ Menú: ${E.menuFijo ? "siempre el mismo" : "variado (7 días)"}</span><span class="sp"></span><button class="btn chico sec" data-a="menuFijo">${E.menuFijo ? "Variar" : "Fijar"}</button></div>
     <div class="row" style="margin-top:8px"><span>🔊 Sonido al terminar el descanso</span><span class="sp"></span><button class="btn chico sec" data-a="sonido">${E.sonido ? "Sí" : "No"}</button></div>
     <div class="row" style="margin-top:10px"><span>📤 Pasar mis datos a otro dispositivo</span><span class="sp"></span><button class="btn chico sec" data-a="exportar">Link</button></div>
@@ -808,24 +815,30 @@ function consejoPeso(){
   const ahora = prom(P.filter(p => dd(p) <= 4).map(p => p.kg)), antes = prom(P.filter(p => Math.abs(dd(p) - dias) <= 4).map(p => p.kg));
   const g = Math.round((ahora - antes) / dias * 7 * 1000);
   if (bajando()) return consejoBajar(-g);
-  let t, col;
-  if (g < 200) { t = `Subís ~${g} g por semana: <b>poco</b>. Sumá ~200 kcal por día en carbohidratos: +30 g de arroz seco en el almuerzo, o +1 banana en la merienda, o +2 rebanadas de pan en la cena. Revisá de nuevo en 2 semanas.`; col = "var(--frio)"; }
-  else if (g <= 600) { t = `Subís ~${g} g por semana: <b>zona ideal</b> ✅. Seguí comiendo igual.`; col = "var(--ok)"; }
-  else { t = `Subís ~${g} g por semana: <b>demasiado rápido</b> (se acumula grasa). Bajá ~200 kcal por día en carbohidratos, nunca la proteína.`; col = "var(--rojo)"; }
-  return `<div class="consejo" style="border-color:${col}">${t}</div>`;
+  const [lo, hi] = rangoSubir();
+  let t, col, boton = "";
+  if (g < lo) { t = `Subís ~${g} g por semana: <b>poco</b>. Sumá ~200 kcal por día en carbohidratos: +30 g de arroz seco en el almuerzo, o +1 banana en la merienda, o +2 rebanadas de pan en la cena. Revisá de nuevo en 2 semanas.`; col = "var(--frio)";
+    boton = `<button class="btn chico sec" data-a="ajuste" data-d="200" style="display:block;width:100%;margin-top:8px">Sumar 200 kcal al plan</button>`; }
+  else if (g <= hi) { t = `Subís ~${g} g por semana: <b>zona ideal</b> ✅. Seguí comiendo igual.`; col = "var(--ok)"; }
+  else { t = `Subís ~${g} g por semana: <b>demasiado rápido</b> (se acumula grasa). Bajá ~200 kcal por día en carbohidratos, nunca la proteína.`; col = "var(--rojo)";
+    boton = `<button class="btn chico sec" data-a="ajuste" data-d="-200" style="display:block;width:100%;margin-top:8px">Restar 200 kcal al plan</button>`; }
+  return `<div class="consejo" style="border-color:${col}">${t}${boton}${notaAjuste()}</div>`;
 }
+// Ganar músculo: el PDF pide 200–600 g por semana para 58 kg; se escala con el peso (y un 20% menos en mujeres).
+function rangoSubir(){ const f = pesoActual() / 58 * (E.sexo === "f" ? .8 : 1); return [Math.round(200 * f / 10) * 10, Math.round(600 * f / 10) * 10]; }
+function notaAjuste(){ const aj = E.ajuste || 0;
+  return aj ? `<div class="small muted" style="margin-top:6px">Ya ajustaste el plan ${aj > 0 ? "+" : ""}${aj} kcal. <button class="chip" data-a="ajuste" data-d="0">Volver al cálculo original</button></div>` : ""; }
 
 // Bajar de peso: lo ideal es perder 0,5–1% del peso por semana. Si no, el usuario corrige las calorías con un toque.
 function consejoBajar(g){
-  const lo = Math.round(pesoActual() * 5), hi = Math.round(pesoActual() * 10), aj = E.ajuste || 0;
+  const lo = Math.round(pesoActual() * 5), hi = Math.round(pesoActual() * 10);
   let t, col, boton = "";
   if (g < lo) { t = `${g > 0 ? `Bajás ~${g} g por semana` : "No estás bajando"}: <b>poco</b>. Comé ~150 kcal menos por día (menos pan, arroz o papa; la proteína no se toca).`; col = "var(--frio)";
-    if (metaKcal() > 1500) boton = `<button class="btn chico sec" data-a="ajuste" data-d="-150" style="margin-top:8px">Restar 150 kcal al plan</button>`; }
+    if (metaKcal() > 1500) boton = `<button class="btn chico sec" data-a="ajuste" data-d="-150" style="display:block;width:100%;margin-top:8px">Restar 150 kcal al plan</button>`; }
   else if (g <= hi) { t = `Bajás ~${g} g por semana: <b>zona ideal</b> ✅. Seguí comiendo igual.`; col = "var(--ok)"; }
   else { t = `Bajás ~${g} g por semana: <b>demasiado rápido</b> (se pierde músculo y cuesta sostenerlo). Comé ~150 kcal más por día en carbohidratos.`; col = "var(--rojo)";
-    boton = `<button class="btn chico sec" data-a="ajuste" data-d="150" style="margin-top:8px">Sumar 150 kcal al plan</button>`; }
-  const nota = aj ? `<div class="small muted" style="margin-top:6px">Ya ajustaste el plan ${aj > 0 ? "+" : ""}${aj} kcal. <button class="chip" data-a="ajuste" data-d="0">Volver al cálculo original</button></div>` : "";
-  return `<div class="consejo" style="border-color:${col}">${t}${boton}${nota}</div>`;
+    boton = `<button class="btn chico sec" data-a="ajuste" data-d="150" style="display:block;width:100%;margin-top:8px">Sumar 150 kcal al plan</button>`; }
+  return `<div class="consejo" style="border-color:${col}">${t}${boton}${notaAjuste()}</div>`;
 }
 
 /* ============ BOTONES ============ */
@@ -1063,7 +1076,7 @@ if (E && E.sesion && E.sesion.f === hoyStr() && E.sesion.descansoHasta) abrirGui
 setInterval(() => { if (E && E.inicio && !$("#guia").innerHTML && !(document.activeElement && document.activeElement.tagName === "INPUT")) render(); }, 60000);
 </script>
 <script>
-const VERSION_APP = "20260928122947";
+const VERSION_APP = "20260928124209";
 if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").then(reg => {
   document.addEventListener("visibilitychange", () => { if (!document.hidden) reg.update().catch(() => {}); });
 }).catch(() => {}));
