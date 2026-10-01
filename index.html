@@ -87,6 +87,24 @@ input{font:inherit;color:var(--ink)}
 .guia{position:fixed;inset:0;z-index:30;background:var(--bg);overflow:auto;padding:calc(env(safe-area-inset-top,0px) + 10px) 16px calc(24px + env(safe-area-inset-bottom,0px))}
 .guia .in{max-width:620px;margin:0 auto}
 .prog{display:flex;gap:4px;margin:8px 0 14px}.prog i{flex:1;height:5px;border-radius:9px;background:var(--s2)}.prog i.ok{background:var(--ok)}.prog i.on{background:var(--fuego)}
+/* Lista de ejercicios de la sesión: hechos, el actual y los que vienen (tocar uno salta a él) */
+.ej.fila{cursor:pointer;padding:10px 8px;margin:0 -8px;border-radius:12px;border-top:1px solid var(--line)}
+.ej.fila:active{background:var(--s2)}
+.ej.fila.actual{background:#C9CED614;box-shadow:0 0 0 1px var(--fuego) inset}
+.ej.fila.hecho .num{background:#132218;color:var(--ok)}
+.ej.fila.salto{opacity:.6}.ej.fila.salto .num{background:var(--s2);color:var(--muted)}
+.ej.fila img.chip-f{flex:none;padding:6px 9px;border-radius:999px;background:var(--s2);border:1px solid var(--line);font-weight:800;font-size:13px}
+.sigCaja{background:var(--s1);border:1px solid var(--line);border-radius:16px;padding:10px 12px;margin-top:12px}
+.sig{display:flex;gap:10px;align-items:center;padding:8px;border-radius:12px;background:var(--s2);margin-bottom:6px;cursor:pointer}
+.sig:last-child{margin-bottom:0}.sig:active{background:var(--s1)}
+.sig .num{width:26px;height:26px;font-size:13px;border-radius:9px}
+.sig b{display:block;font-size:15px}.sig .d{font-size:13px}
+.rec{background:#C9CED61A;border:1px solid #C9CED655;border-radius:12px;padding:8px 10px;margin-top:10px;font-size:14px}
+.vol{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:14px}
+.vol .n{width:104px;flex:none;font-weight:800;color:var(--muted)}
+.vol .b{flex:1;height:9px;border-radius:9px;background:var(--s2);overflow:hidden}
+.vol .b i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,var(--fuego),var(--fuego2))}
+.vol .v{flex:none;min-width:62px;text-align:right;font-weight:800;color:var(--fuego2)}
 .objetivo{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
 .objetivo div{background:var(--s2);border-radius:14px;padding:10px 6px;text-align:center}
 .objetivo b{display:block;font:800 26px var(--fd);color:var(--fuego2)}.objetivo small{font-size:12px;color:var(--muted);font-weight:800}
@@ -152,7 +170,7 @@ details summary{cursor:pointer;font-weight:800;padding:4px 0}
 </div></nav>
 <div id="guia"></div>
 <div id="hoja"></div>
-<script src="media.js?v=20260928140012"></script>
+<script src="media.js?v=20261001001554"></script>
 <script>
 "use strict";
 /* ============ RUTINA: HYPERTROPHY ELITE PROGRAM v2 ============ */
@@ -648,6 +666,68 @@ const minutos = s => Math.round(s / 60);
 const fmtDesc = s => s >= 60 ? Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0") : s + " s";
 function duracionDia(k, sem, lugar = lugarHoy()){ return RUT(lugar)[k].ej.reduce((t, ej) => t + duracion(ej, objetivo(ej, sem)), 0) + 600; }
 
+/* ============ LA SESIÓN COMPLETA A LA VISTA (qué hiciste y qué sigue) ============ */
+// Lista de los ejercicios de la sesión: los hechos con ✓, el actual resaltado y los que faltan.
+// Al tocar una fila se salta a ese ejercicio; el botón 📷 abre su ficha.
+function listaSesion(R, ss, sem, abierta){
+  const act = ss.i, filas = R.ej.map((e0, i) => {
+    const ej = ejActivo(e0), o = objetivo(ej, sem), hechos = (ss.sets[ej.id] || []).length, img = imgDe(ej);
+    const est = i < act ? (hechos ? "hecho" : "salto") : i === act ? "actual" : "";
+    const rec = ss.recs && ss.recs[ej.id];
+    return `<div class="ej fila ${est}" data-g="ir" data-i="${i}">
+      <div class="num">${i < act ? (hechos ? "✓" : "·") : i + 1}</div>
+      <div style="flex:1;min-width:0"><b>${ej.n}${ej.base ? ' <span class="tag tec">🔁</span>' : ""}${rec != null ? ` <span class="tag" style="background:#3DDC8433;color:var(--ok)">🏆 ${ej.casa ? rec + " reps" : fmtKg(rec) + " kg"}</span>` : ""}</b>
+        <div class="d">${o.series} × ${o.reps}${hechos ? ` · <span style="color:var(--ok)">${hechos}/${o.series} series</span>` : ""}</div></div>
+      <button class="chip-f" data-g="ficha" data-id="${e0.id}" aria-label="Ficha de ${esc(ej.n)}">📷</button>
+      ${img ? `<img class="mini" src="${rutaFoto(img, 1)}" alt="" loading="lazy">` : ""}</div>`;
+  }).join("");
+  const faltan = Math.max(0, R.ej.length - Math.max(act, 0)), prox = act >= 0 && act < R.ej.length ? `Vas por el ${act + 1} de ${R.ej.length}` : `${R.ej.length} ejercicios`;
+  return `<details class="card" style="padding:12px 16px;margin:12px 0 0"${abierta ? " open" : ""}><summary>🗒️ Los ${R.ej.length} ejercicios · ${prox}${faltan ? ` · faltan ${faltan}` : ""}</summary>${filas}
+    <p class="small muted" style="margin:10px 0 0">Tocá un ejercicio para saltar a él, o 📷 para ver la foto y las variantes.</p></details>`;
+}
+// Los próximos que faltan, con foto, para ir preparando las máquinas.
+function despuesDe(R, ss, n = 2){
+  if (ss.i < 0) return "";
+  const l = R.ej.slice(ss.i + 1, ss.i + 1 + n).map((e0, k) => {
+    const ej = ejActivo(e0), img = imgDe(ej), o = objetivo(ej, semanaActual().n);
+    return `<div class="sig" data-g="ir" data-i="${ss.i + 1 + k}"><div class="num">${ss.i + 2 + k}</div>
+      <div style="flex:1;min-width:0"><b>${ej.n}</b><div class="d">🛠️ ${ej.eq} · ${o.series} × ${o.reps}</div></div>
+      ${img ? `<img class="mini" src="${rutaFoto(img, 1)}" alt="" loading="lazy">` : ""}</div>`;
+  }).join("");
+  return l ? `<div class="sigCaja"><div class="lbl" style="margin:0 0 6px">Después siguen</div>${l}</div>` : "";
+}
+// Récord del ejercicio: el mejor valor de todas las sesiones anteriores (kg en el gimnasio, reps en casa).
+function recordDe(id, casa){
+  const c = casa ? "reps" : "kg", v = (E.hist[id] || []).flatMap(x => x.sets.map(s => s[c])).filter(x => x > 0);
+  return v.length ? Math.max(...v) : 0;
+}
+// Grupo muscular de cada ejercicio (para el resumen semanal).
+const GRUPOS = {Pecho:["ua1","ua3","ub3","ca1","ca3","cu3"], Espalda:["ua2","ua4","ub2","ca2","ca4","ca8","cu2"],
+  Hombros:["ua5","ua6","ub1","ub4","ub7","ca5","ca6","cu1","cu4"], Brazo:["ua7","ua8","ub5","ub6","ub8","ub9","ca7","cu5","cu6","cu7"],
+  Piernas:["la1","la2","la3","la4","la5","la6","lb1","lb2","lb3","lb4","lb5","lb6","cl1","cl2","cl3","cl4","cl5","cl6","cb1","cb2","cb3","cb4","cb5","cb6"]};
+const grupoDe = id => { const b = id.split("~")[0]; return Object.keys(GRUPOS).find(g => GRUPOS[g].includes(b)) || "Otros"; };
+// Resumen de los últimos 7 días: días entrenados, sesiones y volumen por grupo muscular.
+function resumenSemana(){
+  const hoy = aFecha(hoyStr()).getTime(), desde = hoy - 6 * 864e5, dias = {}, vol = {};
+  Object.entries(E.entrenos).forEach(([f]) => { const d = aFecha(f).getTime(); if (d >= desde && d <= hoy) dias[f] = 1; });
+  let series = 0;
+  Object.entries(E.hist).forEach(([id, hs]) => hs.forEach(x => {
+    const f = aFecha(x.f).getTime();
+    if (f < desde || f > hoy) return;
+    const casa = /^c[alub]\d/.test(id.split("~")[0]);
+    x.sets.forEach(s => { series++; const g = grupoDe(id); vol[g] = (vol[g] || 0) + (casa ? s.reps : s.kg * s.reps); });
+  }));
+  const orden = Object.entries(vol).filter(([, v]) => v >= 1).sort((a, b) => b[1] - a[1]);
+  if (!Object.keys(dias).length && !orden.length) return `<p class="small muted">Cuando empieces a entrenar, acá vas a ver los días de la semana y el volumen por músculo.</p>`;
+  const max = orden.length ? orden[0][1] : 1;
+  return `<div class="stats" style="margin:12px 0">
+      <div class="stat"><b>${Object.keys(dias).length}</b><small>días entrenados</small></div>
+      <div class="stat"><b>${series}</b><small>series</small></div>
+      <div class="stat"><b>${orden.filter(([g]) => g !== "Piernas").length ? Math.round(orden.filter(([g]) => g !== "Piernas").reduce((t, [, v]) => t + v, 0)).toLocaleString("es-AR") : 0}</b><small>kg arriba</small></div></div>
+    ${orden.map(([g, v]) => `<div class="vol"><span class="n">${g}</span><span class="b"><i style="width:${Math.round(v / max * 100)}%"></i></span><span class="v">${Math.round(v).toLocaleString("es-AR")}</span></div>`).join("")}
+    <p class="small muted" style="margin:8px 0 0">Volumen de los últimos 7 días (kg × repeticiones; en casa, repeticiones). Sirve para ver si un músculo se está quedando atrás.</p>`;
+}
+
 /* ============ SONIDOS (grabaciones CC0 de Kenney, nada sintetizado) ============ */
 const SND = {};
 function audio(n){ return SND[n] || (SND[n] = new Audio("sonidos/" + n + ".wav")); }
@@ -1056,13 +1136,21 @@ function pProgreso(){
     <div class="lbl">Anotar el peso de hoy</div>
     <div class="row"><input id="kgIn" class="campo" type="number" inputmode="decimal" step="0.1" placeholder="${fmtKg(pesoActual())}"><button class="btn chico" data-a="peso" style="padding:14px 18px">Guardar</button></div>
     <p class="small muted">Pesate 3 veces por semana: a la mañana, en ayunas, después de ir al baño. ${bajando() ? `Lo ideal es bajar entre ${fmtKg(Math.round(pesoActual() * 5) / 1000)} y ${fmtKg(Math.round(pesoActual() * 10) / 1000)} kg por semana (0,5–1% de tu peso).` : `Lo ideal es subir entre ${fmtKg(subeLo / 1000)} y ${fmtKg(subeHi / 1000)} kg por semana.`}</p></div>`;
+  h += `<div class="card"><h3>📊 Tus últimos 7 días</h3>${resumenSemana()}</div>`;
   h += `<div class="card"><h3>🏆 Tus pesos por ejercicio</h3>`;
   let alguno = false;
   todosEj().flatMap(e0 => [e0, ...(MEDIA[e0.id] ? MEDIA[e0.id].alt.map((a, k) => ({id: e0.id + "~" + k, n: a.n})) : [])]).forEach(ej => {
     const hh = E.hist[ej.id]; if (!hh || !hh.length) return; alguno = true;
     const ult = hh[hh.length - 1], casa = /^c[alub]\d/.test(ej.id), campo = s => casa ? s.reps : s.kg;
     const mejor = Math.max(...hh.flatMap(x => x.sets.map(campo))), top = Math.max(...ult.sets.map(campo));
-    h += `<div class="ej"><div style="flex:1"><b>${casa ? "🏠 " : ""}${ej.n}</b><div class="d">Última vez (${ult.f.slice(8)}/${ult.f.slice(5, 7)}): ${casa ? "" : fmtKg(top) + " kg · "}reps ${ult.sets.map(s => s.reps).join(" / ")}</div></div><span class="chip f">🏆 ${casa ? mejor + " reps" : fmtKg(mejor)}</span></div>`;
+    // Cuánto cambió respecto de la sesión anterior (solo si hay al menos dos)
+    let dif = "";
+    if (hh.length >= 2) {
+      const ant = hh[hh.length - 2], antes = Math.max(...ant.sets.map(campo)), d = top - antes;
+      if (Math.abs(d) >= (casa ? 1 : 0.5)) dif = ` <span style="color:${d > 0 ? "var(--ok)" : "var(--frio)"}">· ${d > 0 ? "+" : ""}${casa ? d + " reps" : fmtKg(d) + " kg"}</span>`;
+    }
+    const esRecord = hh.length > 1 && top > Math.max(...hh.slice(0, -1).flatMap(x => x.sets.map(campo)));
+    h += `<div class="ej"><div style="flex:1"><b>${casa ? "🏠 " : ""}${ej.n}${esRecord ? ' <span class="tag" style="background:#3DDC8433;color:var(--ok)">🏆 récord</span>' : ""}</b><div class="d">Última vez (${ult.f.slice(8)}/${ult.f.slice(5, 7)}): ${casa ? "" : fmtKg(top) + " kg · "}reps ${ult.sets.map(s => s.reps).join(" / ")}${dif}</div></div><span class="chip f">🏆 ${casa ? mejor + " reps" : fmtKg(mejor)}</span></div>`;
   });
   if (!alguno) h += `<p class="muted small">Cuando termines tu primer entrenamiento, acá vas a ver el peso de cada máquina.</p>`;
   h += `</div><div class="card"><h3>📅 Programa</h3><p class="small muted">Estás en la semana <b style="color:var(--ink)">${s.n}</b> de 12${s.ciclo > 1 ? " (vuelta " + s.ciclo + ")" : ""}. Si no coincide, corregila:</p>
@@ -1176,7 +1264,8 @@ function pintarGuia(){
   const ss = E.sesion; if (!ss) return cerrarGuia();
   const R = rutinaSesion(), sem = semanaActual().n, casa = ss.lugar === "casa";
   const arriba = `<div class="row"><button class="chip" data-g="salir">✕ Salir</button><span class="sp"></span><span class="chip">${R.nombre}</span></div>
-    <div class="prog">${R.ej.map((e, i) => `<i class="${i < ss.i ? "ok" : i === ss.i ? "on" : ""}"></i>`).join("")}</div>`;
+    <div class="prog">${R.ej.map((e, i) => `<i class="${i < ss.i ? "ok" : i === ss.i ? "on" : ""}"></i>`).join("")}</div>
+    ${ss.i >= 0 ? listaSesion(R, ss, sem) : ""}`;
   if (ss.i >= R.ej.length && !ss.descansoHasta) return resumenFinal();
   if (ss.descansoHasta) return pintarDescanso(arriba);
   let h;
@@ -1211,6 +1300,11 @@ function pintarGuia(){
       <div class="rirs">${[0, 1, 2, 3, 4].map(r => `<button data-g="rir" data-r="${r}" class="${r === Math.min(4, o.rirMin) ? "on" : ""}">${r}${r === 4 ? "+" : ""}<small>${["ninguna", "1 más", "2 más", "3 más", "4 o más"][r]}</small></button>`).join("")}</div>
       <button class="btn ok" data-g="serie" style="margin-top:16px">✓ Terminé la serie ${ss.serie + 1}</button>
       ${hechos.length ? `<div class="series">${hechos.map((s, i) => `<div class="serie"><span>Serie ${i + 1}</span><span>${ej.casa ? `${s.reps} reps` : `${fmtKg(s.kg)} kg × ${s.reps}`} · RIR ${s.rir}</span></div>`).join("")}</div>` : ""}
+      ${(() => { const rec = recordDe(ej.id, ej.casa), marca = Math.max(...hechos.map(s => ej.casa ? s.reps : s.kg), 0);
+        if (!rec) return "";
+        const tope = hechos.length && marca > rec;
+        return `<div class="rec">🏆 Tu mejor marca: <b>${ej.casa ? rec + " reps" : fmtKg(rec) + " kg"}</b>${hechos.length ? ` · esta sesión: <b style="color:var(--ok)">${ej.casa ? marca + " reps" : fmtKg(marca) + " kg"}</b>${tope ? " · ¡récord!" : marca < rec ? ` (faltan ${ej.casa ? rec - marca : fmtKg(rec - marca)})` : ""}` : ""}</div>`; })()}
+      ${despuesDe(R, ss)}
       <div class="row" style="margin-top:14px"><button class="btn sec chico" data-g="atras">← Anterior</button><span class="sp"></span><button class="btn sec chico" data-g="saltar">Saltar ejercicio →</button></div>`;
   }
   $("#guia").innerHTML = `<div class="guia"><div class="in">${h}</div></div>`;
@@ -1228,6 +1322,7 @@ function pintarDescanso(arriba){
     <circle id="arco" cx="115" cy="115" r="104" stroke="#C9CED6" stroke-width="14" fill="none" stroke-linecap="round" stroke-dasharray="653.5" stroke-dashoffset="0"/></svg>
     <div class="t"><div><b id="seg">--</b><div class="muted small" id="segU">segundos</div></div></div></div>
     <p style="font-size:17px">${prox}</p>
+    ${ss.serie === 0 && ss.i < R.ej.length ? despuesDe(R, ss, 2) : ""}
     <div class="row"><button class="btn sec" data-g="menos">−15 s</button><button class="btn sec" data-g="mas">+15 s</button></div>
     <button class="btn" data-g="yasta" style="margin-top:12px">Listo, sigo →</button></div></div></div>`;
   engancharGuia();
@@ -1242,10 +1337,21 @@ function pintarDescanso(arriba){
   tic(); reloj = setInterval(tic, 250);
 }
 function finDescanso(){ E.sesion.descansoHasta = null; guardar(); pintarGuia(); }
-function engancharGuia(){ document.querySelectorAll("#guia [data-g]").forEach(b => b.onclick = () => guia(b.dataset.g, b)); }
+function engancharGuia(){
+  document.querySelectorAll("#guia [data-g]").forEach(b => b.onclick = ev => { ev.stopPropagation(); guia(b.dataset.g, b); });
+}
 function guia(a, b){
   const ss = E.sesion, R = rutinaSesion(), sem = semanaActual().n;
   if (a === "salir") return cerrarGuia();
+  if (a === "ficha") { detenerRitmo(); return fichaEj(b.dataset.id); }
+  if (a === "ir") {  // saltar al ejercicio que se tocó en la lista
+    detenerRitmo();
+    const i = Math.max(0, Math.min(R.ej.length - 1, +b.dataset.i));
+    ss.i = i; ss.descansoHasta = null;
+    const ea = ejActivo(R.ej[i]), o = objetivo(ea, sem);
+    ss.serie = Math.min(o.series - 1, (ss.sets[ea.id] || []).length);
+    guardar(); sonar("toque"); scrollTo(0, 0); return pintarGuia();
+  }
   if (a === "arrancar") { ss.i = 0; ss.serie = 0; guardar(); sonar("listo"); return pintarGuia(); }
   if (a === "kg" || a === "rep") { const i = a === "kg" ? $("#gKg") : $("#gRep"); i.value = Math.max(0, Math.round(((parseFloat(String(i.value).replace(",", ".")) || 0) + parseFloat(b.dataset.d)) * 100) / 100); sonar("toque"); return; }
   if (a === "rir") { document.querySelectorAll("[data-g=rir]").forEach(x => x.classList.toggle("on", x === b)); sonar("toque"); return; }
@@ -1261,6 +1367,9 @@ function guia(a, b){
     (ss.sets[ej.id] = ss.sets[ej.id] || []).push({kg, reps, rir});
     if (!ej.casa) E.ultimoKg[ej.id] = kg;
     sonar("listo"); vibrar(30);
+    // ¿Récord? Se compara contra las sesiones anteriores; si lo superás, se avisa y queda marcado en la lista.
+    const rec = recordDe(ej.id, ej.casa), marca = ej.casa ? reps : kg;
+    if (rec && marca > rec) { ss.recs = ss.recs || {}; ss.recs[ej.id] = Math.max(marca, ss.recs[ej.id] || 0); toast(`🏆 ¡Récord! ${ej.casa ? marca + " reps" : fmtKg(marca) + " kg"} en ${ej.n}`); }
     ss.serie++;
     let desc = o.desc;
     if (ss.serie >= o.series) { ss.i++; ss.serie = 0; if (ss.i >= R.ej.length) { guardar(); return pintarGuia(); } desc = Math.max(desc, 90); }
@@ -1383,7 +1492,7 @@ if (E && E.sesion && E.sesion.f === hoyStr() && E.sesion.descansoHasta) abrirGui
 setInterval(() => { if (E && E.inicio && !$("#guia").innerHTML && !(document.activeElement && document.activeElement.tagName === "INPUT")) render(); }, 60000);
 </script>
 <script>
-const VERSION_APP = "20260928140012";
+const VERSION_APP = "20261001001554";
 if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").then(reg => {
   document.addEventListener("visibilitychange", () => { if (!document.hidden) reg.update().catch(() => {}); });
 }).catch(() => {}));
