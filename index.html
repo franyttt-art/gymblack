@@ -170,13 +170,13 @@ details summary{cursor:pointer;font-weight:800;padding:4px 0}
 </div></nav>
 <div id="guia"></div>
 <div id="hoja"></div>
-<script src="media.js?v=20261001001554"></script>
+<script src="media.js?v=20261001003900"></script>
 <script>
 "use strict";
 /* ============ RUTINA: HYPERTROPHY ELITE PROGRAM v2 ============ */
 // c = compuesto (multiarticular) · tec = técnica especial del último set (se usa en las semanas 7–11)
 const RUTINA = {
-  UA:{nombre:"Día 1 · Upper A", corto:"Upper A", foco:"Pecho + Espalda + Deltoides lateral + Tríceps", ej:[
+  UA:{nombre:"Día 1 · Upper A", corto:"Upper A", foco:"Pecho + Espalda + Deltoides lateral + Tríceps + Antebrazo", ej:[
     {id:"ua1",n:"Press inclinado con barra",eq:"Banco 30–45° + barra olímpica",m:"Pecho (parte alta)",s:4,r:"6–10",d:120,t:"3-1-1-0",c:1,tip:"Escápulas juntas y abajo. Bajá la barra a la parte alta del pecho."},
     {id:"ua2",n:"Remo polea baja agarre neutro",eq:"Polea baja + triángulo",m:"Dorsal / romboides / bíceps",s:4,r:"8–12",d:90,t:"3-1-1-0",c:1,tip:"Pecho alto, tirá con los codos hacia la cadera. No balancees el torso."},
     {id:"ua3",n:"Apertura inclinada con poleas altas",eq:"Dos poleas altas cruzadas",m:"Pecho (estiramiento)",s:3,r:"12–15",d:90,t:"3-0-1-0",tip:"Codos apenas flexionados. Abrí hasta sentir que estira el pecho."},
@@ -184,7 +184,8 @@ const RUTINA = {
     {id:"ua5",n:"Elevación lateral en máquina",eq:"Máquina de deltoides laterales",m:"Deltoides lateral ★",s:5,r:"12–15",d:60,t:"2-0-1-0",tec:"myo",mas:3,tip:"Empujá con los codos hasta la altura del hombro. Sin encoger."},
     {id:"ua6",n:"Elevación lateral polea baja (a un brazo)",eq:"Polea baja + agarre simple",m:"Deltoides lateral ★",s:3,r:"15–20",d:45,t:"2-0-1-0",tip:"El cable pasa por delante del cuerpo. Subí hasta el hombro. Hacé las reps con un brazo y después con el otro."},
     {id:"ua7",n:"Extensión de tríceps polea alta (cuerda)",eq:"Polea alta + cuerda",m:"Tríceps ★",s:5,r:"12–15",d:75,t:"2-0-1-0",tip:"Codos pegados al cuerpo y quietos. Abrí la cuerda al final."},
-    {id:"ua8",n:"Curl martillo en polea baja (cuerda)",eq:"Polea baja + cuerda",m:"Bíceps / braquial ★",s:4,r:"12–15",d:90,t:"3-0-1-0",tip:"Palmas enfrentadas, codos quietos al costado."}]},
+    {id:"ua8",n:"Curl martillo en polea baja (cuerda)",eq:"Polea baja + cuerda",m:"Bíceps / braquial ★",s:4,r:"12–15",d:90,t:"3-0-1-0",tip:"Palmas enfrentadas, codos quietos al costado."},
+    {id:"ua9",n:"Extensión de muñeca con mancuernas",eq:"Banco plano + 2 mancuernas",m:"Antebrazo (manga corta) ★",s:3,r:"12–15",d:45,t:"2-0-1-0",tip:"Sentado, antebrazos apoyados en el banco y las muñecas colgando del borde. Subí solo con la muñeca, sin levantar el antebrazo. Bajá lento hasta sentir el estiramiento."}]},
   LA:{nombre:"Día 2 · Lower A", corto:"Lower A", foco:"Piernas · cuádriceps dominante", ej:[
     {id:"la1",n:"Sentadilla alta (high bar)",eq:"Rack + barra olímpica",m:"Cuádriceps / glúteos / core",s:4,r:"6–10",d:180,t:"3-1-1-0",c:1,tip:"Barra sobre los trapecios, pecho arriba. Bajá al menos hasta paralelo."},
     {id:"la2",n:"Leg press 45°",eq:"Máquina leg press 45°",m:"Cuádriceps / glúteos",s:3,r:"10–15",d:120,t:"3-0-1-0",c:1,tec:"drop",tip:"Bajá profundo sin despegar la cola del respaldo. No trabes las rodillas arriba."},
@@ -192,7 +193,7 @@ const RUTINA = {
     {id:"la4",n:"Curl femoral tumbado",eq:"Máquina de curl femoral acostado",m:"Isquiotibiales",s:4,r:"10–15",d:90,t:"3-1-1-0",tip:"Cadera pegada al banco. Bajá lento."},
     {id:"la5",n:"Peso muerto rumano (RDL)",eq:"Barra olímpica + discos",m:"Isquiotibiales / glúteos",s:3,r:"8–12",d:120,t:"4-1-1-0",c:1,tip:"Rodillas apenas flexionadas, cadera hacia atrás, barra pegada a las piernas, espalda recta."},
     {id:"la6",n:"Pantorrilla de pie",eq:"Máquina de gemelos de pie",m:"Gemelos",s:4,r:"12–15",d:60,t:"2-2-1-0",tip:"2 s abajo estirando, subí bien arriba en puntas."}]},
-  UB:{nombre:"Día 3 · Upper B", corto:"Upper B", foco:"Hombros + Espalda + Brazos", ej:[
+  UB:{nombre:"Día 3 · Upper B", corto:"Upper B", foco:"Hombros + Espalda + Brazos + Antebrazo", ej:[
     {id:"ub1",n:"Press militar con barra",eq:"Rack + barra olímpica",m:"Hombros / tríceps",s:4,r:"6–10",d:120,t:"3-1-1-0",c:1,tip:"Glúteos y abdomen firmes. La barra sube recta, pasando cerca de la cara."},
     {id:"ub2",n:"Remo con mancuerna pecho apoyado",eq:"Banco inclinado 30° + mancuernas",m:"Dorsal / romboides / bíceps",s:4,r:"8–12",d:90,t:"3-1-1-0",c:1,tip:"Pecho apoyado todo el tiempo. Tirá los codos hacia atrás."},
     {id:"ub3",n:"Press con mancuernas banco plano",eq:"Banco plano + mancuernas",m:"Pecho",s:3,r:"10–12",d:90,t:"3-1-1-0",c:1,tip:"Bajá hasta sentir estiramiento, con los codos a unos 45° del cuerpo."},
@@ -201,7 +202,8 @@ const RUTINA = {
     {id:"ub6",n:"Extensión de tríceps sobre la cabeza con cable",eq:"Polea baja + cuerda",m:"Tríceps (cabeza larga) ★",s:4,r:"12–15",d:90,t:"3-0-1-0",tip:"De espaldas a la polea, codos arriba y quietos. Estirá bien atrás."},
     {id:"ub7",n:"Pájaro en máquina (deltoides posterior)",eq:"Pec deck en posición invertida",m:"Deltoides posterior",s:3,mas:4,r:"12–15",d:75,t:"2-1-1-0",tip:"Brazos casi rectos, abrí hacia atrás. Pausa de 1 s."},
     {id:"ub8",n:"Curl con barra EZ",eq:"Barra EZ + discos",m:"Bíceps ★",s:4,r:"8–12",d:90,t:"3-0-1-0",tip:"Codos quietos, sin balancear el cuerpo."},
-    {id:"ub9",n:"Rompecráneos con barra EZ",eq:"Banco plano + barra EZ",m:"Tríceps ★",s:3,r:"10–12",d:75,t:"3-0-1-0",tip:"Bajá la barra detrás de la frente con los codos apuntando al techo."}]},
+    {id:"ub9",n:"Rompecráneos con barra EZ",eq:"Banco plano + barra EZ",m:"Tríceps ★",s:3,r:"10–12",d:75,t:"3-0-1-0",tip:"Bajá la barra detrás de la frente con los codos apuntando al techo."},
+    {id:"ub10",n:"Flexión de muñeca con mancuernas",eq:"Banco plano + 2 mancuernas",m:"Antebrazo (manga larga)",s:3,r:"12–15",d:45,t:"2-0-1-0",tip:"Sentado, antebrazos apoyados en el banco con las palmas mirando al piso y las muñecas colgando del borde. Bajá la mano hasta sentir el estiramiento y subí solo con la muñeca."}]},
   LB:{nombre:"Día 4 · Lower B", corto:"Lower B", foco:"Piernas · cadena posterior", ej:[
     {id:"lb1",n:"Peso muerto rumano pesado",eq:"Barra olímpica + discos",m:"Isquios / glúteos / lumbares",s:4,r:"6–10",d:180,t:"4-1-1-0",c:1,tip:"Cadera atrás, barra pegada a las piernas, espalda recta. 4 s bajando."},
     {id:"lb2",n:"Hack squat",eq:"Máquina hack squat",m:"Cuádriceps",s:4,r:"10–12",d:120,t:"3-0-1-0",c:1,tip:"Espalda pegada al respaldo, bajá profundo."},
@@ -704,6 +706,7 @@ function recordDe(id, casa){
 // Grupo muscular de cada ejercicio (para el resumen semanal).
 const GRUPOS = {Pecho:["ua1","ua3","ub3","ca1","ca3","cu3"], Espalda:["ua2","ua4","ub2","ca2","ca4","ca8","cu2"],
   Hombros:["ua5","ua6","ub1","ub4","ub7","ca5","ca6","cu1","cu4"], Brazo:["ua7","ua8","ub5","ub6","ub8","ub9","ca7","cu5","cu6","cu7"],
+  Antebrazo:["ua9","ub10"],
   Piernas:["la1","la2","la3","la4","la5","la6","lb1","lb2","lb3","lb4","lb5","lb6","cl1","cl2","cl3","cl4","cl5","cl6","cb1","cb2","cb3","cb4","cb5","cb6"]};
 const grupoDe = id => { const b = id.split("~")[0]; return Object.keys(GRUPOS).find(g => GRUPOS[g].includes(b)) || "Otros"; };
 // Resumen de los últimos 7 días: días entrenados, sesiones y volumen por grupo muscular.
@@ -1492,7 +1495,7 @@ if (E && E.sesion && E.sesion.f === hoyStr() && E.sesion.descansoHasta) abrirGui
 setInterval(() => { if (E && E.inicio && !$("#guia").innerHTML && !(document.activeElement && document.activeElement.tagName === "INPUT")) render(); }, 60000);
 </script>
 <script>
-const VERSION_APP = "20261001001554";
+const VERSION_APP = "20261001003900";
 if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").then(reg => {
   document.addEventListener("visibilitychange", () => { if (!document.hidden) reg.update().catch(() => {}); });
 }).catch(() => {}));

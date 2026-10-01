@@ -35,6 +35,10 @@ const MEDIA = {
     {n:"Curl martillo con mancuernas",eq:"Mancuernas",img:"Hammer_Curls",tip:"Palmas enfrentadas, codos quietos al costado."},
     {n:"Curl martillo cruzado",eq:"Mancuernas",img:"Cross_Body_Hammer_Curl",tip:"Llevá la mancuerna cruzando hacia el hombro contrario."},
     {n:"Curl martillo en banco Scott",eq:"Banco Scott + mancuerna",img:"Preacher_Hammer_Dumbbell_Curl",tip:"Brazo apoyado en el banco, palma mirando hacia adentro."}]},
+  ua9:{img:"Palms-Up_Dumbbell_Wrist_Curl_Over_A_Bench", alt:[
+    {n:"Extensión de muñeca en polea baja",eq:"Polea baja + mancuerna",img:"Cable_Wrist_Curl",tip:"Sentado, la palma hacia arriba. La muñeca es lo único que se mueve."},
+    {n:"Extensión de muñeca con barra sobre el banco",eq:"Banco plano + barra",img:"Palms-Up_Barbell_Wrist_Curl_Over_A_Bench",tip:"Igual que con mancuernas pero con la barra. Codos apenas doblados, manos sueltas."},
+    {n:"Extensión de muñeca sentado, un brazo",eq:"Banco con respaldo + mancuerna",img:"Seated_One-Arm_Dumbbell_Palms-Up_Wrist_Curl",tip:"Apoyá solo ese antebrazo en el banco y hacé las reps, después el otro brazo."}]},
   // ---------- Día 2 · Lower A ----------
   la1:{img:"Barbell_Squat", alt:[
     {n:"Sentadilla en Smith",eq:"Máquina Smith",img:"Smith_Machine_Squat",c:1,tip:"Pies un poco adelante de la barra. Bajá hasta paralelo."},
@@ -97,6 +101,9 @@ const MEDIA = {
     {n:"Rompecráneos con mancuernas",eq:"Banco plano + mancuernas",img:"Lying_Dumbbell_Tricep_Extension",tip:"Acostado, bajá las mancuernas al costado de la cabeza con los codos al techo."},
     {n:"Extensión acostado en polea",eq:"Banco plano + polea baja + barra",img:"Cable_Lying_Triceps_Extension",tip:"Como el rompecráneos, pero con el cable: tensión todo el recorrido."},
     {n:"Press de banca agarre cerrado",eq:"Banco plano + barra",img:"Close-Grip_Barbell_Bench_Press",tip:"Manos al ancho de los hombros, codos pegados al cuerpo."}]},
+  ub10:{img:"Palms-Down_Dumbbell_Wrist_Curl_Over_A_Bench", alt:[
+    {n:"Flexión de muñeca sentado con barra",eq:"Banco con respaldo + barra",img:"Seated_Palms-Down_Barbell_Wrist_Curl",tip:"Palmas hacia el piso, antebrazos apoyados y muñecas colgando del borde."},
+    {n:"Rodillo de muñeca",eq:"Rodillo + barra",img:"Wrist_Roller",tip:"Pasá la barra despacio con las dos manos. Trabaja también la muñeca y el agarre."}]},
   // ---------- Día 4 · Lower B ----------
   lb1:{img:"Romanian_Deadlift", alt:[
     {n:"Peso muerto rumano con mancuernas",eq:"Mancuernas",img:"Stiff-Legged_Dumbbell_Deadlift",c:1,tip:"Cadera atrás, mancuernas pegadas a las piernas, espalda recta."},
